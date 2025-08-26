@@ -1,19 +1,17 @@
-// Update this page (the content is just a fallback if you fail to update the page)
-
 import { MadeWithDyad } from "@/components/made-with-dyad";
+import { Outlet } from "react-router-dom";
+import { Navbar } from "@/components/Navbar";
 
-const Index = () => {
+const IndexLayout = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">
-          Start building your amazing project here!
-        </p>
-      </div>
+    <div className="min-h-screen flex flex-col">
+      <Navbar />
+      <main className="flex-grow container mx-auto p-4">
+        <Outlet /> {/* This is where nested routes will render */}
+      </main>
       <MadeWithDyad />
     </div>
   );
 };
 
-export default Index;
+export default IndexLayout;
