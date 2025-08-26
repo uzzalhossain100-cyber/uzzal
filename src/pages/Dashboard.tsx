@@ -3,73 +3,49 @@ import { DollarSign, Users, CreditCard, Activity } from "lucide-react";
 import { DashboardCard } from "@/components/dashboard/DashboardCard";
 import { RecentTransactions } from "@/components/dashboard/RecentTransactions";
 import { SalesOverviewChart } from "@/components/dashboard/SalesOverviewChart";
-import { Header } from "@/components/layout/Header";
-import { Sidebar } from "@/components/layout/Sidebar";
-import { cn } from "@/lib/utils";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { useAuth } from "@/context/AuthContext"; // Import useAuth
 
 const Dashboard = () => {
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = React.useState(false);
-  const isMobile = useIsMobile();
-
-  const handleToggleSidebar = () => {
-    setIsSidebarCollapsed(!isSidebarCollapsed);
-  };
-
-  React.useEffect(() => {
-    if (isMobile) {
-      setIsSidebarCollapsed(true);
-    } else {
-      setIsSidebarCollapsed(false);
-    }
-  }, [isMobile]);
+  const { user } = useAuth(); // Get user from AuthContext
 
   return (
-    <div className="flex min-h-screen w-full">
-      <div className={cn("hidden sm:block", isMobile && "hidden")}>
-        <Sidebar isCollapsed={isSidebarCollapsed} />
-      </div>
-      <div className="flex flex-col flex-1">
-        <Header
-          onToggleSidebar={handleToggleSidebar}
-          isSidebarCollapsed={isSidebarCollapsed}
+    <div className="flex flex-col flex-1">
+      <h1 className="text-3xl font-bold mb-6">
+        স্বাগতম, {user?.email === 'Uzzal' ? 'এডমিন Uzzal' : user?.email || 'ব্যবহারকারী'}!
+      </h1>
+      <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
+        <DashboardCard
+          title="মোট আয়"
+          value="$45,231.89"
+          change="+20.1% গত মাস থেকে"
+          changeType="increase"
+          icon={DollarSign}
         />
-        <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
-          <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
-            <DashboardCard
-              title="Total Revenue"
-              value="$45,231.89"
-              change="+20.1% from last month"
-              changeType="increase"
-              icon={DollarSign}
-            />
-            <DashboardCard
-              title="Subscriptions"
-              value="+2350"
-              change="+180.1% from last month"
-              changeType="increase"
-              icon={Users}
-            />
-            <DashboardCard
-              title="Sales"
-              value="+12,234"
-              change="+19% from last month"
-              changeType="increase"
-              icon={CreditCard}
-            />
-            <DashboardCard
-              title="Active Now"
-              value="+573"
-              change="+201 since last hour"
-              changeType="increase"
-              icon={Activity}
-            />
-          </div>
-          <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
-            <RecentTransactions />
-            <SalesOverviewChart />
-          </div>
-        </main>
+        <DashboardCard
+          title="সাবস্ক্রিপশন"
+          value="+2350"
+          change="+180.1% গত মাস থেকে"
+          changeType="increase"
+          icon={Users}
+        />
+        <DashboardCard
+          title="বিক্রয়"
+          value="+12,234"
+          change="+19% গত মাস থেকে"
+          changeType="increase"
+          icon={CreditCard}
+        />
+        <DashboardCard
+          title="সক্রিয় এখন"
+          value="+573"
+          change="+201 গত ঘন্টা থেকে"
+          changeType="increase"
+          icon={Activity}
+        />
+      </div>
+      <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3 mt-6">
+        <RecentTransactions />
+        <SalesOverviewChart />
       </div>
     </div>
   );
