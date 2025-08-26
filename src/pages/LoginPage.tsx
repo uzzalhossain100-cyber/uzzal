@@ -40,7 +40,7 @@ const LoginPage: React.FC = () => {
               <Input
                 id="email"
                 type="text"
-                placeholder="ইউজার নেম লিখুন" {/* Updated placeholder */}
+                placeholder="ইউজার নেম লিখুন"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -51,7 +51,7 @@ const LoginPage: React.FC = () => {
               <Input
                 id="password"
                 type="password"
-                placeholder="পাসওয়ার্ড" {/* Updated placeholder */}
+                placeholder="পাসওয়ার্ড"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
