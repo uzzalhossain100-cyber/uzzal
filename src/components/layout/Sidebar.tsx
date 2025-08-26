@@ -3,16 +3,14 @@ import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import {
   Home,
-  Newspaper, // Changed from Receipt to Newspaper for 'News'
-  Bot, // Changed from DollarSign to Bot for 'AI'
-  Mail, // Changed from Users to Mail for 'Contact'
-  User, // Changed from Package to User for 'User Menu'
+  Newspaper,
+  Bot,
+  Mail,
+  Tv, // Added Tv icon for Live TV
   Settings,
-  BarChart,
-  CreditCard,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/context/AuthContext"; // Import useAuth
+import { useAuth } from "@/context/AuthContext";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   isCollapsed?: boolean;
@@ -35,16 +33,19 @@ const navItems = [
     href: "/ai",
   },
   {
+    name: "লাইভ টিভি", // New menu item
+    icon: Tv, // Using Tv icon
+    href: "/live-tv", // New route
+  },
+  {
     name: "যোগাযোগ",
     icon: Mail,
     href: "/contact",
   },
-  // Removed original items like Transactions, Accounts, Customers, Products, Payments, Reports
-  // Keeping Settings as a general item
 ];
 
 export function Sidebar({ className, isCollapsed = false }: SidebarProps) {
-  const { signOut } = useAuth(); // Use signOut from AuthContext
+  const { signOut } = useAuth();
 
   return (
     <div
@@ -101,7 +102,7 @@ export function Sidebar({ className, isCollapsed = false }: SidebarProps) {
             "w-full justify-start text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
             isCollapsed ? "justify-center" : "",
           )}
-          onClick={signOut} // Add signOut functionality
+          onClick={signOut}
         >
           <Settings className="h-5 w-5" />
           <span

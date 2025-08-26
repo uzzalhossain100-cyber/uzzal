@@ -12,7 +12,8 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import NewsPage from "./pages/NewsPage";
 import AIPage from "./pages/AIPage";
 import ContactPage from "./pages/ContactPage";
-import MainLayout from "./components/layout/MainLayout"; // We will create this next
+import LiveTVPage from "./pages/LiveTVPage"; // Import the new LiveTVPage
+import MainLayout from "./components/layout/MainLayout";
 
 const queryClient = new QueryClient();
 
@@ -28,10 +29,11 @@ const App = () => (
             <Route path="/signup" element={<SignupPage />} />
             
             <Route element={<ProtectedRoute />}>
-              <Route element={<MainLayout />}> {/* All protected routes will use MainLayout */}
+              <Route element={<MainLayout />}>
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/news" element={<NewsPage />} />
                 <Route path="/ai" element={<AIPage />} />
+                <Route path="/live-tv" element={<LiveTVPage />} /> {/* New Live TV Route */}
                 <Route path="/contact" element={<ContactPage />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               </Route>
