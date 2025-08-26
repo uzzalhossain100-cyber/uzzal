@@ -39,8 +39,8 @@ const LoginPage: React.FC = () => {
               <Label htmlFor="email">ইমেল / ইউজারনেম</Label>
               <Input
                 id="email"
-                type="text" // Changed to text to allow 'Uzzal' as username
-                placeholder="Uzzal"
+                type="text"
+                placeholder="ইউজার নেম লিখুন" {/* Updated placeholder */}
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -51,7 +51,7 @@ const LoginPage: React.FC = () => {
               <Input
                 id="password"
                 type="password"
-                placeholder="123321"
+                placeholder="পাসওয়ার্ড" {/* Updated placeholder */}
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
