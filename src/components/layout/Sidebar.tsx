@@ -1,14 +1,12 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom"; // Import useLocation
+import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import {
   Home,
   Newspaper,
-  Bot,
   Mail,
   Tv,
-  Settings,
-  LogOut, // Added LogOut icon for consistency
+  LogOut,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
@@ -29,11 +27,6 @@ const navItems = [
     href: "/news",
   },
   {
-    name: "All In One",
-    icon: Bot,
-    href: "/all-in-one",
-  },
-  {
     name: "লাইভ টিভি",
     icon: Tv,
     href: "/live-tv",
@@ -47,12 +40,12 @@ const navItems = [
 
 export function Sidebar({ className, isCollapsed = false }: SidebarProps) {
   const { signOut } = useAuth();
-  const location = useLocation(); // Get current location
+  const location = useLocation();
 
   return (
     <div
       className={cn(
-        "flex h-full flex-col space-y-4 border-r bg-sidebar p-4 transition-all duration-300 shadow-md", // Added shadow-md
+        "flex h-full flex-col space-y-4 border-r bg-sidebar p-4 transition-all duration-300 shadow-md",
         isCollapsed ? "w-16 items-center" : "w-64",
         className,
       )}
@@ -77,14 +70,14 @@ export function Sidebar({ className, isCollapsed = false }: SidebarProps) {
       </div>
       <nav className="flex-1 space-y-2">
         {navItems.map((item) => {
-          const isActive = location.pathname === item.href; // Check if the current path matches the item's href
+          const isActive = location.pathname === item.href;
           return (
             <Link
               key={item.name}
               to={item.href}
               className={cn(
                 "flex items-center gap-3 rounded-lg px-3 py-2 text-sidebar-foreground transition-all hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
-                isActive && "bg-sidebar-primary text-sidebar-primary-foreground hover:bg-sidebar-primary hover:text-sidebar-primary-foreground", // Active link styling
+                isActive && "bg-sidebar-primary text-sidebar-primary-foreground hover:bg-sidebar-primary hover:text-sidebar-primary-foreground",
                 isCollapsed ? "justify-center" : "",
               )}
             >
@@ -110,7 +103,7 @@ export function Sidebar({ className, isCollapsed = false }: SidebarProps) {
           )}
           onClick={signOut}
         >
-          <LogOut className="h-5 w-5" /> {/* Changed to LogOut icon for logout button */}
+          <LogOut className="h-5 w-5" />
           <span
             className={cn(
               "ml-3 transition-opacity duration-300",

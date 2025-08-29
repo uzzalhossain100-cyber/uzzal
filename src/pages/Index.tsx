@@ -6,7 +6,7 @@ import { allInOneCategories, Category, CategoryItem } from '@/data/categories.ts
 import { ArrowLeft, ExternalLink } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-const AllInOnePage: React.FC = () => {
+const Index: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
 
   const handleCategoryClick = (category: Category) => {
@@ -46,7 +46,7 @@ const AllInOnePage: React.FC = () => {
                     )}
                     onClick={() => handleCategoryClick(category)}
                   >
-                    {Icon && <Icon className="h-12 w-12 mb-2 text-primary dark:text-primary-foreground" />} {/* Increased icon size here */}
+                    {Icon && <Icon className="h-12 w-12 mb-2 text-primary dark:text-primary-foreground" />}
                     <span className="font-bold text-lg">{category.name}</span>
                   </Button>
                 );
@@ -98,4 +98,4 @@ const AllInOnePage: React.FC = () => {
   );
 };
 
-export default AllInOnePage;
+export default Index;

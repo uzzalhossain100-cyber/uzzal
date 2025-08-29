@@ -3,14 +3,13 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Dashboard from "./pages/Dashboard";
+import Index from "./pages/Index"; // Changed import from Dashboard to Index
 import NotFound from "./pages/NotFound";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import NewsPage from "./pages/NewsPage";
-import AllInOnePage from "./pages/AllInOnePage"; // Changed import from AIPage
 import ContactPage from "./pages/ContactPage";
 import LiveTVPage from "./pages/LiveTVPage";
 import MainLayout from "./components/layout/MainLayout";
@@ -30,9 +29,9 @@ const App = () => (
             
             <Route element={<ProtectedRoute />}>
               <Route element={<MainLayout />}>
-                <Route path="/" element={<Dashboard />} />
+                <Route path="/" element={<Index />} /> {/* Changed element to Index */}
                 <Route path="/news" element={<NewsPage />} />
-                <Route path="/all-in-one" element={<AllInOnePage />} /> {/* Changed route path and element */}
+                {/* Removed /all-in-one route as it's now the home page */}
                 <Route path="/live-tv" element={<LiveTVPage />} />
                 <Route path="/contact" element={<ContactPage />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
