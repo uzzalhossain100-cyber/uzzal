@@ -13,8 +13,7 @@ import NewsPage from "./pages/NewsPage";
 import ContactPage from "./pages/ContactPage";
 import LiveTVPage from "./pages/LiveTVPage";
 import EmergencyContactsPage from "./pages/EmergencyContactsPage";
-import UserManagementPage from "./pages/UserManagementPage";
-import LiveChatPage from "./pages/LiveChatPage"; // New import
+import UserManagementPage from "./pages/UserManagementPage"; // New import
 import MainLayout from "./components/layout/MainLayout";
 import ViewPlatformPage from "./pages/ViewPlatformPage";
 
@@ -38,8 +37,7 @@ const App = () => (
                 <Route path="/live-tv" element={<LiveTVPage />} />
                 <Route path="/emergency-contacts" element={<EmergencyContactsPage />} />
                 <Route path="/contact" element={<ContactPage />} />
-                <Route path="/user-management" element={<UserManagementPage />} />
-                <Route path="/live-chat" element={<LiveChatPage />} /> {/* New route */}
+                <Route path="/user-management" element={<UserManagementPage />} /> {/* New route */}
                 <Route path="/view/:encodedUrl/:itemName" element={<ViewPlatformPage />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               </Route>
