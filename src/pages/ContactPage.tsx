@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Phone, Mail, User, Code, Copy } from 'lucide-react'; // Import Code and Copy icons
-import { Button } from '@/components/ui/button'; // Import Button
+import { Phone, Mail, User, Code, Copy } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -9,9 +9,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"; // Import Dialog components
-import { ScrollArea } from '@/components/ui/scroll-area'; // Import ScrollArea
-import { toast } from 'sonner'; // Import toast for notifications
+} from "@/components/ui/dialog";
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { toast } from 'sonner';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'; // Import Avatar components
 
 // Source code of App.tsx for display purposes
 const appTsxSourceCode = `import { Toaster } from "@/components/ui/toaster";
@@ -28,7 +29,9 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import NewsPage from "./pages/NewsPage";
 import ContactPage from "./pages/ContactPage";
 import LiveTVPage from "./pages/LiveTVPage";
+import EmergencyContactsPage from "./pages/EmergencyContactsPage"; // New import
 import MainLayout from "./components/layout/MainLayout";
+import ViewPlatformPage from "./pages/ViewPlatformPage";
 
 const queryClient = new QueryClient();
 
@@ -48,7 +51,10 @@ const App = () => (
                 <Route path="/" element={<Index />} />
                 <Route path="/news" element={<NewsPage />} />
                 <Route path="/live-tv" element={<LiveTVPage />} />
+                <Route path="/emergency-contacts" element={<EmergencyContactsPage />} />
                 <Route path="/contact" element={<ContactPage />} />
+                <Route path="/view/:encodedUrl/:itemName" element={<ViewPlatformPage />} />
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               </Route>
             </Route>
             <Route path="*" element={<NotFound />} />
@@ -76,11 +82,14 @@ const ContactPage: React.FC = () => {
           <CardDescription className="text-muted-foreground">আমাদের সাথে যোগাযোগ করুন</CardDescription>
         </CardHeader>
         <CardContent className="grid gap-6 p-6">
-          <div className="flex items-center gap-4 p-3 rounded-lg bg-accent/20 dark:bg-accent/30 border border-primary/10">
-            <User className="h-7 w-7 text-primary" />
-            <div>
+          <div className="flex flex-col items-center gap-4 p-3 rounded-lg bg-accent/20 dark:bg-accent/30 border border-primary/10">
+            <Avatar className="h-24 w-24">
+              <AvatarImage src="/images/uzzal-hossain.jpg" alt="Uzzal Hossain" />
+              <AvatarFallback>UH</AvatarFallback>
+            </Avatar>
+            <div className="text-center">
               <p className="text-sm font-medium text-muted-foreground">এডমিন নাম</p>
-              <p className="text-xl font-semibold text-foreground">Uzzal</p>
+              <p className="text-xl font-semibold text-foreground">উজ্জ্বল হোসেন</p>
             </div>
           </div>
           <div className="flex items-center gap-4 p-3 rounded-lg bg-accent/20 dark:bg-accent/30 border border-primary/10">
@@ -94,7 +103,7 @@ const ContactPage: React.FC = () => {
             <Mail className="h-7 w-7 text-primary" />
             <div>
               <p className="text-sm font-medium text-muted-foreground">ইমেল</p>
-              <p className="text-xl font-semibold text-foreground">admin@example.com</p>
+              <p className="text-xl font-semibold text-foreground">uzzalhossain.100@gmail.com</p>
             </div>
           </div>
 
