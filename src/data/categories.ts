@@ -1,8 +1,8 @@
 import {
   BookOpen, Film, Users, Newspaper, ShoppingCart, Banknote, Plane, HeartPulse,
-  Building, MessageSquare, Tool, Utensils, Gamepad, Laptop, MessageCircle, // Changed Football to Gamepad
+  Building, MessageSquare, Settings, Utensils, Gamepad, Laptop, MessageCircle, // Changed Tool to Settings
   Camera, Briefcase, Sparkles, GraduationCap, Landmark, Map, Syringe, Gavel,
-  Phone, Settings, ChefHat, Dumbbell, Code, Rss, Palette, TrendingUp, MoreHorizontal
+  Phone, ChefHat, Dumbbell, Code, Rss, Palette, TrendingUp, MoreHorizontal
 } from 'lucide-react';
 import React from 'react';
 
@@ -280,7 +280,7 @@ export const allInOneCategories: Category[] = [
   },
   {
     name: "ইউটিলিটি",
-    icon: Tool,
+    icon: Settings, // Changed to Settings
     items: [
       { name: "গুগল ম্যাপস", url: "https://www.google.com/maps" },
       { name: "গুগল ট্রান্সলেট", url: "https://translate.google.com/" },
