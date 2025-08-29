@@ -3,6 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'; // New import
+import { Menu } from 'lucide-react'; // New import for icon
 
 interface Newspaper {
   name: string;
@@ -34,10 +36,51 @@ const bangladeshiNewspapers: Newspaper[] = [
 
 const NewsPage: React.FC = () => {
   const [selectedNewsUrl, setSelectedNewsUrl] = useState<string | null>(null);
+  const [isSheetOpen, setIsSheetOpen] = useState(false); // State to control sheet
+
+  const handleNewspaperSelect = (url: string) => {
+    setSelectedNewsUrl(url);
+    setIsSheetOpen(false); // Close sheet after selection on mobile
+  };
 
   return (
     <div className="flex flex-col lg:flex-row gap-6 h-full">
-      <Card className="w-full lg:w-1/3 flex flex-col">
+      {/* Mobile/Tablet View: Collapsible Sheet */}
+      <div className="lg:hidden w-full">
+        <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+          <SheetTrigger asChild>
+            <Button variant="outline" className="w-full mb-4">
+              <Menu className="mr-2 h-4 w-4" /> সংবাদপত্র তালিকা
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left" className="w-full sm:max-w-xs p-0">
+            <CardHeader className="px-4 pt-4 pb-2">
+              <CardTitle>বাংলাদেশের সংবাদপত্র</CardTitle>
+            </CardHeader>
+            <CardContent className="flex-1 overflow-hidden px-0">
+              <ScrollArea className="h-[calc(100vh-80px)] w-full p-4">
+                <div className="grid gap-2">
+                  {bangladeshiNewspapers.map((paper, index) => (
+                    <React.Fragment key={paper.name}>
+                      <Button
+                        variant={selectedNewsUrl === paper.url ? "secondary" : "ghost"}
+                        className="w-full justify-start text-left"
+                        onClick={() => handleNewspaperSelect(paper.url)}
+                      >
+                        {paper.name}
+                      </Button>
+                      {index < bangladeshiNewspapers.length - 1 && <Separator />}
+                    </React.Fragment>
+                  ))}
+                </div>
+              </ScrollArea>
+            </CardContent>
+          </SheetContent>
+        </Sheet>
+      </div>
+
+      {/* Desktop View: Static Card */}
+      <Card className="hidden lg:flex w-full lg:w-1/3 flex-col">
         <CardHeader>
           <CardTitle>বাংলাদেশের সংবাদপত্র</CardTitle>
         </CardHeader>
@@ -47,7 +90,7 @@ const NewsPage: React.FC = () => {
               {bangladeshiNewspapers.map((paper, index) => (
                 <React.Fragment key={paper.name}>
                   <Button
-                    variant="ghost"
+                    variant={selectedNewsUrl === paper.url ? "secondary" : "ghost"}
                     className="w-full justify-start text-left"
                     onClick={() => setSelectedNewsUrl(paper.url)}
                   >
@@ -61,6 +104,7 @@ const NewsPage: React.FC = () => {
         </CardContent>
       </Card>
 
+      {/* News Reader Card */}
       <Card className="w-full lg:w-2/3 flex flex-col">
         <CardHeader>
           <CardTitle>সংবাদ পাঠ</CardTitle>
@@ -71,7 +115,7 @@ const NewsPage: React.FC = () => {
               src={selectedNewsUrl}
               title="Selected Newspaper"
               className="w-full h-[calc(100vh-200px)] border-0"
-              sandbox="allow-scripts allow-same-origin allow-popups allow-forms" // Added sandbox for security
+              sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
             />
           ) : (
             <div className="flex items-center justify-center h-full text-muted-foreground">
