@@ -1,6 +1,6 @@
 import {
   BookOpen, Film, Users, Newspaper, ShoppingCart, Banknote, Plane, HeartPulse,
-  Building, MessageSquare, Settings, Utensils, Gamepad, Laptop, MessageCircle, // Changed Tool to Settings
+  Building, MessageSquare, Settings, Utensils, Gamepad, Laptop, MessageCircle,
   Camera, Briefcase, Sparkles, GraduationCap, Landmark, Map, Syringe, Gavel,
   Phone, ChefHat, Dumbbell, Code, Rss, Palette, TrendingUp, MoreHorizontal
 } from 'lucide-react';
@@ -13,8 +13,9 @@ export interface CategoryItem {
 
 export interface Category {
   name: string;
-  icon?: React.ElementType; // Added icon property
-  items: CategoryItem[];
+  icon?: React.ElementType;
+  items?: CategoryItem[]; // Made items optional
+  internalRoute?: string; // Added internalRoute property
 }
 
 export const allInOneCategories: Category[] = [
@@ -97,30 +98,10 @@ export const allInOneCategories: Category[] = [
     ],
   },
   {
-    name: "খবর",
+    name: "খবর", // This is the category to be updated
     icon: Newspaper,
-    items: [
-      { name: "বিবিসি বাংলা", url: "https://www.bbc.com/bengali" },
-      { name: "সিএনএন", url: "https://edition.cnn.com/" },
-      { name: "প্রথম আলো", url: "https://www.prothomalo.com/" },
-      { name: "যুগান্তর", url: "https://www.jugantor.com/" },
-      { name: "দ্য ডেইলি স্টার", url: "https://www.thedailystar.net/" },
-      { name: "নিউ ইয়র্ক টাইমস", url: "https://www.nytimes.com/" },
-      { name: "দ্য গার্ডিয়ান", url: "https://www.theguardian.com/" },
-      { name: "আল জাজিরা", url: "https://www.aljazeera.com/" },
-      { name: "রয়টার্স", url: "https://www.reuters.com/" },
-      { name: "এপি নিউজ", url: "https://apnews.com/" },
-      { name: "হিন্দুস্তান টাইমস", url: "https://www.hindustantimes.com/" },
-      { name: "টাইমস অফ ইন্ডিয়া", url: "https://timesofindia.indiatimes.com/" },
-      { name: "ডয়চে ভেলে", url: "https://www.dw.com/en/top-stories/s-9097" },
-      { name: "ফ্রান্স ২৪", url: "https://www.france24.com/en/" },
-      { name: "এনডিটিভি", url: "https://www.ndtv.com/" },
-      { name: "আজ তাক", url: "https://www.aajtak.in/" },
-      { name: "জি নিউজ", url: "https://zeenews.india.com/" },
-      { name: "এবিপি আনন্দ", url: "https://bengali.abplive.com/" },
-      { name: "নিউজ ১৮ বাংলা", url: "https://bengali.news18.com/" },
-      { name: "ইত্তেফাক", url: "https://www.ittefaq.com.bd/" },
-    ],
+    internalRoute: "/news", // Direct navigation to the internal NewsPage
+    // Removed the 'items' array as it's now a direct link
   },
   {
     name: "কেনাকাটা",
@@ -280,7 +261,7 @@ export const allInOneCategories: Category[] = [
   },
   {
     name: "ইউটিলিটি",
-    icon: Settings, // Changed to Settings
+    icon: Settings,
     items: [
       { name: "গুগল ম্যাপস", url: "https://www.google.com/maps" },
       { name: "গুগল ট্রান্সলেট", url: "https://translate.google.com/" },
@@ -332,7 +313,7 @@ export const allInOneCategories: Category[] = [
   },
   {
     name: "খেলাধুলা",
-    icon: Gamepad, // Changed to Gamepad
+    icon: Gamepad,
     items: [
       { name: "ইএসপিএন", url: "https://www.espn.com/" },
       { name: "ক্রিকবাজ", url: "https://www.cricbuzz.com/" },

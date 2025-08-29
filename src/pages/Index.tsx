@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -8,9 +9,14 @@ import { cn } from '@/lib/utils';
 
 const Index: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const handleCategoryClick = (category: Category) => {
-    setSelectedCategory(category);
+    if (category.internalRoute) {
+      navigate(category.internalRoute); // Navigate to internal route if specified
+    } else {
+      setSelectedCategory(category);
+    }
   };
 
   const handleItemClick = (item: CategoryItem) => {
@@ -72,7 +78,7 @@ const Index: React.FC = () => {
       <CardContent className="flex-1 overflow-hidden p-6">
         <ScrollArea className="h-[calc(100vh-180px)] w-full rounded-xl border-2 border-primary/20 bg-background/80 p-4 shadow-lg">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-            {selectedCategory.items.map((item) => (
+            {selectedCategory.items?.map((item) => ( // Use optional chaining for items
               <Button
                 key={item.name}
                 variant="ghost"
