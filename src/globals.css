@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%; /* Pure white for a clean base */
+    --background: 210 60% 98%; /* Light blue for a colorful background */
     --foreground: 240 10% 3.9%; /* Near black text */
 
     --card: 0 0% 100%; /* White card background */
@@ -45,7 +45,7 @@
   }
 
   .dark {
-    --background: 240 10% 3.9%; /* Near black background */
+    --background: 220 20% 10%; /* Dark blue for a colorful background in dark mode */
     --foreground: 0 0% 98%; /* Near white text */
 
     --card: 240 10% 3.9%;
@@ -72,6 +72,8 @@
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
     --ring: 262 83% 58%; /* Ring color matches primary */
+
+    --radius: 0.5rem;
 
     --sidebar-background: 240 10% 8%; /* Darker purple-ish sidebar background */
     --sidebar-foreground: 0 0% 98%; /* Light text for sidebar */
