@@ -1,6 +1,6 @@
 import {
   BookOpen, Film, Users, Newspaper, ShoppingCart, Banknote, Plane, HeartPulse,
-  Building, MessageSquare, Tool, Utensils, Football, Laptop, MessageCircle,
+  Building, MessageSquare, Tool, Utensils, Gamepad, Laptop, MessageCircle, // Changed Football to Gamepad
   Camera, Briefcase, Sparkles, GraduationCap, Landmark, Map, Syringe, Gavel,
   Phone, Settings, ChefHat, Dumbbell, Code, Rss, Palette, TrendingUp, MoreHorizontal
 } from 'lucide-react';
@@ -332,7 +332,7 @@ export const allInOneCategories: Category[] = [
   },
   {
     name: "খেলাধুলা",
-    icon: Football,
+    icon: Gamepad, // Changed to Gamepad
     items: [
       { name: "ইএসপিএন", url: "https://www.espn.com/" },
       { name: "ক্রিকবাজ", url: "https://www.cricbuzz.com/" },
@@ -379,7 +379,7 @@ export const allInOneCategories: Category[] = [
       { name: "রেক্ট", url: "https://react.dev/" },
       { name: "অ্যাঙ্গুলার", url: "https://angular.io/" },
       { name: "ভিউজেএস", url: "https://vuejs.org/" },
-      { name: "নেক্সটজেএস", url: "https://nextjs.org/" },
+      { name: "নেক্সটজেএস", url: "https://nextjs.com/" },
     ],
   },
   {
