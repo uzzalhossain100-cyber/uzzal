@@ -1,3 +1,11 @@
+import {
+  BookOpen, Film, Users, Newspaper, ShoppingCart, Banknote, Plane, HeartPulse,
+  Building, MessageSquare, Tool, Utensils, Football, Laptop, MessageCircle,
+  Camera, Briefcase, Sparkles, GraduationCap, Landmark, Map, Syringe, Gavel,
+  Phone, Settings, ChefHat, Dumbbell, Code, Rss, Palette, TrendingUp, MoreHorizontal
+} from 'lucide-react';
+import React from 'react';
+
 export interface CategoryItem {
   name: string;
   url: string;
@@ -5,12 +13,14 @@ export interface CategoryItem {
 
 export interface Category {
   name: string;
+  icon?: React.ElementType; // Added icon property
   items: CategoryItem[];
 }
 
 export const allInOneCategories: Category[] = [
   {
     name: "শিক্ষা",
+    icon: BookOpen,
     items: [
       { name: "খান একাডেমি", url: "https://www.khanacademy.org/" },
       { name: "১০ মিনিট স্কুল", url: "https://10minuteschool.com/" },
@@ -36,6 +46,7 @@ export const allInOneCategories: Category[] = [
   },
   {
     name: "বিনোদন",
+    icon: Film,
     items: [
       { name: "ইউটিউব", url: "https://www.youtube.com/" },
       { name: "নেটফ্লিক্স", url: "https://www.netflix.com/" },
@@ -61,6 +72,7 @@ export const allInOneCategories: Category[] = [
   },
   {
     name: "সামাজিক মাধ্যম",
+    icon: Users,
     items: [
       { name: "ফেসবুক", url: "https://www.facebook.com/" },
       { name: "টুইটার (X)", url: "https://twitter.com/" },
@@ -86,6 +98,7 @@ export const allInOneCategories: Category[] = [
   },
   {
     name: "খবর",
+    icon: Newspaper,
     items: [
       { name: "বিবিসি বাংলা", url: "https://www.bbc.com/bengali" },
       { name: "সিএনএন", url: "https://edition.cnn.com/" },
@@ -111,6 +124,7 @@ export const allInOneCategories: Category[] = [
   },
   {
     name: "কেনাকাটা",
+    icon: ShoppingCart,
     items: [
       { name: "দারাজ", url: "https://www.daraz.com.bd/" },
       { name: "অ্যামাজন", url: "https://www.amazon.com/" },
@@ -136,6 +150,7 @@ export const allInOneCategories: Category[] = [
   },
   {
     name: "ব্যাংকিং ও ফিনান্স",
+    icon: Banknote,
     items: [
       { name: "বিকাশ", url: "https://www.bkash.com/" },
       { name: "নগদ", url: "https://nagad.com.bd/" },
@@ -161,6 +176,7 @@ export const allInOneCategories: Category[] = [
   },
   {
     name: "ভ্রমণ",
+    icon: Plane,
     items: [
       { name: "বিমান বাংলাদেশ এয়ারলাইন্স", url: "https://www.biman-airlines.com/" },
       { name: "ইউএস-বাংলা এয়ারলাইন্স", url: "https://usbair.com/" },
@@ -186,6 +202,7 @@ export const allInOneCategories: Category[] = [
   },
   {
     name: "স্বাস্থ্য",
+    icon: HeartPulse,
     items: [
       { name: "মায়া আপা", url: "https://www.maya.com.bd/" },
       { name: "ডাক্তারবাড়ি", url: "https://www.doctorbari.com/" },
@@ -211,6 +228,7 @@ export const allInOneCategories: Category[] = [
   },
   {
     name: "সরকারি সেবা",
+    icon: Building,
     items: [
       { name: "জাতীয় তথ্য বাতায়ন", url: "https://www.bangladesh.gov.bd/" },
       { name: "ই-সেবা", url: "https://www.esheba.gov.bd/" },
@@ -236,6 +254,7 @@ export const allInOneCategories: Category[] = [
   },
   {
     name: "যোগাযোগ",
+    icon: MessageSquare,
     items: [
       { name: "জিমেইল", url: "https://mail.google.com/" },
       { name: "আউটলুক", url: "https://outlook.live.com/" },
@@ -261,6 +280,7 @@ export const allInOneCategories: Category[] = [
   },
   {
     name: "ইউটিলিটি",
+    icon: Tool,
     items: [
       { name: "গুগল ম্যাপস", url: "https://www.google.com/maps" },
       { name: "গুগল ট্রান্সলেট", url: "https://translate.google.com/" },
@@ -286,6 +306,7 @@ export const allInOneCategories: Category[] = [
   },
   {
     name: "খাবার ও রেসিপি",
+    icon: Utensils,
     items: [
       { name: "ফুডপান্ডা", url: "https://www.foodpanda.com.bd/" },
       { name: "উবার ইটস", url: "https://www.ubereats.com/" },
@@ -311,6 +332,7 @@ export const allInOneCategories: Category[] = [
   },
   {
     name: "খেলাধুলা",
+    icon: Football,
     items: [
       { name: "ইএসপিএন", url: "https://www.espn.com/" },
       { name: "ক্রিকবাজ", url: "https://www.cricbuzz.com/" },
@@ -336,6 +358,7 @@ export const allInOneCategories: Category[] = [
   },
   {
     name: "প্রযুক্তি",
+    icon: Laptop,
     items: [
       { name: "টেকক্রাঞ্চ", url: "https://techcrunch.com/" },
       { name: "দ্য ভার্জ", url: "https://www.theverge.com/" },
@@ -361,6 +384,7 @@ export const allInOneCategories: Category[] = [
   },
   {
     name: "ব্লগ ও ফোরাম",
+    icon: MessageCircle,
     items: [
       { name: "মিডিয়াম", url: "https://medium.com/" },
       { name: "ওয়ার্ডপ্রেস", url: "https://wordpress.com/" },
@@ -386,6 +410,7 @@ export const allInOneCategories: Category[] = [
   },
   {
     name: "ফটোগ্রাফি ও ডিজাইন",
+    icon: Camera,
     items: [
       { name: "আনস্প্ল্যাশ", url: "https://unsplash.com/" },
       { name: "পিক্সেলস", url: "https://www.pexels.com/" },
@@ -411,6 +436,7 @@ export const allInOneCategories: Category[] = [
   },
   {
     name: "ব্যবসা ও উদ্যোক্তা",
+    icon: Briefcase,
     items: [
       { name: "বিডিজবস", url: "https://www.bdjobs.com/" },
       { name: "লিঙ্কডইন", url: "https://www.linkedin.com/" },
@@ -436,6 +462,7 @@ export const allInOneCategories: Category[] = [
   },
   {
     name: "অন্যান্য",
+    icon: Sparkles,
     items: [
       { name: "গুগল", url: "https://www.google.com/" },
       { name: "ডাকডাকগো", url: "https://duckduckgo.com/" },

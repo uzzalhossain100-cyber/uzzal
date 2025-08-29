@@ -3,7 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { allInOneCategories, Category, CategoryItem } from '@/data/categories.ts';
-import { ArrowLeft, ExternalLink } from 'lucide-react'; // Added ExternalLink icon
+import { ArrowLeft, ExternalLink } from 'lucide-react';
+import { cn } from '@/lib/utils'; // Import cn for conditional class names
 
 const AllInOnePage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
@@ -23,23 +24,33 @@ const AllInOnePage: React.FC = () => {
   // State 1: Displaying Categories
   if (!selectedCategory) {
     return (
-      <Card className="w-full flex flex-col h-full">
-        <CardHeader>
-          <CardTitle>ক্যাটাগরি</CardTitle>
+      <Card className="w-full flex flex-col h-full bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-800 dark:to-gray-900">
+        <CardHeader className="pb-4">
+          <CardTitle className="text-3xl font-extrabold text-center text-primary dark:text-primary-foreground">
+            সমস্ত ক্যাটাগরি
+          </CardTitle>
         </CardHeader>
-        <CardContent className="flex-1 overflow-hidden">
-          <ScrollArea className="h-[calc(100vh-160px)] w-full rounded-md border p-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-              {allInOneCategories.map((category) => (
-                <Button
-                  key={category.name}
-                  variant="outline"
-                  className="h-24 flex flex-col items-center justify-center text-center p-2"
-                  onClick={() => handleCategoryClick(category)}
-                >
-                  <span className="font-semibold text-base">{category.name}</span>
-                </Button>
-              ))}
+        <CardContent className="flex-1 overflow-hidden p-6">
+          <ScrollArea className="h-[calc(100vh-180px)] w-full rounded-xl border-2 border-primary/20 bg-background/80 p-4 shadow-lg">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+              {allInOneCategories.map((category) => {
+                const Icon = category.icon;
+                return (
+                  <Button
+                    key={category.name}
+                    variant="outline"
+                    className={cn(
+                      "h-32 flex flex-col items-center justify-center text-center p-4 rounded-lg shadow-md transition-all duration-200",
+                      "bg-white text-gray-800 border-blue-300 hover:bg-blue-50 hover:border-blue-500",
+                      "dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:border-gray-400"
+                    )}
+                    onClick={() => handleCategoryClick(category)}
+                  >
+                    {Icon && <Icon className="h-8 w-8 mb-2 text-primary dark:text-primary-foreground" />}
+                    <span className="font-bold text-lg">{category.name}</span>
+                  </Button>
+                );
+              })}
             </div>
           </ScrollArea>
         </CardContent>
@@ -49,28 +60,34 @@ const AllInOnePage: React.FC = () => {
 
   // State 2: Displaying Items within a Category
   return (
-    <Card className="w-full flex flex-col h-full">
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle>
-          <Button variant="ghost" onClick={handleBackToCategories} className="p-0 h-auto">
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            {selectedCategory.name}
+    <Card className="w-full flex flex-col h-full bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-800 dark:to-gray-900">
+      <CardHeader className="flex flex-row items-center justify-between pb-4">
+        <CardTitle className="text-3xl font-extrabold text-primary dark:text-primary-foreground flex items-center">
+          <Button variant="ghost" onClick={handleBackToCategories} className="p-0 h-auto mr-2 text-primary dark:text-primary-foreground hover:bg-transparent">
+            <ArrowLeft className="h-6 w-6" />
           </Button>
+          {selectedCategory.name}
         </CardTitle>
       </CardHeader>
-      <CardContent className="flex-1 overflow-hidden">
-        <ScrollArea className="h-[calc(100vh-160px)] w-full rounded-md border p-4">
+      <CardContent className="flex-1 overflow-hidden p-6">
+        <ScrollArea className="h-[calc(100vh-180px)] w-full rounded-xl border-2 border-primary/20 bg-background/80 p-4 shadow-lg">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             {selectedCategory.items.map((item) => (
               <Button
                 key={item.name}
                 variant="ghost"
-                className="w-full justify-start text-left flex flex-col items-start h-auto py-2"
+                className={cn(
+                  "w-full justify-start text-left flex flex-col items-start h-auto py-3 px-4 rounded-lg shadow-sm transition-all duration-200",
+                  "bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 hover:border-gray-300",
+                  "dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:border-gray-500"
+                )}
                 onClick={() => handleItemClick(item)}
               >
-                <span className="font-semibold text-base">{item.name}</span>
-                <span className="text-sm text-muted-foreground text-left truncate w-full flex items-center">
-                  <ExternalLink className="h-3 w-3 mr-1" /> {item.url}
+                <span className="font-semibold text-base flex items-center mb-1">
+                  {item.name}
+                </span>
+                <span className="text-xs text-muted-foreground text-left truncate w-full flex items-center">
+                  <ExternalLink className="h-3 w-3 mr-1 flex-shrink-0" /> <span className="truncate">{item.url}</span>
                 </span>
               </Button>
             ))}
