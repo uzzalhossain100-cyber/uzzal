@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import React from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom'; // Import useSearchParams
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -8,30 +8,34 @@ import { ArrowLeft, ExternalLink } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const Index: React.FC = () => {
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
-  const navigate = useNavigate(); // Initialize useNavigate
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+
+  const categoryParam = searchParams.get('category');
+  const currentCategory = categoryParam
+    ? allInOneCategories.find(cat => cat.name === categoryParam)
+    : null;
 
   const handleCategoryClick = (category: Category) => {
     if (category.internalRoute) {
-      navigate(category.internalRoute); // Navigate to internal route if specified
+      navigate(category.internalRoute);
     } else {
-      setSelectedCategory(category);
+      setSearchParams({ category: category.name }); // Update URL param
     }
   };
 
   const handleItemClick = (item: CategoryItem) => {
-    // Encode the URL and item name before passing them in the route
     const encodedUrl = encodeURIComponent(item.url);
     const encodedItemName = encodeURIComponent(item.name);
-    navigate(`/view/${encodedUrl}/${encodedItemName}`); // Navigate to the new ViewPlatformPage
+    navigate(`/view/${encodedUrl}/${encodedItemName}`);
   };
 
   const handleBackToCategories = () => {
-    setSelectedCategory(null);
+    setSearchParams({}); // Clear URL param to show all categories
   };
 
   // State 1: Displaying Categories
-  if (!selectedCategory) {
+  if (!currentCategory) { // Use currentCategory derived from URL
     return (
       <Card className="w-full flex flex-col h-full bg-gradient-to-br from-primary/5 to-accent/5 dark:from-primary/10 dark:to-accent/10 shadow-xl border-primary/20">
         <CardHeader className="pb-4 border-b">
@@ -75,13 +79,13 @@ const Index: React.FC = () => {
           <Button variant="ghost" onClick={handleBackToCategories} className="p-0 h-auto mr-2 text-primary dark:text-primary-foreground hover:bg-transparent hover:text-primary/80">
             <ArrowLeft className="h-6 w-6" />
           </Button>
-          {selectedCategory.name}
+          {currentCategory.name}
         </CardTitle>
       </CardHeader>
       <CardContent className="flex-1 overflow-hidden p-6">
         <ScrollArea className="h-[calc(100vh-180px)] w-full rounded-xl border-2 border-primary/20 bg-background/80 p-4 shadow-lg">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-            {selectedCategory.items?.map((item) => ( // Use optional chaining for items
+            {currentCategory.items?.map((item) => ( // Use optional chaining for items
               <Button
                 key={item.name}
                 variant="ghost"
