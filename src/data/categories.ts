@@ -3,7 +3,8 @@ import {
   Building, MessageSquare, Settings, Utensils, Gamepad, Laptop, MessageCircle,
   Camera, Briefcase, Sparkles, GraduationCap, Landmark, Map, Syringe, Gavel,
   Phone, ChefHat, Dumbbell, Code, Rss, Palette, TrendingUp, MoreHorizontal,
-  LifeBuoy // Added LifeBuoy icon for Emergency Contacts
+  LifeBuoy, // Added LifeBuoy icon for Emergency Contacts
+  Tv // Added Tv icon
 } from 'lucide-react';
 import React from 'react';
 
