@@ -221,6 +221,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signUp = async (username: string, email: string, mobileNumber: string, password: string) => {
+    // Check if username already exists
+    const { data: existingUsername, error: usernameCheckError } = await supabase
+      .from('profiles')
+      .select('id')
+      .eq('username', username)
+      .single();
+
+    if (existingUsername) {
+      showError("এই ইউজারনেমটি ইতিমধ্যেই ব্যবহৃত হয়েছে। অন্য একটি ইউজারনেম ব্যবহার করুন।");
+      return { success: false, error: "Username already taken." };
+    }
+    if (usernameCheckError && usernameCheckError.code !== 'PGRST116') { // PGRST116 means no rows found
+      console.error("Error checking username:", usernameCheckError);
+      showError("ইউজারনেম চেক করতে সমস্যা হয়েছে।");
+      return { success: false, error: "Error checking username." };
+    }
+
     const { data: authData, error: authError } = await supabase.auth.signUp({ email, password });
 
     if (authError) {
@@ -265,10 +282,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const getUsersProfiles = async (): Promise<Profile[] | null> => {
-    if (profile?.email !== 'Uzzal') {
-      showError("এই অ্যাকশন করার অনুমতি আপনার নেই।");
-      return null;
-    }
+    // Allow any logged-in user to fetch profiles for ActiveUsersPage,
+    // but only admin can see UserManagementPage.
+    // The check for 'Uzzal' admin is for the UserManagementPage specifically.
     const { data, error } = await supabase
       .from('profiles')
       .select('*');

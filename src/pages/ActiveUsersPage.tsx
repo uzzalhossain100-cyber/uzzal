@@ -27,17 +27,27 @@ const ActiveUsersPage: React.FC = () => {
   useEffect(() => {
     const fetchAllUsers = async () => {
       setLoading(true);
-      const fetchedUsers = await getUsersProfiles(); // Admin can fetch all profiles
-      if (fetchedUsers) {
-        setAllUsers(fetchedUsers);
+      let fetchedUsers = await getUsersProfiles();
+      if (!fetchedUsers) {
+        fetchedUsers = [];
       }
+
+      // If the current user is the mock admin, add them to the list if not already present
+      if (currentUserProfile && currentUserProfile.email === 'Uzzal' && !fetchedUsers.some(u => u.id === currentUserProfile.id)) {
+        fetchedUsers.push({
+          ...currentUserProfile,
+          is_active: true, // Admin is always active when logged in
+        });
+      }
+      
+      setAllUsers(fetchedUsers);
       setLoading(false);
     };
 
     if (!authLoading) {
       fetchAllUsers();
     }
-  }, [authLoading, getUsersProfiles]);
+  }, [authLoading, getUsersProfiles, currentUserProfile]);
 
   useEffect(() => {
     // Combine all users with online status
@@ -45,7 +55,7 @@ const ActiveUsersPage: React.FC = () => {
 
     const usersWithStatus = allUsers.map(user => ({
       ...user,
-      isOnline: onlineUserIds.has(user.id),
+      isOnline: onlineUserIds.has(user.id) || (currentUserProfile?.id === user.id && currentUserProfile.email === 'Uzzal'), // Admin is online if logged in
     }));
 
     // Filter based on search query
@@ -62,7 +72,7 @@ const ActiveUsersPage: React.FC = () => {
     });
 
     setFilteredUsers(searchFiltered);
-  }, [allUsers, onlineUsers, searchQuery]);
+  }, [allUsers, onlineUsers, searchQuery, currentUserProfile]);
 
   const handleChatClick = (user: Profile) => {
     toast.info(`'${user.username}' এর সাথে চ্যাট শুরু করার চেষ্টা হচ্ছে। (এই ফিচারটি এখনো ডেভেলপ করা হয়নি)`);
