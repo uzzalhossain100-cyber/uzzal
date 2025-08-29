@@ -20,7 +20,10 @@ const Index: React.FC = () => {
   };
 
   const handleItemClick = (item: CategoryItem) => {
-    window.open(item.url, '_blank');
+    // Encode the URL and item name before passing them in the route
+    const encodedUrl = encodeURIComponent(item.url);
+    const encodedItemName = encodeURIComponent(item.name);
+    navigate(`/view/${encodedUrl}/${encodedItemName}`); // Navigate to the new ViewPlatformPage
   };
 
   const handleBackToCategories = () => {

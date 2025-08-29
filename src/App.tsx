@@ -13,6 +13,7 @@ import NewsPage from "./pages/NewsPage";
 import ContactPage from "./pages/ContactPage";
 import LiveTVPage from "./pages/LiveTVPage";
 import MainLayout from "./components/layout/MainLayout";
+import ViewPlatformPage from "./pages/ViewPlatformPage"; // New import
 
 const queryClient = new QueryClient();
 
@@ -34,6 +35,7 @@ const App = () => (
                 {/* Removed /all-in-one route as it's now the home page */}
                 <Route path="/live-tv" element={<LiveTVPage />} />
                 <Route path="/contact" element={<ContactPage />} />
+                <Route path="/view/:encodedUrl/:itemName" element={<ViewPlatformPage />} /> {/* New route */}
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               </Route>
             </Route>
