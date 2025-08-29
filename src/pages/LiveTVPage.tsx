@@ -261,37 +261,39 @@ const LiveTVPage: React.FC = () => {
         </CardContent>
       </Card>
 
-      <Card className="hidden lg:flex w-full lg:w-1/4 flex-col">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Tv className="h-5 w-5" /> চ্যানেল তালিকা
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="flex-1 overflow-hidden">
-          {selectedCountry ? (
-            <ScrollArea className="h-[calc(100vh-200px)] w-full rounded-md border p-4">
-              <div className="grid gap-2">
-                {selectedCountry.channels.map((channel, index) => (
-                  <React.Fragment key={channel.name}>
-                    <Button
-                      variant={selectedChannelUrl === channel.url ? "secondary" : "ghost"}
-                      className="w-full justify-start text-left"
-                      onClick={() => handleChannelSelect(channel)}
-                    >
-                      {channel.name}
-                    </Button>
-                    {index < selectedCountry.channels.length - 1 && <Separator />}
-                  </React.Fragment>
-                ))}
+      {selectedCountry && ( // Only render this card if a country is selected
+        <Card className="hidden lg:flex w-full lg:w-1/4 flex-col">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Tv className="h-5 w-5" /> চ্যানেল তালিকা
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="flex-1 overflow-hidden">
+            {selectedCountry ? (
+              <ScrollArea className="h-[calc(100vh-200px)] w-full rounded-md border p-4">
+                <div className="grid gap-2">
+                  {selectedCountry.channels.map((channel, index) => (
+                    <React.Fragment key={channel.name}>
+                      <Button
+                        variant={selectedChannelUrl === channel.url ? "secondary" : "ghost"}
+                        className="w-full justify-start text-left"
+                        onClick={() => handleChannelSelect(channel)}
+                      >
+                        {channel.name}
+                      </Button>
+                      {index < selectedCountry.channels.length - 1 && <Separator />}
+                    </React.Fragment>
+                  ))}
+                </div>
+              </ScrollArea>
+            ) : (
+              <div className="flex items-center justify-center h-full text-muted-foreground">
+                একটি দেশ নির্বাচন করুন
               </div>
-            </ScrollArea>
-          ) : (
-            <div className="flex items-center justify-center h-full text-muted-foreground">
-              একটি দেশ নির্বাচন করুন
-            </div>
-          )}
-        </CardContent>
-      </Card>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       {/* Live TV Player Card */}
       <Card className="w-full lg:w-2/4 flex flex-col">
