@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { User } from '@supabase/supabase-js';
 import { showSuccess, showError } from '@/utils/toast';
@@ -12,11 +12,21 @@ interface Profile {
   created_at: string;
 }
 
+interface PresenceState {
+  [key: string]: {
+    user_id: string;
+    username: string;
+    email: string;
+    online_at: number;
+  }[];
+}
+
 interface AuthContextType {
   user: User | null;
   profile: Profile | null;
   loading: boolean;
-  signIn: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  onlineUsers: Profile[]; // New: List of currently online users
+  signIn: (identifier: string, password: string) => Promise<{ success: boolean; error?: string }>;
   signUp: (username: string, email: string, mobileNumber: string, password: string) => Promise<{ success: boolean; error?: string }>;
   signOut: () => Promise<void>;
   getUsersProfiles: () => Promise<Profile[] | null>;
@@ -29,6 +39,33 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [onlineUsers, setOnlineUsers] = useState<Profile[]>([]);
+  const presenceChannelRef = useRef<any>(null); // Ref for Supabase Realtime channel
+
+  // Function to update online users based on presence state
+  const updateOnlineUsers = async (presenceState: PresenceState) => {
+    const currentOnlineUserIds = new Set<string>();
+    const newOnlineUsers: Profile[] = [];
+
+    for (const key in presenceState) {
+      if (presenceState.hasOwnProperty(key)) {
+        presenceState[key].forEach(p => {
+          if (!currentOnlineUserIds.has(p.user_id)) {
+            currentOnlineUserIds.add(p.user_id);
+            newOnlineUsers.push({
+              id: p.user_id,
+              username: p.username,
+              email: p.email,
+              mobile_number: null, // Mobile number is not part of presence payload
+              is_active: true, // Assume online users are active
+              created_at: new Date(p.online_at).toISOString(),
+            });
+          }
+        });
+      }
+    }
+    setOnlineUsers(newOnlineUsers);
+  };
 
   useEffect(() => {
     const fetchUserAndProfile = async (sessionUser: User | null) => {
@@ -43,47 +80,90 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (error) {
           console.error("Error fetching profile:", error);
           setProfile(null);
-          // If profile not found or error, consider logging out or handling appropriately
-          // For now, we'll just set profile to null
         } else if (data) {
           setProfile(data);
           if (!data.is_active) {
-            // If user is inactive, sign them out
             await supabase.auth.signOut();
             setUser(null);
             setProfile(null);
             showError("আপনার অ্যাকাউন্ট নিষ্ক্রিয় করা হয়েছে।");
+          } else {
+            // Join presence channel if user is active
+            if (!presenceChannelRef.current) {
+              presenceChannelRef.current = supabase.channel('online-users', {
+                config: {
+                  presence: {
+                    key: sessionUser.id,
+                  },
+                },
+              });
+
+              presenceChannelRef.current.on('presence', { event: 'sync' }, () => {
+                const newState = presenceChannelRef.current.presenceState();
+                updateOnlineUsers(newState);
+              });
+
+              presenceChannelRef.current.on('presence', { event: 'join' }, ({ newPresences }: { newPresences: any[] }) => {
+                const newState = presenceChannelRef.current.presenceState();
+                updateOnlineUsers(newState);
+              });
+
+              presenceChannelRef.current.on('presence', { event: 'leave' }, ({ leftPresences }: { leftPresences: any[] }) => {
+                const newState = presenceChannelRef.current.presenceState();
+                updateOnlineUsers(newState);
+              });
+
+              presenceChannelRef.current.subscribe(async (status: string) => {
+                if (status === 'SUBSCRIBED') {
+                  const { error: presenceError } = await presenceChannelRef.current.track({
+                    user_id: sessionUser.id,
+                    username: data.username,
+                    email: data.email,
+                    online_at: Date.now(),
+                  });
+                  if (presenceError) {
+                    console.error("Error tracking presence:", presenceError);
+                  }
+                }
+              });
+            }
           }
         }
       } else {
+        // If no user, ensure presence channel is unsubscribed
+        if (presenceChannelRef.current) {
+          presenceChannelRef.current.unsubscribe();
+          presenceChannelRef.current = null;
+        }
         setUser(null);
         setProfile(null);
+        setOnlineUsers([]);
       }
       setLoading(false);
     };
 
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        // console.log("Auth state change:", event, session?.user); // For debugging
-        setLoading(true); // Set loading true on any auth state change
+        setLoading(true);
         await fetchUserAndProfile(session?.user || null);
       }
     );
 
-    // Initial check for session
     supabase.auth.getSession().then(({ data: { session } }) => {
       fetchUserAndProfile(session?.user || null);
     });
 
     return () => {
       authListener.subscription.unsubscribe();
+      if (presenceChannelRef.current) {
+        presenceChannelRef.current.unsubscribe();
+      }
     };
   }, []);
 
-  const signIn = async (email: string, password: string) => {
+  const signIn = async (identifier: string, password: string) => {
     // Special admin login for 'Uzzal'
-    if (email === 'Uzzal' && password === '123321') {
-      // Simulate admin user and profile
+    if (identifier === 'Uzzal' && password === '123321') {
       const adminUser: User = { id: 'admin-id', email: 'Uzzal', app_metadata: {}, user_metadata: {}, aud: 'authenticated', created_at: new Date().toISOString() } as User;
       const adminProfile: Profile = { id: 'admin-id', username: 'Uzzal', mobile_number: '01713236980', is_active: true, email: 'Uzzal', created_at: new Date().toISOString() };
       setUser(adminUser);
@@ -92,13 +172,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return { success: true };
     }
 
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    let emailToSignIn = identifier;
+
+    // Check if identifier is an email or username
+    if (!identifier.includes('@')) {
+      // Assume it's a username, try to find the email
+      const { data: profileData, error: profileError } = await supabase
+        .from('profiles')
+        .select('email')
+        .eq('username', identifier)
+        .single();
+
+      if (profileError || !profileData) {
+        showError("ভুল ইউজারনেম বা পাসওয়ার্ড।");
+        return { success: false, error: "ভুল ইউজারনেম বা পাসওয়ার্ড।" };
+      }
+      emailToSignIn = profileData.email;
+    }
+
+    const { data, error } = await supabase.auth.signInWithPassword({ email: emailToSignIn, password });
     if (error) {
       showError(error.message);
       return { success: false, error: error.message };
     }
 
-    // After successful login, fetch profile to check active status
     const { data: profileData, error: profileError } = await supabase
       .from('profiles')
       .select('*')
@@ -107,13 +204,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     if (profileError || !profileData) {
       showError("প্রোফাইল ডেটা লোড করতে ব্যর্থ।");
-      await supabase.auth.signOut(); // Log out if profile not found
+      await supabase.auth.signOut();
       return { success: false, error: "প্রোফাইল ডেটা লোড করতে ব্যর্থ।" };
     }
 
     if (!profileData.is_active) {
       showError("আপনার অ্যাকাউন্ট নিষ্ক্রিয় করা হয়েছে।");
-      await supabase.auth.signOut(); // Log out if inactive
+      await supabase.auth.signOut();
       return { success: false, error: "আপনার অ্যাকাউন্ট নিষ্ক্রিয় করা হয়েছে।" };
     }
 
@@ -137,34 +234,38 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         username,
         email,
         mobile_number: mobileNumber,
-        is_active: true, // New users are active by default
+        is_active: true,
       });
 
       if (profileError) {
-        console.error("Error creating profile:", profileError); // Log the error for debugging
+        console.error("Error creating profile:", profileError);
         showError(profileError.message);
-        // If profile creation fails, the auth.users entry still exists.
-        // For a production app, you might want a server-side function to clean this up.
         return { success: false, error: profileError.message };
       }
     }
-    showSuccess("সাইন আপ সফল! আপনার অ্যাকাউন্ট যাচাই করতে আপনার ইমেল চেক করুন।");
+    showSuccess("সাইন আপ সফল! এখন আপনি লগইন করতে পারেন।"); // Changed message
     return { success: true };
   };
 
   const signOut = async () => {
+    if (presenceChannelRef.current) {
+      await presenceChannelRef.current.untrack();
+      presenceChannelRef.current.unsubscribe();
+      presenceChannelRef.current = null;
+    }
     const { error } = await supabase.auth.signOut();
     if (error) {
       showError(error.message);
     } else {
       setUser(null);
       setProfile(null);
+      setOnlineUsers([]);
       showSuccess("লগআউট সফল!");
     }
   };
 
   const getUsersProfiles = async (): Promise<Profile[] | null> => {
-    if (profile?.email !== 'Uzzal') { // Only admin can view all profiles
+    if (profile?.email !== 'Uzzal') {
       showError("এই অ্যাকশন করার অনুমতি আপনার নেই।");
       return null;
     }
@@ -180,7 +281,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const updateUserProfileStatus = async (userId: string, isActive: boolean): Promise<{ success: boolean; error?: string }> => {
-    if (profile?.email !== 'Uzzal') { // Only admin can update user status
+    if (profile?.email !== 'Uzzal') {
       showError("এই অ্যাকশন করার অনুমতি আপনার নেই।");
       return { success: false, error: "অনুমতি নেই।" };
     }
@@ -198,7 +299,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ user, profile, loading, signIn, signUp, signOut, getUsersProfiles, updateUserProfileStatus }}>
+    <AuthContext.Provider value={{ user, profile, loading, onlineUsers, signIn, signUp, signOut, getUsersProfiles, updateUserProfileStatus }}>
       {children}
     </AuthContext.Provider>
   );

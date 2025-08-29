@@ -8,6 +8,7 @@ import {
   Tv,
   LogOut,
   Users, // Added Users icon for User Management
+  MessageSquareText // Added MessageSquareText for Active Users
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
@@ -33,6 +34,11 @@ const navItems = [
     href: "/live-tv",
   },
   {
+    name: "সক্রিয় ইউজার", // New menu item
+    icon: MessageSquareText,
+    href: "/active-users",
+  },
+  {
     name: "যোগাযোগ",
     icon: Mail,
     href: "/contact",
@@ -40,10 +46,10 @@ const navItems = [
 ];
 
 export function Sidebar({ className, isCollapsed = false }: SidebarProps) {
-  const { signOut, profile } = useAuth(); // Get profile from useAuth
+  const { signOut, profile } = useAuth();
   const location = useLocation();
 
-  const isAdmin = profile?.email === 'Uzzal'; // Check if the logged-in user is the admin
+  const isAdmin = profile?.email === 'Uzzal';
 
   return (
     <div
@@ -96,7 +102,7 @@ export function Sidebar({ className, isCollapsed = false }: SidebarProps) {
             </Link>
           );
         })}
-        {isAdmin && ( // Only show User Management link if admin
+        {isAdmin && (
           <Link
             to="/user-management"
             className={cn(
