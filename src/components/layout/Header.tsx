@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Menu, Bell, Search, LogOut } from "lucide-react"; // Added LogOut icon
+import { Menu, Bell, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -14,7 +14,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Sidebar } from "./Sidebar";
-import { useAuth } from "@/context/AuthContext"; // Import useAuth
 
 interface HeaderProps {
   onToggleSidebar: () => void;
@@ -22,8 +21,6 @@ interface HeaderProps {
 }
 
 export function Header({ onToggleSidebar, isSidebarCollapsed }: HeaderProps) {
-  const { user, signOut } = useAuth(); // Use user and signOut from AuthContext
-
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background px-4 sm:static sm:px-6">
       <Sheet>
@@ -50,7 +47,7 @@ export function Header({ onToggleSidebar, isSidebarCollapsed }: HeaderProps) {
         <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
         <Input
           type="search"
-          placeholder="অনুসন্ধান করুন..."
+          placeholder="Search..."
           className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
         />
       </div>
@@ -59,7 +56,7 @@ export function Header({ onToggleSidebar, isSidebarCollapsed }: HeaderProps) {
         <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
           3
         </span>
-        <span className="sr-only">নোটিফিকেশন</span>
+        <span className="sr-only">Notifications</span>
       </Button>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -70,24 +67,17 @@ export function Header({ onToggleSidebar, isSidebarCollapsed }: HeaderProps) {
           >
             <Avatar>
               <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-              <AvatarFallback>
-                {user?.email ? user.email.charAt(0).toUpperCase() : 'U'}
-              </AvatarFallback>
+              <AvatarFallback>CN</AvatarFallback>
             </Avatar>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuLabel>
-            {user?.email || "আমার অ্যাকাউন্ট"}
-          </DropdownMenuLabel>
+          <DropdownMenuLabel>My Account</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>সেটিংস</DropdownMenuItem>
-          <DropdownMenuItem>সাপোর্ট</DropdownMenuItem>
+          <DropdownMenuItem>Settings</DropdownMenuItem>
+          <DropdownMenuItem>Support</DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={signOut}>
-            <LogOut className="mr-2 h-4 w-4" />
-            লগআউট
-          </DropdownMenuItem>
+          <DropdownMenuItem>Logout</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </header>
