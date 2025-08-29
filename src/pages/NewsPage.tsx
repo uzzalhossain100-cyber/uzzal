@@ -80,7 +80,7 @@ const NewsPage: React.FC = () => {
       </div>
 
       {/* Desktop View: Static Card */}
-      <Card className="hidden lg:flex w-full lg:w-1/3 flex-col">
+      <Card className="hidden lg:flex w-full lg:w-1/4 flex-col"> {/* Changed from lg:w-1/3 to lg:w-1/4 */}
         <CardHeader>
           <CardTitle>বাংলাদেশের সংবাদপত্র</CardTitle>
         </CardHeader>
@@ -105,7 +105,7 @@ const NewsPage: React.FC = () => {
       </Card>
 
       {/* News Reader Card */}
-      <Card className="w-full lg:w-2/3 flex flex-col">
+      <Card className="w-full lg:w-3/4 flex flex-col"> {/* Changed from lg:w-2/3 to lg:w-3/4 */}
         <CardHeader>
           <CardTitle>সংবাদ পাঠ</CardTitle>
         </CardHeader>
