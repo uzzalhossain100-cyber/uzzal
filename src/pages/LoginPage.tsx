@@ -27,11 +27,11 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
-      <Card className="w-full max-w-md">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-100 to-purple-100 dark:from-gray-800 dark:to-gray-900 p-4">
+      <Card className="w-full max-w-md shadow-lg border-primary/20 dark:border-primary/50">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl">লগইন</CardTitle>
-          <CardDescription>আপনার অ্যাকাউন্ট অ্যাক্সেস করতে আপনার ইমেল এবং পাসওয়ার্ড লিখুন।</CardDescription>
+          <CardTitle className="text-3xl font-bold text-primary dark:text-primary-foreground">লগইন</CardTitle>
+          <CardDescription className="text-muted-foreground">আপনার অ্যাকাউন্ট অ্যাক্সেস করতে আপনার ইমেল এবং পাসওয়ার্ড লিখুন।</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="grid gap-4">
@@ -44,6 +44,7 @@ const LoginPage: React.FC = () => {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                className="border-primary/30 focus-visible:ring-primary"
               />
             </div>
             <div className="grid gap-2">
@@ -55,15 +56,16 @@ const LoginPage: React.FC = () => {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                className="border-primary/30 focus-visible:ring-primary"
               />
             </div>
-            <Button type="submit" className="w-full" disabled={isLoading}>
+            <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90" disabled={isLoading}>
               {isLoading ? 'লগইন হচ্ছে...' : 'লগইন করুন'}
             </Button>
           </form>
-          <div className="mt-4 text-center text-sm">
+          <div className="mt-4 text-center text-sm text-muted-foreground">
             অ্যাকাউন্ট নেই?{" "}
-            <Link to="/signup" className="underline">
+            <Link to="/signup" className="underline text-primary hover:text-primary/90">
               সাইন আপ করুন
             </Link>
           </div>

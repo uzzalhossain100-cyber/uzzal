@@ -138,19 +138,19 @@ const LiveTVPage: React.FC = () => {
   const [selectedChannelUrl, setSelectedChannelUrl] = useState<string | null>(null);
   const [isCountrySheetOpen, setIsCountrySheetOpen] = useState(false);
   const [isChannelSheetOpen, setIsChannelSheetOpen] = useState(false);
-  const [showDesktopCountryList, setShowDesktopCountryList] = useState(true); // New state for desktop country list visibility
+  const [showDesktopCountryList, setShowDesktopCountryList] = useState(true);
 
   const handleCountrySelect = (country: Country) => {
     setSelectedCountry(country);
-    setSelectedChannelUrl(null); // Reset selected channel when country changes
-    setIsCountrySheetOpen(false); // Close country sheet after selection on mobile
-    setIsChannelSheetOpen(true); // Open channel sheet automatically on mobile
-    setShowDesktopCountryList(false); // Hide desktop country list after selection
+    setSelectedChannelUrl(null);
+    setIsCountrySheetOpen(false);
+    setIsChannelSheetOpen(true);
+    setShowDesktopCountryList(false);
   };
 
   const handleChannelSelect = (channel: TVChannel) => {
     setSelectedChannelUrl(channel.url);
-    setIsChannelSheetOpen(false); // Close channel sheet after selection on mobile
+    setIsChannelSheetOpen(false);
   };
 
   return (
@@ -158,16 +158,15 @@ const LiveTVPage: React.FC = () => {
       {/* Mobile/Tablet View: Collapsible Sheets */}
       <div className="lg:hidden w-full flex flex-col sm:flex-row gap-4 mb-4">
         {!selectedCountry ? (
-          // Case 1: No country selected yet, show only country selection trigger
           <Sheet open={isCountrySheetOpen} onOpenChange={setIsCountrySheetOpen}>
             <SheetTrigger asChild>
-              <Button variant="outline" className="w-full">
+              <Button variant="outline" className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
                 <Menu className="mr-2 h-4 w-4" /> দেশ নির্বাচন করুন
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-full sm:max-w-xs p-0">
-              <CardHeader className="px-4 pt-4 pb-2">
-                <CardTitle className="flex items-center gap-2">
+            <SheetContent side="left" className="w-full sm:max-w-xs p-0 bg-background">
+              <CardHeader className="px-4 pt-4 pb-2 border-b">
+                <CardTitle className="flex items-center gap-2 text-primary">
                   <Globe className="h-5 w-5" /> দেশ নির্বাচন করুন
                 </CardTitle>
               </CardHeader>
@@ -178,12 +177,12 @@ const LiveTVPage: React.FC = () => {
                       <React.Fragment key={country.name}>
                         <Button
                           variant={selectedCountry?.name === country.name ? "secondary" : "ghost"}
-                          className="w-full justify-start text-left"
+                          className={`w-full justify-start text-left ${selectedCountry?.name === country.name ? "bg-primary text-primary-foreground hover:bg-primary/90" : "hover:bg-accent"}`}
                           onClick={() => handleCountrySelect(country)}
                         >
                           {country.name}
                         </Button>
-                        {index < countries.length - 1 && <Separator />}
+                        {index < countries.length - 1 && <Separator className="bg-border" />}
                       </React.Fragment>
                     ))}
                   </div>
@@ -192,17 +191,16 @@ const LiveTVPage: React.FC = () => {
             </SheetContent>
           </Sheet>
         ) : (
-          // Case 2: Country selected, show channel list trigger and a button to re-select country
           <>
             <Sheet open={isChannelSheetOpen} onOpenChange={setIsChannelSheetOpen}>
               <SheetTrigger asChild>
-                <Button variant="outline" className="w-full sm:w-1/2">
+                <Button variant="outline" className="w-full sm:w-1/2 bg-primary text-primary-foreground hover:bg-primary/90">
                   <Menu className="mr-2 h-4 w-4" /> চ্যানেল তালিকা
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-full sm:max-w-xs p-0">
-                <CardHeader className="px-4 pt-4 pb-2">
-                  <CardTitle className="flex items-center gap-2">
+              <SheetContent side="left" className="w-full sm:max-w-xs p-0 bg-background">
+                <CardHeader className="px-4 pt-4 pb-2 border-b">
+                  <CardTitle className="flex items-center gap-2 text-primary">
                     <Tv className="h-5 w-5" /> চ্যানেল তালিকা
                   </CardTitle>
                 </CardHeader>
@@ -214,12 +212,12 @@ const LiveTVPage: React.FC = () => {
                           <React.Fragment key={channel.name}>
                             <Button
                               variant={selectedChannelUrl === channel.url ? "secondary" : "ghost"}
-                              className="w-full justify-start text-left"
+                              className={`w-full justify-start text-left ${selectedChannelUrl === channel.url ? "bg-primary text-primary-foreground hover:bg-primary/90" : "hover:bg-accent"}`}
                               onClick={() => handleChannelSelect(channel)}
                             >
                               {channel.name}
                             </Button>
-                            {index < selectedCountry.channels.length - 1 && <Separator />}
+                            {index < selectedCountry.channels.length - 1 && <Separator className="bg-border" />}
                           </React.Fragment>
                         ))}
                       </div>
@@ -234,8 +232,8 @@ const LiveTVPage: React.FC = () => {
             </Sheet>
             <Button
               variant="outline"
-              className="w-full sm:w-1/2"
-              onClick={() => setIsCountrySheetOpen(true)} // Open country sheet
+              className="w-full sm:w-1/2 bg-secondary text-secondary-foreground hover:bg-secondary/90"
+              onClick={() => setIsCountrySheetOpen(true)}
             >
               <Globe className="mr-2 h-4 w-4" /> দেশ নির্বাচন করুন
             </Button>
@@ -245,25 +243,25 @@ const LiveTVPage: React.FC = () => {
 
       {/* Desktop View: Static Cards */}
       {(!selectedCountry || showDesktopCountryList) && (
-        <Card className="hidden lg:flex w-full lg:w-1/4 flex-col">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <Card className="hidden lg:flex w-full lg:w-1/4 flex-col shadow-lg border-primary/20">
+          <CardHeader className="border-b">
+            <CardTitle className="flex items-center gap-2 text-primary">
               <Globe className="h-5 w-5" /> দেশ নির্বাচন করুন
             </CardTitle>
           </CardHeader>
-          <CardContent className="flex-1 overflow-hidden">
-            <ScrollArea className="h-[calc(100vh-200px)] w-full rounded-md border p-4">
+          <CardContent className="flex-1 overflow-hidden p-0">
+            <ScrollArea className="h-[calc(100vh-200px)] w-full p-4">
               <div className="grid gap-2">
                 {countries.map((country, index) => (
                   <React.Fragment key={country.name}>
                     <Button
                       variant={selectedCountry?.name === country.name ? "secondary" : "ghost"}
-                      className="w-full justify-start text-left"
+                      className={`w-full justify-start text-left ${selectedCountry?.name === country.name ? "bg-primary text-primary-foreground hover:bg-primary/90" : "hover:bg-accent"}`}
                       onClick={() => handleCountrySelect(country)}
                     >
                       {country.name}
                     </Button>
-                    {index < countries.length - 1 && <Separator />}
+                    {index < countries.length - 1 && <Separator className="bg-border" />}
                   </React.Fragment>
                 ))}
               </div>
@@ -272,38 +270,38 @@ const LiveTVPage: React.FC = () => {
         </Card>
       )}
 
-      {selectedCountry && ( // Only render this card if a country is selected
-        <Card className="hidden lg:flex w-full lg:w-1/4 flex-col">
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="flex items-center gap-2">
+      {selectedCountry && (
+        <Card className="hidden lg:flex w-full lg:w-1/4 flex-col shadow-lg border-primary/20">
+          <CardHeader className="flex flex-row items-center justify-between border-b">
+            <CardTitle className="flex items-center gap-2 text-primary">
               <Tv className="h-5 w-5" /> চ্যানেল তালিকা
             </CardTitle>
-            {!showDesktopCountryList && ( // Show button only if country list is hidden
-              <Button variant="outline" size="sm" onClick={() => setShowDesktopCountryList(true)}>
+            {!showDesktopCountryList && (
+              <Button variant="outline" size="sm" className="bg-secondary text-secondary-foreground hover:bg-secondary/90" onClick={() => setShowDesktopCountryList(true)}>
                 <Globe className="mr-2 h-4 w-4" /> দেশ নির্বাচন করুন
               </Button>
             )}
           </CardHeader>
-          <CardContent className="flex-1 overflow-hidden">
+          <CardContent className="flex-1 overflow-hidden p-0">
             {selectedCountry ? (
-              <ScrollArea className="h-[calc(100vh-200px)] w-full rounded-md border p-4">
+              <ScrollArea className="h-[calc(100vh-200px)] w-full p-4">
                 <div className="grid gap-2">
                   {selectedCountry.channels.map((channel, index) => (
                     <React.Fragment key={channel.name}>
                       <Button
                         variant={selectedChannelUrl === channel.url ? "secondary" : "ghost"}
-                        className="w-full justify-start text-left"
+                        className={`w-full justify-start text-left ${selectedChannelUrl === channel.url ? "bg-primary text-primary-foreground hover:bg-primary/90" : "hover:bg-accent"}`}
                         onClick={() => handleChannelSelect(channel)}
                       >
                         {channel.name}
                       </Button>
-                      {index < selectedCountry.channels.length - 1 && <Separator />}
+                      {index < selectedCountry.channels.length - 1 && <Separator className="bg-border" />}
                     </React.Fragment>
                   ))}
                 </div>
               </ScrollArea>
             ) : (
-              <div className="flex items-center justify-center h-full text-muted-foreground">
+              <div className="flex items-center justify-center h-full text-muted-foreground text-lg p-4">
                 একটি দেশ নির্বাচন করুন
               </div>
             )}
@@ -312,21 +310,21 @@ const LiveTVPage: React.FC = () => {
       )}
 
       {/* Live TV Player Card */}
-      <Card className="w-full lg:w-2/4 flex flex-col">
-        <CardHeader>
-          <CardTitle>{selectedChannelUrl ? "লাইভ স্ট্রিম" : "লাইভ টিভি প্লেয়ার"}</CardTitle>
+      <Card className="w-full lg:w-2/4 flex flex-col shadow-lg border-primary/20">
+        <CardHeader className="border-b">
+          <CardTitle className="text-primary">{selectedChannelUrl ? "লাইভ স্ট্রিম" : "লাইভ টিভি প্লেয়ার"}</CardTitle>
         </CardHeader>
         <CardContent className="flex-1 p-0">
           {selectedChannelUrl ? (
             <iframe
               src={selectedChannelUrl}
               title="Live TV Stream"
-              className="w-full h-[calc(100vh-200px)] border-0"
+              className="w-full h-[calc(100vh-200px)] border-0 rounded-b-lg"
               sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
               allow="autoplay; fullscreen; picture-in-picture"
             />
           ) : (
-            <div className="flex items-center justify-center h-full text-muted-foreground">
+            <div className="flex items-center justify-center h-full text-muted-foreground text-lg p-4">
               একটি চ্যানেল নির্বাচন করুন
             </div>
           )}

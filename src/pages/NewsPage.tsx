@@ -3,8 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'; // New import
-import { Menu } from 'lucide-react'; // New import for icon
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Menu, Newspaper as NewspaperIcon } from 'lucide-react'; // Renamed Newspaper to NewspaperIcon to avoid conflict
 
 interface Newspaper {
   name: string;
@@ -36,11 +36,11 @@ const bangladeshiNewspapers: Newspaper[] = [
 
 const NewsPage: React.FC = () => {
   const [selectedNewsUrl, setSelectedNewsUrl] = useState<string | null>(null);
-  const [isSheetOpen, setIsSheetOpen] = useState(false); // State to control sheet
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
 
   const handleNewspaperSelect = (url: string) => {
     setSelectedNewsUrl(url);
-    setIsSheetOpen(false); // Close sheet after selection on mobile
+    setIsSheetOpen(false);
   };
 
   return (
@@ -49,13 +49,15 @@ const NewsPage: React.FC = () => {
       <div className="lg:hidden w-full">
         <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
           <SheetTrigger asChild>
-            <Button variant="outline" className="w-full mb-4">
+            <Button variant="outline" className="w-full mb-4 bg-primary text-primary-foreground hover:bg-primary/90">
               <Menu className="mr-2 h-4 w-4" /> সংবাদপত্র তালিকা
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className="w-full sm:max-w-xs p-0">
-            <CardHeader className="px-4 pt-4 pb-2">
-              <CardTitle>বাংলাদেশের সংবাদপত্র</CardTitle>
+          <SheetContent side="left" className="w-full sm:max-w-xs p-0 bg-background">
+            <CardHeader className="px-4 pt-4 pb-2 border-b">
+              <CardTitle className="flex items-center gap-2 text-primary">
+                <NewspaperIcon className="h-5 w-5" /> বাংলাদেশের সংবাদপত্র
+              </CardTitle>
             </CardHeader>
             <CardContent className="flex-1 overflow-hidden px-0">
               <ScrollArea className="h-[calc(100vh-80px)] w-full p-4">
@@ -64,12 +66,12 @@ const NewsPage: React.FC = () => {
                     <React.Fragment key={paper.name}>
                       <Button
                         variant={selectedNewsUrl === paper.url ? "secondary" : "ghost"}
-                        className="w-full justify-start text-left"
+                        className={`w-full justify-start text-left ${selectedNewsUrl === paper.url ? "bg-primary text-primary-foreground hover:bg-primary/90" : "hover:bg-accent"}`}
                         onClick={() => handleNewspaperSelect(paper.url)}
                       >
                         {paper.name}
                       </Button>
-                      {index < bangladeshiNewspapers.length - 1 && <Separator />}
+                      {index < bangladeshiNewspapers.length - 1 && <Separator className="bg-border" />}
                     </React.Fragment>
                   ))}
                 </div>
@@ -80,23 +82,25 @@ const NewsPage: React.FC = () => {
       </div>
 
       {/* Desktop View: Static Card */}
-      <Card className="hidden lg:flex w-full lg:w-1/4 flex-col"> {/* Changed from lg:w-1/3 to lg:w-1/4 */}
-        <CardHeader>
-          <CardTitle>বাংলাদেশের সংবাদপত্র</CardTitle>
+      <Card className="hidden lg:flex w-full lg:w-1/4 flex-col shadow-lg border-primary/20">
+        <CardHeader className="border-b">
+          <CardTitle className="flex items-center gap-2 text-primary">
+            <NewspaperIcon className="h-5 w-5" /> বাংলাদেশের সংবাদপত্র
+          </CardTitle>
         </CardHeader>
-        <CardContent className="flex-1 overflow-hidden">
-          <ScrollArea className="h-[calc(100vh-200px)] w-full rounded-md border p-4">
+        <CardContent className="flex-1 overflow-hidden p-0">
+          <ScrollArea className="h-[calc(100vh-200px)] w-full p-4">
             <div className="grid gap-2">
               {bangladeshiNewspapers.map((paper, index) => (
                 <React.Fragment key={paper.name}>
                   <Button
                     variant={selectedNewsUrl === paper.url ? "secondary" : "ghost"}
-                    className="w-full justify-start text-left"
+                    className={`w-full justify-start text-left ${selectedNewsUrl === paper.url ? "bg-primary text-primary-foreground hover:bg-primary/90" : "hover:bg-accent"}`}
                     onClick={() => setSelectedNewsUrl(paper.url)}
                   >
                     {paper.name}
                   </Button>
-                  {index < bangladeshiNewspapers.length - 1 && <Separator />}
+                  {index < bangladeshiNewspapers.length - 1 && <Separator className="bg-border" />}
                 </React.Fragment>
               ))}
             </div>
@@ -105,20 +109,20 @@ const NewsPage: React.FC = () => {
       </Card>
 
       {/* News Reader Card */}
-      <Card className="w-full lg:w-3/4 flex flex-col"> {/* Changed from lg:w-2/3 to lg:w-3/4 */}
-        <CardHeader>
-          <CardTitle>সংবাদ পাঠ</CardTitle>
+      <Card className="w-full lg:w-3/4 flex flex-col shadow-lg border-primary/20">
+        <CardHeader className="border-b">
+          <CardTitle className="text-primary">সংবাদ পাঠ</CardTitle>
         </CardHeader>
         <CardContent className="flex-1 p-0">
           {selectedNewsUrl ? (
             <iframe
               src={selectedNewsUrl}
               title="Selected Newspaper"
-              className="w-full h-[calc(100vh-200px)] border-0"
+              className="w-full h-[calc(100vh-200px)] border-0 rounded-b-lg"
               sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
             />
           ) : (
-            <div className="flex items-center justify-center h-full text-muted-foreground">
+            <div className="flex items-center justify-center h-full text-muted-foreground text-lg p-4">
               একটি সংবাদপত্র নির্বাচন করুন
             </div>
           )}

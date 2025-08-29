@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { allInOneCategories, Category, CategoryItem } from '@/data/categories.ts';
 import { ArrowLeft, ExternalLink } from 'lucide-react';
-import { cn } from '@/lib/utils'; // Import cn for conditional class names
+import { cn } from '@/lib/utils';
 
 const AllInOnePage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
@@ -14,7 +14,7 @@ const AllInOnePage: React.FC = () => {
   };
 
   const handleItemClick = (item: CategoryItem) => {
-    window.open(item.url, '_blank'); // Open link in a new tab
+    window.open(item.url, '_blank');
   };
 
   const handleBackToCategories = () => {
@@ -24,8 +24,8 @@ const AllInOnePage: React.FC = () => {
   // State 1: Displaying Categories
   if (!selectedCategory) {
     return (
-      <Card className="w-full flex flex-col h-full bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-800 dark:to-gray-900">
-        <CardHeader className="pb-4">
+      <Card className="w-full flex flex-col h-full bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-800 dark:to-gray-900 shadow-xl border-primary/20">
+        <CardHeader className="pb-4 border-b">
           <CardTitle className="text-3xl font-extrabold text-center text-primary dark:text-primary-foreground">
             সমস্ত ক্যাটাগরি
           </CardTitle>
@@ -41,8 +41,8 @@ const AllInOnePage: React.FC = () => {
                     variant="outline"
                     className={cn(
                       "h-32 flex flex-col items-center justify-center text-center p-4 rounded-lg shadow-md transition-all duration-200",
-                      "bg-white text-gray-800 border-blue-300 hover:bg-blue-50 hover:border-blue-500",
-                      "dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:border-gray-400"
+                      "bg-card text-foreground border-primary/30 hover:bg-primary/10 hover:border-primary",
+                      "dark:bg-card dark:text-foreground dark:border-primary/50 dark:hover:bg-primary/20 dark:hover:border-primary"
                     )}
                     onClick={() => handleCategoryClick(category)}
                   >
@@ -60,10 +60,10 @@ const AllInOnePage: React.FC = () => {
 
   // State 2: Displaying Items within a Category
   return (
-    <Card className="w-full flex flex-col h-full bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-800 dark:to-gray-900">
-      <CardHeader className="flex flex-row items-center justify-between pb-4">
+    <Card className="w-full flex flex-col h-full bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-800 dark:to-gray-900 shadow-xl border-primary/20">
+      <CardHeader className="flex flex-row items-center justify-between pb-4 border-b">
         <CardTitle className="text-3xl font-extrabold text-primary dark:text-primary-foreground flex items-center">
-          <Button variant="ghost" onClick={handleBackToCategories} className="p-0 h-auto mr-2 text-primary dark:text-primary-foreground hover:bg-transparent">
+          <Button variant="ghost" onClick={handleBackToCategories} className="p-0 h-auto mr-2 text-primary dark:text-primary-foreground hover:bg-transparent hover:text-primary/80">
             <ArrowLeft className="h-6 w-6" />
           </Button>
           {selectedCategory.name}
@@ -78,12 +78,12 @@ const AllInOnePage: React.FC = () => {
                 variant="ghost"
                 className={cn(
                   "w-full justify-start text-left flex flex-col items-start h-auto py-3 px-4 rounded-lg shadow-sm transition-all duration-200",
-                  "bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 hover:border-gray-300",
-                  "dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:border-gray-500"
+                  "bg-card text-foreground border border-primary/20 hover:bg-primary/10 hover:border-primary",
+                  "dark:bg-card dark:text-foreground dark:border-primary/30 dark:hover:bg-primary/20 dark:hover:border-primary"
                 )}
                 onClick={() => handleItemClick(item)}
               >
-                <span className="font-semibold text-base flex items-center mb-1">
+                <span className="font-semibold text-base flex items-center mb-1 text-primary dark:text-primary-foreground">
                   {item.name}
                 </span>
                 <span className="text-xs text-muted-foreground text-left truncate w-full flex items-center">

@@ -4,32 +4,32 @@ import { Phone, Mail, User } from 'lucide-react';
 
 const ContactPage: React.FC = () => {
   return (
-    <div className="flex items-center justify-center min-h-[calc(100vh-100px)]">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl">যোগাযোগ</CardTitle>
-          <CardDescription>আমাদের সাথে যোগাযোগ করুন</CardDescription>
+    <div className="flex items-center justify-center min-h-[calc(100vh-100px)] p-4 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 rounded-lg shadow-xl">
+      <Card className="w-full max-w-md shadow-lg border-primary/20 dark:border-primary/50">
+        <CardHeader className="text-center border-b pb-4">
+          <CardTitle className="text-3xl font-bold text-primary dark:text-primary-foreground">যোগাযোগ</CardTitle>
+          <CardDescription className="text-muted-foreground">আমাদের সাথে যোগাযোগ করুন</CardDescription>
         </CardHeader>
-        <CardContent className="grid gap-4">
-          <div className="flex items-center gap-4">
-            <User className="h-6 w-6 text-primary" />
+        <CardContent className="grid gap-6 p-6">
+          <div className="flex items-center gap-4 p-3 rounded-lg bg-accent/20 dark:bg-accent/30 border border-primary/10">
+            <User className="h-7 w-7 text-primary" />
             <div>
-              <p className="text-sm font-medium">এডমিন নাম</p>
-              <p className="text-lg font-semibold">Uzzal</p>
+              <p className="text-sm font-medium text-muted-foreground">এডমিন নাম</p>
+              <p className="text-xl font-semibold text-foreground">Uzzal</p>
             </div>
           </div>
-          <div className="flex items-center gap-4">
-            <Phone className="h-6 w-6 text-primary" />
+          <div className="flex items-center gap-4 p-3 rounded-lg bg-accent/20 dark:bg-accent/30 border border-primary/10">
+            <Phone className="h-7 w-7 text-primary" />
             <div>
-              <p className="text-sm font-medium">মোবাইল নম্বর</p>
-              <p className="text-lg font-semibold">01713236980</p>
+              <p className="text-sm font-medium text-muted-foreground">মোবাইল নম্বর</p>
+              <p className="text-xl font-semibold text-foreground">01713236980</p>
             </div>
           </div>
-          <div className="flex items-center gap-4">
-            <Mail className="h-6 w-6 text-primary" />
+          <div className="flex items-center gap-4 p-3 rounded-lg bg-accent/20 dark:bg-accent/30 border border-primary/10">
+            <Mail className="h-7 w-7 text-primary" />
             <div>
-              <p className="text-sm font-medium">ইমেল</p>
-              <p className="text-lg font-semibold">admin@example.com</p> {/* Added a placeholder email */}
+              <p className="text-sm font-medium text-muted-foreground">ইমেল</p>
+              <p className="text-xl font-semibold text-foreground">admin@example.com</p>
             </div>
           </div>
         </CardContent>

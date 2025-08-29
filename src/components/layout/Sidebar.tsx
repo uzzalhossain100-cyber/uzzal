@@ -1,13 +1,14 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom"; // Import useLocation
 import { cn } from "@/lib/utils";
 import {
   Home,
   Newspaper,
   Bot,
   Mail,
-  Tv, // Added Tv icon for Live TV
+  Tv,
   Settings,
+  LogOut, // Added LogOut icon for consistency
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
@@ -28,9 +29,9 @@ const navItems = [
     href: "/news",
   },
   {
-    name: "All In One", // Changed name
+    name: "All In One",
     icon: Bot,
-    href: "/all-in-one", // Changed href
+    href: "/all-in-one",
   },
   {
     name: "লাইভ টিভি",
@@ -46,11 +47,12 @@ const navItems = [
 
 export function Sidebar({ className, isCollapsed = false }: SidebarProps) {
   const { signOut } = useAuth();
+  const location = useLocation(); // Get current location
 
   return (
     <div
       className={cn(
-        "flex h-full flex-col space-y-4 border-r bg-sidebar p-4 transition-all duration-300",
+        "flex h-full flex-col space-y-4 border-r bg-sidebar p-4 transition-all duration-300 shadow-md", // Added shadow-md
         isCollapsed ? "w-16 items-center" : "w-64",
         className,
       )}
@@ -74,26 +76,30 @@ export function Sidebar({ className, isCollapsed = false }: SidebarProps) {
         </h1>
       </div>
       <nav className="flex-1 space-y-2">
-        {navItems.map((item) => (
-          <Link
-            key={item.name}
-            to={item.href}
-            className={cn(
-              "flex items-center gap-3 rounded-lg px-3 py-2 text-sidebar-foreground transition-all hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
-              isCollapsed ? "justify-center" : "",
-            )}
-          >
-            <item.icon className="h-5 w-5" />
-            <span
+        {navItems.map((item) => {
+          const isActive = location.pathname === item.href; // Check if the current path matches the item's href
+          return (
+            <Link
+              key={item.name}
+              to={item.href}
               className={cn(
-                "transition-opacity duration-300",
-                isCollapsed ? "opacity-0 w-0" : "opacity-100 w-auto",
+                "flex items-center gap-3 rounded-lg px-3 py-2 text-sidebar-foreground transition-all hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+                isActive && "bg-sidebar-primary text-sidebar-primary-foreground hover:bg-sidebar-primary hover:text-sidebar-primary-foreground", // Active link styling
+                isCollapsed ? "justify-center" : "",
               )}
             >
-              {item.name}
-            </span>
-          </Link>
-        ))}
+              <item.icon className="h-5 w-5" />
+              <span
+                className={cn(
+                  "transition-opacity duration-300",
+                  isCollapsed ? "opacity-0 w-0" : "opacity-100 w-auto",
+                )}
+              >
+                {item.name}
+              </span>
+            </Link>
+          );
+        })}
       </nav>
       <div className="mt-auto pt-4 border-t border-sidebar-border">
         <Button
@@ -104,7 +110,7 @@ export function Sidebar({ className, isCollapsed = false }: SidebarProps) {
           )}
           onClick={signOut}
         >
-          <Settings className="h-5 w-5" />
+          <LogOut className="h-5 w-5" /> {/* Changed to LogOut icon for logout button */}
           <span
             className={cn(
               "ml-3 transition-opacity duration-300",
