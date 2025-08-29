@@ -16,6 +16,26 @@ const SignupPage: React.FC = () => {
   const { signUp } = useAuth();
   const navigate = useNavigate();
 
+  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    // Allow only English letters, numbers, underscore, and hyphen
+    if (/^[a-zA-Z0-9_-]*$/.test(value)) {
+      setUsername(value);
+    } else {
+      showError("ইউজারনেম শুধুমাত্র ইংরেজি অক্ষর, সংখ্যা, আন্ডারস্কোর এবং হাইফেন দিয়ে গঠিত হতে পারে।");
+    }
+  };
+
+  const handleMobileNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    // Allow only digits
+    if (/^\d*$/.test(value)) {
+      setMobileNumber(value);
+    } else {
+      showError("মোবাইল নম্বর শুধুমাত্র সংখ্যা দিয়ে গঠিত হতে পারে।");
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -42,10 +62,10 @@ const SignupPage: React.FC = () => {
               <Input
                 id="username"
                 type="text"
-                placeholder="আপনার ইউজারনেম"
+                placeholder="আপনার ইউজারনেম (শুধুমাত্র ইংরেজি)"
                 required
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                onChange={handleUsernameChange}
                 className="border-primary/30 focus-visible:ring-primary"
               />
             </div>
@@ -66,10 +86,10 @@ const SignupPage: React.FC = () => {
               <Input
                 id="mobileNumber"
                 type="tel"
-                placeholder="01XXXXXXXXX"
+                placeholder="01XXXXXXXXX (শুধুমাত্র সংখ্যা)"
                 required
                 value={mobileNumber}
-                onChange={(e) => setMobileNumber(e.target.value)}
+                onChange={handleMobileNumberChange}
                 className="border-primary/30 focus-visible:ring-primary"
               />
             </div>
