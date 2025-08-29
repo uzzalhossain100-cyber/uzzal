@@ -3,8 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
-import { Globe, Tv, Menu } from 'lucide-react'; // New import for Menu icon
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'; // New import
+import { Globe, Tv, Menu } from 'lucide-react';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
 interface TVChannel {
   name: string;
@@ -155,79 +155,83 @@ const LiveTVPage: React.FC = () => {
     <div className="flex flex-col lg:flex-row gap-6 h-full">
       {/* Mobile/Tablet View: Collapsible Sheets */}
       <div className="lg:hidden w-full flex flex-col sm:flex-row gap-4 mb-4">
-        {/* Country Selection Sheet */}
-        <Sheet open={isCountrySheetOpen} onOpenChange={setIsCountrySheetOpen}>
-          <SheetTrigger asChild>
-            <Button variant="outline" className="w-full sm:w-1/2">
-              <Menu className="mr-2 h-4 w-4" /> দেশ নির্বাচন করুন
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="left" className="w-full sm:max-w-xs p-0">
-            <CardHeader className="px-4 pt-4 pb-2">
-              <CardTitle className="flex items-center gap-2">
-                <Globe className="h-5 w-5" /> দেশ নির্বাচন করুন
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="flex-1 overflow-hidden px-0">
-              <ScrollArea className="h-[calc(100vh-80px)] w-full p-4">
-                <div className="grid gap-2">
-                  {countries.map((country, index) => (
-                    <React.Fragment key={country.name}>
-                      <Button
-                        variant={selectedCountry?.name === country.name ? "secondary" : "ghost"}
-                        className="w-full justify-start text-left"
-                        onClick={() => handleCountrySelect(country)}
-                      >
-                        {country.name}
-                      </Button>
-                      {index < countries.length - 1 && <Separator />}
-                    </React.Fragment>
-                  ))}
-                </div>
-              </ScrollArea>
-            </CardContent>
-          </SheetContent>
-        </Sheet>
-
-        {/* Channel List Sheet */}
-        <Sheet open={isChannelSheetOpen} onOpenChange={setIsChannelSheetOpen}>
-          <SheetTrigger asChild>
-            <Button variant="outline" className="w-full sm:w-1/2" disabled={!selectedCountry}>
-              <Menu className="mr-2 h-4 w-4" /> চ্যানেল তালিকা
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="left" className="w-full sm:max-w-xs p-0">
-            <CardHeader className="px-4 pt-4 pb-2">
-              <CardTitle className="flex items-center gap-2">
-                <Tv className="h-5 w-5" /> চ্যানেল তালিকা
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="flex-1 overflow-hidden px-0">
-              {selectedCountry ? (
+        {/* Country Selection Sheet Trigger */}
+        {!isChannelSheetOpen && ( // Only show country selection trigger if channel sheet is not open
+          <Sheet open={isCountrySheetOpen} onOpenChange={setIsCountrySheetOpen}>
+            <SheetTrigger asChild>
+              <Button variant="outline" className="w-full sm:w-1/2">
+                <Menu className="mr-2 h-4 w-4" /> দেশ নির্বাচন করুন
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-full sm:max-w-xs p-0">
+              <CardHeader className="px-4 pt-4 pb-2">
+                <CardTitle className="flex items-center gap-2">
+                  <Globe className="h-5 w-5" /> দেশ নির্বাচন করুন
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="flex-1 overflow-hidden px-0">
                 <ScrollArea className="h-[calc(100vh-80px)] w-full p-4">
                   <div className="grid gap-2">
-                    {selectedCountry.channels.map((channel, index) => (
-                      <React.Fragment key={channel.name}>
+                    {countries.map((country, index) => (
+                      <React.Fragment key={country.name}>
                         <Button
-                          variant={selectedChannelUrl === channel.url ? "secondary" : "ghost"}
+                          variant={selectedCountry?.name === country.name ? "secondary" : "ghost"}
                           className="w-full justify-start text-left"
-                          onClick={() => handleChannelSelect(channel)}
+                          onClick={() => handleCountrySelect(country)}
                         >
-                          {channel.name}
+                          {country.name}
                         </Button>
-                        {index < selectedCountry.channels.length - 1 && <Separator />}
+                        {index < countries.length - 1 && <Separator />}
                       </React.Fragment>
                     ))}
                   </div>
                 </ScrollArea>
-              ) : (
-                <div className="flex items-center justify-center h-full text-muted-foreground p-4">
-                  একটি দেশ নির্বাচন করুন
-                </div>
-              )}
-            </CardContent>
-          </SheetContent>
-        </Sheet>
+              </CardContent>
+            </SheetContent>
+          </Sheet>
+        )}
+
+        {/* Channel List Sheet Trigger */}
+        {!isCountrySheetOpen && selectedCountry && ( // Only show channel list trigger if country sheet is not open AND a country is selected
+          <Sheet open={isChannelSheetOpen} onOpenChange={setIsChannelSheetOpen}>
+            <SheetTrigger asChild>
+              <Button variant="outline" className="w-full sm:w-1/2" disabled={!selectedCountry}>
+                <Menu className="mr-2 h-4 w-4" /> চ্যানেল তালিকা
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-full sm:max-w-xs p-0">
+              <CardHeader className="px-4 pt-4 pb-2">
+                <CardTitle className="flex items-center gap-2">
+                  <Tv className="h-5 w-5" /> চ্যানেল তালিকা
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="flex-1 overflow-hidden px-0">
+                {selectedCountry ? (
+                  <ScrollArea className="h-[calc(100vh-80px)] w-full p-4">
+                    <div className="grid gap-2">
+                      {selectedCountry.channels.map((channel, index) => (
+                        <React.Fragment key={channel.name}>
+                          <Button
+                            variant={selectedChannelUrl === channel.url ? "secondary" : "ghost"}
+                            className="w-full justify-start text-left"
+                            onClick={() => handleChannelSelect(channel)}
+                          >
+                            {channel.name}
+                          </Button>
+                          {index < selectedCountry.channels.length - 1 && <Separator />}
+                        </React.Fragment>
+                      ))}
+                    </div>
+                  </ScrollArea>
+                ) : (
+                  <div className="flex items-center justify-center h-full text-muted-foreground p-4">
+                    একটি দেশ নির্বাচন করুন
+                  </div>
+                )}
+              </CardContent>
+            </SheetContent>
+          </Sheet>
+        )}
       </div>
 
       {/* Desktop View: Static Cards */}
