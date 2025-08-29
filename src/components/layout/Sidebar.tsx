@@ -28,14 +28,14 @@ const navItems = [
     href: "/news",
   },
   {
-    name: "এআই",
+    name: "All In One", // Changed name
     icon: Bot,
-    href: "/ai",
+    href: "/all-in-one", // Changed href
   },
   {
-    name: "লাইভ টিভি", // New menu item
-    icon: Tv, // Using Tv icon
-    href: "/live-tv", // New route
+    name: "লাইভ টিভি",
+    icon: Tv,
+    href: "/live-tv",
   },
   {
     name: "যোগাযোগ",

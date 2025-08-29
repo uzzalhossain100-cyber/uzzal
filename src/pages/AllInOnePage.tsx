@@ -113,7 +113,7 @@ const popularAITools: AITool[] = [
   },
 ];
 
-const AIPage: React.FC = () => {
+const AllInOnePage: React.FC = () => {
   const [selectedAITool, setSelectedAITool] = useState<AITool | null>(null);
 
   return (
@@ -166,4 +166,4 @@ const AIPage: React.FC = () => {
   );
 };
 
-export default AIPage;
+export default AllInOnePage;

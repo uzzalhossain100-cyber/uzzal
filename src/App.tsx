@@ -10,9 +10,9 @@ import SignupPage from "./pages/SignupPage";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import NewsPage from "./pages/NewsPage";
-import AIPage from "./pages/AIPage";
+import AllInOnePage from "./pages/AllInOnePage"; // Changed import from AIPage
 import ContactPage from "./pages/ContactPage";
-import LiveTVPage from "./pages/LiveTVPage"; // Import the new LiveTVPage
+import LiveTVPage from "./pages/LiveTVPage";
 import MainLayout from "./components/layout/MainLayout";
 
 const queryClient = new QueryClient();
@@ -32,8 +32,8 @@ const App = () => (
               <Route element={<MainLayout />}>
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/news" element={<NewsPage />} />
-                <Route path="/ai" element={<AIPage />} />
-                <Route path="/live-tv" element={<LiveTVPage />} /> {/* New Live TV Route */}
+                <Route path="/all-in-one" element={<AllInOnePage />} /> {/* Changed route path and element */}
+                <Route path="/live-tv" element={<LiveTVPage />} />
                 <Route path="/contact" element={<ContactPage />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               </Route>

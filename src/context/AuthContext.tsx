@@ -19,17 +19,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     const { data: authListener } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      (event, session) => {
+        // console.log("Auth state change:", event, session?.user); // For debugging
         setUser(session?.user || null);
         setLoading(false);
       }
     );
 
-    // Check initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user || null);
-      setLoading(false);
-    });
+    // The initial session is handled by the 'INITIAL_SESSION' event of onAuthStateChange.
+    // No need for a separate getSession() call here, as onAuthStateChange covers it.
 
     return () => {
       authListener.subscription.unsubscribe();
