@@ -69,7 +69,7 @@ const ContactPage: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-[calc(100vh-100px)] p-4 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 rounded-lg shadow-xl">
+    <div className="flex items-center justify-center min-h-[calc(100vh-100px)] p-4 bg-gradient-to-br from-primary/5 to-accent/5 dark:from-primary/10 dark:to-accent/10 rounded-lg shadow-xl">
       <Card className="w-full max-w-md shadow-lg border-primary/20 dark:border-primary/50">
         <CardHeader className="text-center border-b pb-4">
           <CardTitle className="text-3xl font-bold text-primary dark:text-primary-foreground">যোগাযোগ</CardTitle>
