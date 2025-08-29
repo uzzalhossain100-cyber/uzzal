@@ -4,19 +4,19 @@
 
 @layer base {
   :root {
-    --background: 210 20% 98%; /* Light blue-gray for a softer background */
-    --foreground: 222.2 84% 4.9%; /* Dark text */
+    --background: 0 0% 100%; /* Pure white for a clean base */
+    --foreground: 240 10% 3.9%; /* Near black text */
 
     --card: 0 0% 100%; /* White card background */
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 240 10% 3.9%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 240 10% 3.9%;
 
-    --primary: 217.2 91.2% 59.8%; /* A vibrant blue */
-    --primary-foreground: 210 40% 98%; /* White text on primary */
+    --primary: 262 83% 58%; /* A vibrant purple */
+    --primary-foreground: 0 0% 100%; /* White text on primary */
 
-    --secondary: 210 40% 96.1%; /* Light gray secondary */
+    --secondary: 210 40% 96.1%; /* Light blue-gray secondary */
     --secondary-foreground: 222.2 47.4% 11.2%;
 
     --muted: 210 40% 96.1%;
@@ -26,61 +26,61 @@
     --accent-foreground: 222.2 47.4% 11.2%;
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 100%;
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 217.2 91.2% 59.8%; /* Ring color matches primary */
+    --ring: 262 83% 58%; /* Ring color matches primary */
 
     --radius: 0.5rem;
 
-    --sidebar-background: 210 20% 96%; /* Lighter sidebar background */
-    --sidebar-foreground: 222.2 47.4% 11.2%; /* Dark text for sidebar */
-    --sidebar-primary: 217.2 91.2% 59.8%; /* Primary color for active items */
+    --sidebar-background: 262 83% 95%; /* Very light purple sidebar background */
+    --sidebar-foreground: 240 10% 3.9%; /* Dark text for sidebar */
+    --sidebar-primary: 262 83% 58%; /* Primary color for active items */
     --sidebar-primary-foreground: 0 0% 100%; /* White text on active sidebar items */
-    --sidebar-accent: 210 40% 92%; /* Slightly darker hover for sidebar */
-    --sidebar-accent-foreground: 222.2 47.4% 11.2%;
-    --sidebar-border: 214.3 31.8% 85%; /* Lighter border */
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-accent: 262 83% 90%; /* Slightly darker hover for sidebar */
+    --sidebar-accent-foreground: 240 10% 3.9%;
+    --sidebar-border: 262 83% 85%; /* Lighter border */
+    --sidebar-ring: 262 83% 58%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%; /* Dark background */
-    --foreground: 210 40% 98%; /* Light text */
+    --background: 240 10% 3.9%; /* Near black background */
+    --foreground: 0 0% 98%; /* Near white text */
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
 
-    --primary: 217.2 91.2% 59.8%; /* Vibrant blue for dark mode primary */
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 262 83% 58%; /* Same vibrant purple for dark mode primary */
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 240 3.7% 15.9%; /* Darker gray secondary */
+    --secondary-foreground: 0 0% 98%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
 
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 217.2 91.2% 59.8%; /* Ring color matches primary */
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 262 83% 58%; /* Ring color matches primary */
 
-    --sidebar-background: 222.2 47.4% 11.2%; /* Darker sidebar background */
-    --sidebar-foreground: 210 40% 98%; /* Light text for sidebar */
-    --sidebar-primary: 217.2 91.2% 59.8%; /* Primary color for active items */
+    --sidebar-background: 240 10% 8%; /* Darker purple-ish sidebar background */
+    --sidebar-foreground: 0 0% 98%; /* Light text for sidebar */
+    --sidebar-primary: 262 83% 58%; /* Primary color for active items */
     --sidebar-primary-foreground: 0 0% 100%; /* White text on active sidebar items */
-    --sidebar-accent: 217.2 32.6% 17.5%; /* Slightly lighter hover for sidebar */
-    --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 217.2 32.6% 17.5%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-accent: 240 10% 12%; /* Slightly lighter hover for sidebar */
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 240 10% 15%;
+    --sidebar-ring: 262 83% 58%;
   }
 }
 
