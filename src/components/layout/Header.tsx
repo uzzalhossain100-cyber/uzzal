@@ -24,6 +24,11 @@ interface HeaderProps {
 export function Header({ onToggleSidebar, isSidebarCollapsed }: HeaderProps) {
   const { user, signOut } = useAuth();
 
+  // Determine if the logged-in user is the admin 'Uzzal'
+  const isAdmin = user?.email === 'Uzzal';
+  const avatarSrc = isAdmin ? "/images/uzzal-hossain.jpg" : "https://github.com/shadcn.png";
+  const avatarFallback = user?.email ? user.email.charAt(0).toUpperCase() : 'U';
+
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background px-4 sm:static sm:px-6 shadow-sm"> {/* Added shadow-sm */}
       <Sheet>
@@ -69,9 +74,9 @@ export function Header({ onToggleSidebar, isSidebarCollapsed }: HeaderProps) {
             className="overflow-hidden rounded-full border-primary/30 hover:bg-primary/10" // Styled avatar button
           >
             <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+              <AvatarImage src={avatarSrc} alt={user?.email || "@user"} />
               <AvatarFallback>
-                {user?.email ? user.email.charAt(0).toUpperCase() : 'U'}
+                {avatarFallback}
               </AvatarFallback>
             </Avatar>
           </Button>
