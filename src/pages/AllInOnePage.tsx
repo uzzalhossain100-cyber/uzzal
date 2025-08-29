@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { allInOneCategories, Category, CategoryItem } from '@/data/categories';
+import { allInOneCategories, Category, CategoryItem } from '@/data/categories.ts'; // Added .ts extension
 import { ArrowLeft } from 'lucide-react';
 
 const AllInOnePage: React.FC = () => {
