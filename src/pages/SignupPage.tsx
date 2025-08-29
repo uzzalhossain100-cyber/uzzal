@@ -1,0 +1,75 @@
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useAuth } from '@/context/AuthContext';
+import { showError } from '@/utils/toast';
+
+const SignupPage: React.FC = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const { signUp } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    const { success, error } = await signUp(email, password);
+    if (success) {
+      navigate('/login'); // Redirect to login after successful signup
+    } else {
+      showError(error || "Signup failed.");
+    }
+    setIsLoading(false);
+  };
+
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
+      <Card className="w-full max-w-md">
+        <CardHeader className="text-center">
+          <CardTitle className="text-2xl">সাইন আপ</CardTitle>
+          <CardDescription>একটি নতুন অ্যাকাউন্ট তৈরি করতে আপনার ইমেল এবং পাসওয়ার্ড লিখুন।</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="grid gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="email">ইমেল</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="m@example.com"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="password">পাসওয়ার্ড</Label>
+              <Input
+                id="password"
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? 'সাইন আপ হচ্ছে...' : 'সাইন আপ করুন'}
+            </Button>
+          </form>
+          <div className="mt-4 text-center text-sm">
+            ইতিমধ্যে একটি অ্যাকাউন্ট আছে?{" "}
+            <Link to="/login" className="underline">
+              লগইন করুন
+            </Link>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+export default SignupPage;

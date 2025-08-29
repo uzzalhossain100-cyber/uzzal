@@ -3,15 +3,14 @@ import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import {
   Home,
-  DollarSign,
-  Receipt,
-  Users,
+  Newspaper,
+  Bot,
+  Mail,
+  Tv, // Added Tv icon for Live TV
   Settings,
-  BarChart,
-  Package,
-  CreditCard,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/context/AuthContext";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   isCollapsed?: boolean;
@@ -19,48 +18,35 @@ interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const navItems = [
   {
-    name: "Dashboard",
+    name: "হোম",
     icon: Home,
     href: "/",
   },
   {
-    name: "Transactions",
-    icon: Receipt,
-    href: "/transactions",
+    name: "খবর",
+    icon: Newspaper,
+    href: "/news",
   },
   {
-    name: "Accounts",
-    icon: DollarSign,
-    href: "/accounts",
+    name: "All In One", // Changed name
+    icon: Bot,
+    href: "/all-in-one", // Changed href
   },
   {
-    name: "Customers",
-    icon: Users,
-    href: "/customers",
+    name: "লাইভ টিভি",
+    icon: Tv,
+    href: "/live-tv",
   },
   {
-    name: "Products",
-    icon: Package,
-    href: "/products",
-  },
-  {
-    name: "Payments",
-    icon: CreditCard,
-    href: "/payments",
-  },
-  {
-    name: "Reports",
-    icon: BarChart,
-    href: "/reports",
-  },
-  {
-    name: "Settings",
-    icon: Settings,
-    href: "/settings",
+    name: "যোগাযোগ",
+    icon: Mail,
+    href: "/contact",
   },
 ];
 
 export function Sidebar({ className, isCollapsed = false }: SidebarProps) {
+  const { signOut } = useAuth();
+
   return (
     <div
       className={cn(
@@ -76,7 +62,7 @@ export function Sidebar({ className, isCollapsed = false }: SidebarProps) {
             isCollapsed ? "opacity-0 w-0" : "opacity-100 w-auto",
           )}
         >
-          Accounting
+          ড্যাশবোর্ড
         </h1>
         <h1
           className={cn(
@@ -84,7 +70,7 @@ export function Sidebar({ className, isCollapsed = false }: SidebarProps) {
             isCollapsed ? "opacity-100 w-auto" : "opacity-0 w-0",
           )}
         >
-          A
+          D
         </h1>
       </div>
       <nav className="flex-1 space-y-2">
@@ -116,6 +102,7 @@ export function Sidebar({ className, isCollapsed = false }: SidebarProps) {
             "w-full justify-start text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
             isCollapsed ? "justify-center" : "",
           )}
+          onClick={signOut}
         >
           <Settings className="h-5 w-5" />
           <span
@@ -124,7 +111,7 @@ export function Sidebar({ className, isCollapsed = false }: SidebarProps) {
               isCollapsed ? "opacity-0 w-0" : "opacity-100 w-auto",
             )}
           >
-            Settings
+            লগআউট
           </span>
         </Button>
       </div>
