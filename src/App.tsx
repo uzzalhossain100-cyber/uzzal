@@ -3,7 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index"; // Changed import from Dashboard to Index
+import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
@@ -12,8 +12,9 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import NewsPage from "./pages/NewsPage";
 import ContactPage from "./pages/ContactPage";
 import LiveTVPage from "./pages/LiveTVPage";
+import EmergencyContactsPage from "./pages/EmergencyContactsPage"; // New import
 import MainLayout from "./components/layout/MainLayout";
-import ViewPlatformPage from "./pages/ViewPlatformPage"; // New import
+import ViewPlatformPage from "./pages/ViewPlatformPage";
 
 const queryClient = new QueryClient();
 
@@ -30,12 +31,12 @@ const App = () => (
             
             <Route element={<ProtectedRoute />}>
               <Route element={<MainLayout />}>
-                <Route path="/" element={<Index />} /> {/* Changed element to Index */}
+                <Route path="/" element={<Index />} />
                 <Route path="/news" element={<NewsPage />} />
-                {/* Removed /all-in-one route as it's now the home page */}
                 <Route path="/live-tv" element={<LiveTVPage />} />
+                <Route path="/emergency-contacts" element={<EmergencyContactsPage />} /> {/* New route */}
                 <Route path="/contact" element={<ContactPage />} />
-                <Route path="/view/:encodedUrl/:itemName" element={<ViewPlatformPage />} /> {/* New route */}
+                <Route path="/view/:encodedUrl/:itemName" element={<ViewPlatformPage />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               </Route>
             </Route>

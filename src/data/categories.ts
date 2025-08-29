@@ -2,7 +2,8 @@ import {
   BookOpen, Film, Users, Newspaper, ShoppingCart, Banknote, Plane, HeartPulse,
   Building, MessageSquare, Settings, Utensils, Gamepad, Laptop, MessageCircle,
   Camera, Briefcase, Sparkles, GraduationCap, Landmark, Map, Syringe, Gavel,
-  Phone, ChefHat, Dumbbell, Code, Rss, Palette, TrendingUp, MoreHorizontal
+  Phone, ChefHat, Dumbbell, Code, Rss, Palette, TrendingUp, MoreHorizontal,
+  LifeBuoy // Added LifeBuoy icon for Emergency Contacts
 } from 'lucide-react';
 import React from 'react';
 
@@ -102,6 +103,16 @@ export const allInOneCategories: Category[] = [
     icon: Newspaper,
     internalRoute: "/news", // Direct navigation to the internal NewsPage
     // Removed the 'items' array as it's now a direct link
+  },
+  {
+    name: "লাইভ টিভি", // New category
+    icon: Tv,
+    internalRoute: "/live-tv", // Direct navigation to the existing LiveTVPage
+  },
+  {
+    name: "জরুরি যোগাযোগ", // New category
+    icon: LifeBuoy, // Using LifeBuoy icon for emergency contacts
+    internalRoute: "/emergency-contacts", // Direct navigation to the new EmergencyContactsPage
   },
   {
     name: "কেনাকাটা",
