@@ -8,7 +8,7 @@ import { useAuth } from '@/context/AuthContext';
 import { showError } from '@/utils/toast';
 
 const LoginPage: React.FC = () => {
-  const [email, setEmail] = useState('');
+  const [identifier, setIdentifier] = useState(''); // Can be email or username
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { signIn } = useAuth();
@@ -17,7 +17,7 @@ const LoginPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    const { success, error } = await signIn(email, password);
+    const { success, error } = await signIn(identifier, password);
     if (success) {
       navigate('/');
     } else {
@@ -31,19 +31,19 @@ const LoginPage: React.FC = () => {
       <Card className="w-full max-w-md shadow-lg border-primary/20 dark:border-primary/50">
         <CardHeader className="text-center">
           <CardTitle className="text-3xl font-bold text-primary dark:text-primary-foreground">লগইন</CardTitle>
-          <CardDescription className="text-muted-foreground">আপনার অ্যাকাউন্ট অ্যাক্সেস করতে আপনার ইমেল এবং পাসওয়ার্ড লিখুন।</CardDescription>
+          <CardDescription className="text-muted-foreground">আপনার অ্যাকাউন্ট অ্যাক্সেস করতে আপনার ইউজারনেম/ইমেল এবং পাসওয়ার্ড লিখুন।</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="grid gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="email">ইমেল / ইউজারনেম</Label>
+              <Label htmlFor="identifier">ইউজারনেম / ইমেল</Label>
               <Input
-                id="email"
+                id="identifier"
                 type="text"
-                placeholder="ইউজার নেম লিখুন"
+                placeholder="ইউজারনেম বা ইমেল লিখুন"
                 required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={identifier}
+                onChange={(e) => setIdentifier(e.target.value)}
                 className="border-primary/30 focus-visible:ring-primary"
               />
             </div>
