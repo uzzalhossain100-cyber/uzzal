@@ -7,6 +7,7 @@ import {
   Mail,
   Tv,
   LogOut,
+  Users, // Added Users icon for User Management
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
@@ -39,8 +40,10 @@ const navItems = [
 ];
 
 export function Sidebar({ className, isCollapsed = false }: SidebarProps) {
-  const { signOut } = useAuth();
+  const { signOut, profile } = useAuth(); // Get profile from useAuth
   const location = useLocation();
+
+  const isAdmin = profile?.email === 'Uzzal'; // Check if the logged-in user is the admin
 
   return (
     <div
@@ -93,6 +96,26 @@ export function Sidebar({ className, isCollapsed = false }: SidebarProps) {
             </Link>
           );
         })}
+        {isAdmin && ( // Only show User Management link if admin
+          <Link
+            to="/user-management"
+            className={cn(
+              "flex items-center gap-3 rounded-lg px-3 py-2 text-sidebar-foreground transition-all hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+              location.pathname === "/user-management" && "bg-sidebar-primary text-sidebar-primary-foreground hover:bg-sidebar-primary hover:text-sidebar-primary-foreground",
+              isCollapsed ? "justify-center" : "",
+            )}
+          >
+            <Users className="h-5 w-5" />
+            <span
+              className={cn(
+                "transition-opacity duration-300",
+                isCollapsed ? "opacity-0 w-0" : "opacity-100 w-auto",
+              )}
+            >
+              ইউজার ম্যানেজমেন্ট
+            </span>
+          </Link>
+        )}
       </nav>
       <div className="mt-auto pt-4 border-t border-sidebar-border">
         <Button
