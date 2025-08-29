@@ -46,7 +46,7 @@ const AllInOnePage: React.FC = () => {
                     )}
                     onClick={() => handleCategoryClick(category)}
                   >
-                    {Icon && <Icon className="h-8 w-8 mb-2 text-primary dark:text-primary-foreground" />}
+                    {Icon && <Icon className="h-12 w-12 mb-2 text-primary dark:text-primary-foreground" />} {/* Increased icon size here */}
                     <span className="font-bold text-lg">{category.name}</span>
                   </Button>
                 );
