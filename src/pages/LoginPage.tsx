@@ -6,11 +6,13 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuth } from '@/context/AuthContext';
 import { showError } from '@/utils/toast';
+import GuestLoginDialog from '@/components/GuestLoginDialog'; // Import the new component
 
 const LoginPage: React.FC = () => {
   const [identifier, setIdentifier] = useState(''); // Can be email or username
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isGuestLoginDialogOpen, setIsGuestLoginDialogOpen] = useState(false); // State for dialog
   const { signIn } = useAuth();
   const navigate = useNavigate();
 
@@ -69,8 +71,21 @@ const LoginPage: React.FC = () => {
               সাইন আপ করুন
             </Link>
           </div>
+          <div className="mt-6 text-center">
+            <Button
+              variant="outline"
+              className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90"
+              onClick={() => setIsGuestLoginDialogOpen(true)}
+            >
+              সাধারণ ইউজার হিসেবে প্রবেশ করুন
+            </Button>
+          </div>
         </CardContent>
       </Card>
+      <GuestLoginDialog
+        isOpen={isGuestLoginDialogOpen}
+        onOpenChange={setIsGuestLoginDialogOpen}
+      />
     </div>
   );
 };

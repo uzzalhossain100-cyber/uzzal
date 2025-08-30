@@ -42,6 +42,7 @@ export function Sidebar({ className, isCollapsed = false }: SidebarProps) {
   const location = useLocation();
 
   const isAdmin = profile?.email === 'Uzzal';
+  const isGuest = profile?.is_guest;
 
   return (
     <div
@@ -94,7 +95,7 @@ export function Sidebar({ className, isCollapsed = false }: SidebarProps) {
             </Link>
           );
         })}
-        {isAdmin && (
+        {isAdmin && !isGuest && ( // Only show User Management for admin, not guests
           <Link
             to="/user-management"
             className={cn(

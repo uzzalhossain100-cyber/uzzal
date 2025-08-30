@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Menu, Bell, Search, LogOut } from "lucide-react";
+import { Menu, Bell, Search, LogOut, User as UserIcon } from "lucide-react"; // Added UserIcon
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -22,13 +22,15 @@ interface HeaderProps {
 }
 
 export function Header({ onToggleSidebar, isSidebarCollapsed }: HeaderProps) {
-  const { user, signOut } = useAuth();
+  const { user, profile, signOut } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
 
   // Determine if the logged-in user is the admin 'Uzzal'
   const isAdmin = user?.email === 'Uzzal';
+  const isGuest = profile?.is_guest;
+
   const avatarSrc = isAdmin ? "/images/uzzal-hossain.jpg" : "https://github.com/shadcn.png";
-  const avatarFallback = user?.email ? user.email.charAt(0).toUpperCase() : 'U';
+  const avatarFallback = user?.email ? user.email.charAt(0).toUpperCase() : (profile?.username ? profile.username.charAt(0).toUpperCase() : 'U');
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -85,21 +87,33 @@ export function Header({ onToggleSidebar, isSidebarCollapsed }: HeaderProps) {
             className="overflow-hidden rounded-full border-primary/30 hover:bg-primary/10"
           >
             <Avatar>
-              <AvatarImage src={avatarSrc} alt={user?.email || "@user"} />
-              <AvatarFallback>
-                {avatarFallback}
-              </AvatarFallback>
+              {isGuest ? (
+                <AvatarFallback>
+                  <UserIcon className="h-5 w-5" />
+                </AvatarFallback>
+              ) : (
+                <>
+                  <AvatarImage src={avatarSrc} alt={user?.email || "@user"} />
+                  <AvatarFallback>
+                    {avatarFallback}
+                  </AvatarFallback>
+                </>
+              )}
             </Avatar>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>
-            {user?.email || "আমার অ্যাকাউন্ট"}
+            {isGuest ? `গেস্ট: ${profile?.username}` : (user?.email || "আমার অ্যাকাউন্ট")}
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>সেটিংস</DropdownMenuItem>
-          <DropdownMenuItem>সাপোর্ট</DropdownMenuItem>
-          <DropdownMenuSeparator />
+          {!isGuest && (
+            <>
+              <DropdownMenuItem>সেটিংস</DropdownMenuItem>
+              <DropdownMenuItem>সাপোর্ট</DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </>
+          )}
           <DropdownMenuItem onClick={signOut} className="text-destructive hover:bg-destructive/10">
             <LogOut className="mr-2 h-4 w-4" />
             লগআউট

@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Input } from '@/components/ui/input';
-import { Users, Circle, MessageSquareText, Search as SearchIcon, Loader2 } from 'lucide-react';
+import { Users, Circle, MessageSquareText, Search as SearchIcon, Loader2, User as UserIcon } from 'lucide-react'; // Added UserIcon
 import { useAuth } from '@/context/AuthContext';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
@@ -15,6 +15,7 @@ interface Profile {
   is_active: boolean;
   email: string;
   created_at: string;
+  is_guest?: boolean; // Added for guest users
 }
 
 const ActiveUsersPage: React.FC = () => {
@@ -27,7 +28,7 @@ const ActiveUsersPage: React.FC = () => {
   useEffect(() => {
     const fetchAllUsers = async () => {
       setLoading(true);
-      let fetchedUsers = await getUsersProfiles();
+      let fetchedUsers = await getUsersProfiles(); // This now only fetches real users
       if (!fetchedUsers) {
         fetchedUsers = [];
       }
@@ -37,6 +38,7 @@ const ActiveUsersPage: React.FC = () => {
         fetchedUsers.push({
           ...currentUserProfile,
           is_active: true, // Admin is always active when logged in
+          is_guest: false,
         });
       }
       
@@ -50,12 +52,15 @@ const ActiveUsersPage: React.FC = () => {
   }, [authLoading, getUsersProfiles, currentUserProfile]);
 
   useEffect(() => {
-    // Combine all users with online status
+    // Combine all users (real and online guests) with online status
     const onlineUserIds = new Set(onlineUsers.map(u => u.id));
+    const onlineGuestUsers = onlineUsers.filter(u => u.is_guest);
 
-    const usersWithStatus = allUsers.map(user => ({
+    const combinedUsers = [...allUsers, ...onlineGuestUsers.filter(guest => !allUsers.some(u => u.id === guest.id))];
+
+    const usersWithStatus = combinedUsers.map(user => ({
       ...user,
-      isOnline: onlineUserIds.has(user.id) || (currentUserProfile?.id === user.id && currentUserProfile.email === 'Uzzal'), // Admin is online if logged in
+      isOnline: onlineUserIds.has(user.id) || (currentUserProfile?.id === user.id && (currentUserProfile.email === 'Uzzal' || currentUserProfile.is_guest)), // Admin/Guest is online if logged in
     }));
 
     // Filter based on search query
@@ -126,7 +131,10 @@ const ActiveUsersPage: React.FC = () => {
                         )}
                       />
                       <div>
-                        <p className="font-semibold text-foreground">{user.username}</p>
+                        <p className="font-semibold text-foreground flex items-center">
+                          {user.username}
+                          {user.is_guest && <span className="ml-2 text-xs text-muted-foreground">(গেস্ট)</span>}
+                        </p>
                         <p className="text-sm text-muted-foreground">{user.email}</p>
                       </div>
                     </div>
