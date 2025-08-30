@@ -44,6 +44,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
   const [onlineUsers, setOnlineUsers] = useState<Profile[]>([]);
   const presenceChannelRef = useRef<any>(null); // Ref for Supabase Realtime channel
+  const authListenerRef = useRef<any>(null); // Ref to store the auth listener subscription
 
   // Function to update online users based on presence state
   const updateOnlineUsers = async (presenceState: PresenceState) => {
@@ -216,7 +217,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         else {
           // If no user and no mock admin and no guest, ensure presence channel is unsubscribed
           if (presenceChannelRef.current) {
-            presenceChannelRef.current.unsubscribe();
+            try {
+              presenceChannelRef.current.unsubscribe();
+            } catch (e) {
+              console.warn("Warning: Error unsubscribing presence channel in fetchUserAndProfile:", e);
+            }
             presenceChannelRef.current = null;
           }
           setUser(null);
@@ -233,6 +238,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         await fetchUserAndProfile(session?.user || null);
       }
     );
+    authListenerRef.current = authListener; // Store the listener for cleanup
 
     // Initial session check
     supabase.auth.getSession().then(async ({ data: { session } }) => {
@@ -240,9 +246,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
 
     return () => {
-      authListener.subscription.unsubscribe();
+      // Defensive check for authListener and its subscription
+      if (authListenerRef.current && authListenerRef.current.subscription) {
+        try {
+          authListenerRef.current.subscription.unsubscribe();
+        } catch (e) {
+          console.warn("Warning: Error unsubscribing auth listener during useEffect cleanup:", e);
+        }
+      }
+      // The presenceChannelRef.current cleanup here is for component unmount.
+      // If signOut has already cleared it, this will be skipped.
       if (presenceChannelRef.current) {
-        presenceChannelRef.current.unsubscribe();
+        try {
+          presenceChannelRef.current.unsubscribe();
+        } catch (e) {
+          console.warn("Warning: Error unsubscribing presence channel during useEffect cleanup:", e);
+        }
+        presenceChannelRef.current = null;
       }
     };
   }, []);
@@ -367,10 +387,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signOut = async () => {
+    // First, handle presence channel cleanup if it exists
     if (presenceChannelRef.current) {
-      await presenceChannelRef.current.untrack();
-      presenceChannelRef.current.unsubscribe();
-      presenceChannelRef.current = null;
+      try {
+        // Attempt to untrack
+        await presenceChannelRef.current.untrack();
+      } catch (e) {
+        console.warn("Warning: Error untracking presence channel during signOut:", e);
+        // Continue even if untrack fails, as unsubscribe might still be needed
+      }
+
+      // After untrack (or failed untrack), attempt to unsubscribe if the channel is still there
+      if (presenceChannelRef.current) { // Re-check after async operation
+        try {
+          presenceChannelRef.current.unsubscribe();
+        } catch (e) {
+          console.warn("Warning: Error unsubscribing presence channel during signOut:", e);
+        }
+        presenceChannelRef.current = null; // Ensure it's cleared
+      }
     }
 
     // Handle mock admin and guest logout directly
