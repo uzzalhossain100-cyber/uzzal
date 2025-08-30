@@ -67,6 +67,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setOnlineUsers(newOnlineUsers);
   };
 
+  // Helper function to set mock admin state
+  const setMockAdminSession = () => {
+    const adminUser: User = { id: 'admin-id', email: 'Uzzal', app_metadata: {}, user_metadata: {}, aud: 'authenticated', created_at: new Date().toISOString() } as User;
+    const adminProfile: Profile = { id: 'admin-id', username: 'Uzzal', mobile_number: '01713236980', is_active: true, email: 'Uzzal', created_at: new Date().toISOString() };
+    setUser(adminUser);
+    setProfile(adminProfile);
+    localStorage.setItem('isMockAdminLoggedIn', 'true'); // Persist mock admin state
+  };
+
+  // Helper function to clear mock admin state
+  const clearMockAdminSession = () => {
+    setUser(null);
+    setProfile(null);
+    localStorage.removeItem('isMockAdminLoggedIn');
+  };
+
   useEffect(() => {
     const fetchUserAndProfile = async (sessionUser: User | null) => {
       if (sessionUser) {
@@ -80,6 +96,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (error) {
           console.error("Error fetching profile:", error);
           setProfile(null);
+          // If profile fetch fails for a real user, consider signing them out or showing an error.
+          // For now, just setting profile to null.
         } else if (data) {
           setProfile(data);
           if (!data.is_active) {
@@ -87,6 +105,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setUser(null);
             setProfile(null);
             showError("আপনার অ্যাকাউন্ট নিষ্ক্রিয় করা হয়েছে।");
+            clearMockAdminSession(); // Also clear mock admin if a real user becomes inactive
           } else {
             // Join presence channel if user is active
             if (!presenceChannelRef.current) {
@@ -130,14 +149,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           }
         }
       } else {
-        // If no user, ensure presence channel is unsubscribed
-        if (presenceChannelRef.current) {
-          presenceChannelRef.current.unsubscribe();
-          presenceChannelRef.current = null;
+        // If no Supabase user, check for mock admin session
+        if (localStorage.getItem('isMockAdminLoggedIn') === 'true') {
+          setMockAdminSession(); // Re-establish mock admin session
+        } else {
+          // If no user and no mock admin, ensure presence channel is unsubscribed
+          if (presenceChannelRef.current) {
+            presenceChannelRef.current.unsubscribe();
+            presenceChannelRef.current = null;
+          }
+          setUser(null);
+          setProfile(null);
+          setOnlineUsers([]);
         }
-        setUser(null);
-        setProfile(null);
-        setOnlineUsers([]);
       }
       setLoading(false);
     };
@@ -149,8 +173,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     );
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      fetchUserAndProfile(session?.user || null);
+    // Initial session check
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      await fetchUserAndProfile(session?.user || null);
     });
 
     return () => {
@@ -164,10 +189,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signIn = async (identifier: string, password: string) => {
     // Special admin login for 'Uzzal'
     if (identifier === 'Uzzal' && password === '123321') {
-      const adminUser: User = { id: 'admin-id', email: 'Uzzal', app_metadata: {}, user_metadata: {}, aud: 'authenticated', created_at: new Date().toISOString() } as User;
-      const adminProfile: Profile = { id: 'admin-id', username: 'Uzzal', mobile_number: '01713236980', is_active: true, email: 'Uzzal', created_at: new Date().toISOString() };
-      setUser(adminUser);
-      setProfile(adminProfile);
+      setMockAdminSession(); // Use the helper function
       showSuccess("এডমিন লগইন সফল!");
       return { success: true };
     }
@@ -205,17 +227,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (profileError || !profileData) {
       showError("প্রোফাইল ডেটা লোড করতে ব্যর্থ।");
       await supabase.auth.signOut();
+      clearMockAdminSession(); // Clear mock admin if a real user profile fails to load
       return { success: false, error: "প্রোফাইল ডেটা লোড করতে ব্যর্থ।" };
     }
 
     if (!profileData.is_active) {
       showError("আপনার অ্যাকাউন্ট নিষ্ক্রিয় করা হয়েছে।");
       await supabase.auth.signOut();
+      clearMockAdminSession(); // Clear mock admin if a real user is inactive
       return { success: false, error: "আপনার অ্যাকাউন্ট নিষ্ক্রিয় করা হয়েছে।" };
     }
 
     setUser(data.user);
     setProfile(profileData);
+    localStorage.removeItem('isMockAdminLoggedIn'); // Ensure mock admin flag is cleared if a real user logs in
     showSuccess("লগইন সফল!");
     return { success: true };
   };
@@ -274,6 +299,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (error) {
       showError(error.message);
     } else {
+      clearMockAdminSession(); // Clear mock admin session on sign out
       setUser(null);
       setProfile(null);
       setOnlineUsers([]);
