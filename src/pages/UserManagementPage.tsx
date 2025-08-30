@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { useNavigate } from 'react-router-dom';
 import { showError } from '@/utils/toast';
 import { supabase } from '@/lib/supabaseClient';
-import { format } from 'date-fns';
+import { format, startOfDay, endOfDay, startOfMonth, endOfMonth, startOfYear, endOfYear } from 'date-fns'; // Added date-fns functions
 
 interface Profile {
   id: string;
@@ -81,39 +81,50 @@ const UserManagementPage: React.FC = () => {
 
   const fetchVisitsData = async () => {
     setLoadingVisits(true);
+    
     // Fetch recent visits
     const { data: visitsData, error: visitsError } = await supabase
       .from('visits')
       .select('*')
       .order('visited_at', { ascending: false })
-      .limit(50); // Limit to 50 recent visits
+      .limit(50);
 
     if (visitsError) {
       console.error("Error fetching visits:", visitsError.message);
       showError("ভিজিট ডেটা লোড করতে ব্যর্থ।");
+      setLoadingVisits(false); // Ensure loading state is reset even on error
+      return;
     } else {
       setRecentVisits(visitsData || []);
     }
 
-    // Fetch visit counts
-    const today = format(new Date(), 'yyyy-MM-dd');
-    const startOfMonth = format(new Date(new Date().getFullYear(), new Date().getMonth(), 1), 'yyyy-MM-dd');
-    const startOfYear = format(new Date(new Date().getFullYear(), 0, 1), 'yyyy-MM-dd');
+    // Calculate date boundaries in local time and convert to ISO strings for Supabase
+    const now = new Date();
+    const todayStart = startOfDay(now).toISOString();
+    const todayEnd = endOfDay(now).toISOString();
+    const thisMonthStart = startOfMonth(now).toISOString();
+    const thisMonthEnd = endOfMonth(now).toISOString();
+    const thisYearStart = startOfYear(now).toISOString();
+    const thisYearEnd = endOfYear(now).toISOString();
 
+    // Fetch visit counts
     const { count: todayCount, error: todayError } = await supabase
       .from('visits')
       .select('*', { count: 'exact', head: true })
-      .gte('visited_at', today);
+      .gte('visited_at', todayStart)
+      .lte('visited_at', todayEnd);
 
     const { count: monthCount, error: monthError } = await supabase
       .from('visits')
       .select('*', { count: 'exact', head: true })
-      .gte('visited_at', startOfMonth);
+      .gte('visited_at', thisMonthStart)
+      .lte('visited_at', thisMonthEnd);
 
     const { count: yearCount, error: yearError } = await supabase
       .from('visits')
       .select('*', { count: 'exact', head: true })
-      .gte('visited_at', startOfYear);
+      .gte('visited_at', thisYearStart)
+      .lte('visited_at', thisYearEnd);
 
     const { count: totalCount, error: totalError } = await supabase
       .from('visits')
