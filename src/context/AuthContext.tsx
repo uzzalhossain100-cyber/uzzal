@@ -249,7 +249,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signIn = async (identifier: string, password: string) => {
     // Special admin login for 'Uzzal'
-    if (identifier === 'Uzzal' && password === '123321') {
+    if (identifier === 'Uzzal' && password === '200186') { // Changed password here
       setMockAdminSession(); // Use the helper function
       showSuccess("এডমিন লগইন সফল!");
       return { success: true };

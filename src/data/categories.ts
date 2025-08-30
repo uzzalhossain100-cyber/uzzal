@@ -311,12 +311,41 @@ export const allInOneCategories: Category[] = [
       {
         name: "ভারত",
         subItems: [
+          // Hindi Channels
           { name: "স্টার প্লাস", url: "https://www.hotstar.com/in/channels/star-plus/1260000001" },
           { name: "সনি এন্টারটেইনমেন্ট টেলিভিশন", url: "https://www.sonyliv.com/channels/sony-entertainment-television-1260000001" },
           { name: "জি টিভি", url: "https://www.zee5.com/channels/zee-tv/0-9-zeetv" },
           { name: "কালারস টিভি", url: "https://www.voot.com/channels/colors-hindi/451846" },
           { name: "আজ তাক", url: "https://www.aajtak.in/livetv" },
           { name: "এনডিটিভি ইন্ডিয়া", url: "https://www.ndtv.com/video/live/channel/ndtv-india" },
+          { name: "রিপাবলিক টিভি", url: "https://www.republicworld.com/live-tv.html" },
+          { name: "ইন্ডিয়া টুডে", url: "https://www.indiatoday.in/livetv" },
+          { name: "এবিপি নিউজ", url: "https://news.abplive.com/live-tv" },
+          { name: "জি নিউজ", url: "https://zeenews.india.com/hindi/live-tv" },
+          { name: "সনি ম্যাক্স", url: "https://www.sonyliv.com/channels/sony-max-1260000002" },
+          { name: "স্টার গোল্ড", url: "https://www.hotstar.com/in/channels/star-gold/1260000003" },
+          { name: "কালারস সিনেপ্লেক্স", url: "https://www.voot.com/channels/colors-cineplex/451847" },
+          { name: "জি সিনেমা", url: "https://www.zee5.com/channels/zee-cinema/0-9-zeecinema" },
+          { name: "এমটিভি ইন্ডিয়া", url: "https://www.voot.com/channels/mtv-india/451848" },
+          { name: "জুম", url: "https://www.timesnownews.com/zoom" },
+          { name: "স্টার স্পোর্টস ১ হিন্দি", url: "https://www.hotstar.com/in/sports/cricket/star-sports-1-hindi/1260000004" },
+          { name: "সনি সিক্স", url: "https://www.sonyliv.com/channels/sony-six-1260000005" },
+          // Bengali Channels
+          { name: "স্টার জলসা", url: "https://www.hotstar.com/in/channels/star-jalsha/1260000006" },
+          { name: "জি বাংলা", url: "https://www.zee5.com/channels/zee-bangla/0-9-zeebangla" },
+          { name: "কালারস বাংলা", url: "https://www.voot.com/channels/colors-bangla/451849" },
+          { name: "এবিপি আনন্দ", url: "https://bengali.abplive.com/live-tv" },
+          { name: "২৪ ঘণ্টা জি নিউজ", url: "https://zeenews.india.com/bengali/live-tv" },
+          // Tamil Channels
+          { name: "স্টার বিজয়", url: "https://www.hotstar.com/in/channels/star-vijay/1260000007" },
+          { name: "জি তামিল", url: "https://www.zee5.com/channels/zee-tamil/0-9-zeetamil" },
+          { name: "সান টিভি", url: "https://www.sunnetwork.in/live-tv/suntv.aspx" },
+          { name: "কালারস তামিল", url: "https://www.voot.com/channels/colors-tamil/451850" },
+          // Telugu Channels
+          { name: "স্টার মা", url: "https://www.hotstar.com/in/channels/star-maa/1260000008" },
+          { name: "জি তেলুগু", url: "https://www.zee5.com/channels/zee-telugu/0-9-zeetelugu" },
+          { name: "ইটিভি তেলুগু", url: "https://www.etvwin.com/live" },
+          { name: "জেমিনি টিভি", url: "https://www.sunnetwork.in/live-tv/geminitv.aspx" },
         ],
       },
       {
