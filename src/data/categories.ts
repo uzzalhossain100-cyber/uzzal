@@ -3,7 +3,7 @@ import {
   Building, MessageSquare, Settings, Utensils, Gamepad, Laptop, MessageCircle,
   Camera, Briefcase, Sparkles, GraduationCap, Landmark, Map, Syringe, Gavel,
   Phone, ChefHat, Dumbbell, Code, Rss, Palette, TrendingUp, MoreHorizontal,
-  LifeBuoy, Tv
+  LifeBuoy, Tv, Globe // Added Globe for country selection
 } from 'lucide-react';
 import React from 'react';
 
@@ -23,28 +23,57 @@ export interface Category {
 export const allInOneCategories: Category[] = [
   {
     name: "শিক্ষা",
-    icon: BookOpen,
+    icon: BookOpen, // Main icon for the Education category
     items: [
-      { name: "খান একাডেমি", url: "https://www.khanacademy.org/" },
-      { name: "১০ মিনিট স্কুল", url: "https://10minuteschool.com/" },
-      { name: "উইকিপিডিয়া", url: "https://www.wikipedia.org/" },
-      { name: "Coursera", url: "https://www.coursera.org/" },
-      { name: "edX", url: "https://www.edx.org/" },
-      { name: "Google Scholar", url: "https://scholar.google.com/" },
-      { name: "TED Talks", url: "https://www.ted.com/talks" },
-      { name: "Duolingo", url: "https://www.duolingo.com/" },
-      { name: "Codecademy", url: "https://www.codecademy.com/" },
-      { name: "FreeCodeCamp", url: "https://www.freecodecamp.org/" },
-      { name: "GeeksforGeeks", url: "https://www.geeksforgeeks.org/" },
-      { name: "W3Schools", url: "https://www.w3schools.com/" },
-      { name: "MDN Web Docs", url: "https://developer.mozilla.org/en-US/" },
-      { name: "Stack Overflow", url: "https://stackoverflow.com/" },
-      { name: "ResearchGate", url: "https://www.researchgate.net/" },
-      { name: "Academia.edu", url: "https://www.academia.edu/" },
-      { name: "Project Gutenberg", url: "https://www.gutenberg.org/" },
-      { name: "OpenStax", url: "https://openstax.org/" },
-      { name: "MIT OpenCourseWare", url: "https://ocw.mit.edu/" },
-      { name: "Harvard Online Courses", url: "https://online-learning.harvard.edu/" },
+      {
+        name: "বাংলাদেশ",
+        subItems: [
+          { name: "১০ মিনিট স্কুল", url: "https://10minuteschool.com/" },
+          { name: "খান একাডেমি বাংলা", url: "https://bn.khanacademy.org/" },
+          { name: "উইকিপিডিয়া বাংলা", url: "https://bn.wikipedia.org/" },
+          { name: "উদ্ভাস উন্মেষ", url: "https://udvash.com/" },
+          { name: "রেটিনা", url: "https://retina.com.bd/" },
+          { name: "আইকন প্লাস", url: "https://iconplus.com.bd/" },
+          { name: "ওমেকা", url: "https://omegabangladesh.com/" },
+          { name: "শিখো", url: "https://shikho.com/" },
+          { name: "এডু হাইভ", url: "https://eduhive.com.bd/" },
+          { name: "কিশোর বাতায়ন", url: "https://kishor.gov.bd/" },
+          { name: "মুক্তপাঠ", url: "https://muktopaath.gov.bd/" },
+          { name: "জাতীয় ই-তথ্যকোষ", url: "https://www.infokosh.gov.bd/" },
+        ],
+      },
+      {
+        name: "ভারত",
+        subItems: [
+          { name: "বাইজু'স", url: "https://byjus.com/" },
+          { name: "আনঅ্যাকাডেমি", url: "https://unacademy.com/" },
+          { name: "বেদান্তু", url: "https://www.vedantu.com/" },
+          { name: "সুইফটলার্ন", url: "https://www.swiftlearn.com/" },
+          { name: "খান একাডেমি", url: "https://www.khanacademy.org/" },
+          { name: "আকাশ ইনস্টিটিউট", url: "https://www.aakash.ac.in/" },
+          { name: "ফিটজি", url: "https://www.fiitjee.com/" },
+          { name: "রেজোনেন্স", url: "https://www.resonance.ac.in/" },
+          { name: "ভিডিও", url: "https://www.viden.io/" },
+          { name: "লার্নএক্স", url: "https://learnx.in/" },
+        ],
+      },
+      {
+        name: "আন্তর্জাতিক", // For global platforms
+        subItems: [
+          { name: "Coursera", url: "https://www.coursera.org/" },
+          { name: "edX", url: "https://www.edx.org/" },
+          { name: "Google Scholar", url: "https://scholar.google.com/" },
+          { name: "TED Talks", url: "https://www.ted.com/talks" },
+          { name: "Duolingo", url: "https://www.duolingo.com/" },
+          { name: "Codecademy", url: "https://www.codecademy.com/" },
+          { name: "FreeCodeCamp", url: "https://www.freecodecamp.org/" },
+          { name: "W3Schools", url: "https://www.w3schools.com/" },
+          { name: "MDN Web Docs", url: "https://developer.mozilla.org/en-US/" },
+          { name: "Stack Overflow", url: "https://stackoverflow.com/" },
+          { name: "Project Gutenberg", url: "https://www.gutenberg.org/" },
+          { name: "MIT OpenCourseWare", url: "https://ocw.mit.edu/" },
+        ],
+      },
     ],
   },
   {

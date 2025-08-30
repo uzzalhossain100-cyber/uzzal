@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { allInOneCategories, Category, CategoryItem } from '@/data/categories.ts';
-import { ArrowLeft, ExternalLink, Newspaper as NewspaperIcon, Globe, Tv } from 'lucide-react'; // Added Tv icon
+import { ArrowLeft, ExternalLink, Newspaper as NewspaperIcon, Globe, Tv, GraduationCap, BookOpen } from 'lucide-react'; // Added GraduationCap and BookOpen icons
 import { cn } from '@/lib/utils';
 
 const Index: React.FC = () => {
@@ -12,13 +12,13 @@ const Index: React.FC = () => {
   const navigate = useNavigate();
 
   const categoryParam = searchParams.get('category');
-  const subCategoryParam = searchParams.get('subCategory'); // New: for countries within News/Live TV
+  const subCategoryParam = searchParams.get('subCategory'); // For countries within News/Live TV/Education
 
   const currentCategory = categoryParam
     ? allInOneCategories.find(cat => cat.name === categoryParam)
     : null;
 
-  const currentSubCategoryItems = (currentCategory?.name === "খবর" || currentCategory?.name === "লাইভ টিভি") && subCategoryParam
+  const currentSubCategoryItems = (currentCategory?.name === "খবর" || currentCategory?.name === "লাইভ টিভি" || currentCategory?.name === "শিক্ষা") && subCategoryParam
     ? currentCategory.items?.find(item => item.name === subCategoryParam)?.subItems
     : null;
 
@@ -31,11 +31,11 @@ const Index: React.FC = () => {
   };
 
   const handleItemClick = (item: CategoryItem) => {
-    if ((currentCategory?.name === "খবর" || currentCategory?.name === "লাইভ টিভি") && item.subItems) {
-      // If it's a country within "খবর" or "লাইভ টিভি" category
+    if ((currentCategory?.name === "খবর" || currentCategory?.name === "লাইভ টিভি" || currentCategory?.name === "শিক্ষা") && item.subItems) {
+      // If it's a country within "খবর", "লাইভ টিভি" or "শিক্ষা" category
       setSearchParams({ category: currentCategory.name, subCategory: item.name });
     } else if (item.url) {
-      // If it's a final item with a URL (e.g., a newspaper or a regular category item)
+      // If it's a final item with a URL (e.g., a newspaper, TV channel, or educational site)
       const encodedUrl = encodeURIComponent(item.url);
       const encodedItemName = encodeURIComponent(item.name);
       navigate(`/view/${encodedUrl}/${encodedItemName}`);
@@ -44,7 +44,7 @@ const Index: React.FC = () => {
 
   const handleBack = () => {
     if (subCategoryParam) {
-      // If currently viewing newspapers/TV channels, go back to countries
+      // If currently viewing sub-items (newspapers/TV channels/educational sites), go back to countries
       setSearchParams({ category: categoryParam || '' });
     } else if (categoryParam) {
       // If currently viewing countries or a regular category, go back to all categories
@@ -89,11 +89,22 @@ const Index: React.FC = () => {
     );
   }
 
-  // State 2: Displaying Countries for "খবর" or "লাইভ টিভি"
-  if ((currentCategory.name === "খবর" || currentCategory.name === "লাইভ টিভি") && !subCategoryParam) {
+  // State 2: Displaying Countries for "খবর", "লাইভ টিভি" or "শিক্ষা"
+  if ((currentCategory.name === "খবর" || currentCategory.name === "লাইভ টিভি" || currentCategory.name === "শিক্ষা") && !subCategoryParam) {
     // Determine icon based on category
-    const CountryIcon = currentCategory.name === "খবর" ? Globe : Tv;
-    const titleSuffix = currentCategory.name === "খবর" ? "দেশ নির্বাচন করুন" : "দেশ নির্বাচন করুন";
+    let CountryIcon: React.ElementType;
+    let titleSuffix: string;
+
+    if (currentCategory.name === "খবর") {
+      CountryIcon = Globe;
+      titleSuffix = "দেশ নির্বাচন করুন";
+    } else if (currentCategory.name === "লাইভ টিভি") {
+      CountryIcon = Tv;
+      titleSuffix = "দেশ নির্বাচন করুন";
+    } else { // currentCategory.name === "শিক্ষা"
+      CountryIcon = GraduationCap; // Specific icon for education country selection
+      titleSuffix = "দেশ নির্বাচন করুন";
+    }
 
     return (
       <Card className="w-full flex flex-col h-full bg-gradient-to-br from-primary/5 to-accent/5 dark:from-primary/10 dark:to-accent/10 shadow-xl border-primary/20">
@@ -132,18 +143,21 @@ const Index: React.FC = () => {
     );
   }
 
-  // State 3: Displaying Newspapers/TV Channels for a selected country within "খবর" OR "লাইভ টিভি" OR Items for other categories
-  const itemsToDisplay = currentCategory.name === "খবর" && subCategoryParam
+  // State 3: Displaying Newspapers/TV Channels/Educational Sites for a selected country
+  const itemsToDisplay = (currentCategory.name === "খবর" || currentCategory.name === "লাইভ টিভি" || currentCategory.name === "শিক্ষা") && subCategoryParam
     ? currentSubCategoryItems
-    : currentCategory.name === "লাইভ টিভি" && subCategoryParam
-      ? currentSubCategoryItems
-      : currentCategory.items;
+    : currentCategory.items;
 
-  const titleText = currentCategory.name === "খবর" && subCategoryParam
-    ? `${subCategoryParam} - সংবাদপত্র`
-    : currentCategory.name === "লাইভ টিভি" && subCategoryParam
-      ? `${subCategoryParam} - টেলিভিশন`
-      : currentCategory.name;
+  let titleText: string;
+  if (currentCategory.name === "খবর" && subCategoryParam) {
+    titleText = `${subCategoryParam} - সংবাদপত্র`;
+  } else if (currentCategory.name === "লাইভ টিভি" && subCategoryParam) {
+    titleText = `${subCategoryParam} - টেলিভিশন`;
+  } else if (currentCategory.name === "শিক্ষা" && subCategoryParam) {
+    titleText = `${subCategoryParam} - শিক্ষা বিষয়ক ওয়েবসাইট`;
+  } else {
+    titleText = currentCategory.name;
+  }
 
   return (
     <Card className="w-full flex flex-col h-full bg-gradient-to-br from-primary/5 to-accent/5 dark:from-primary/10 dark:to-accent/10 shadow-xl border-primary/20">
