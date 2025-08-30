@@ -1,10 +1,10 @@
 import React from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom'; // Import useSearchParams
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { allInOneCategories, Category, CategoryItem } from '@/data/categories.ts';
-import { ArrowLeft, ExternalLink } from 'lucide-react';
+import { ArrowLeft, ExternalLink, Newspaper as NewspaperIcon, Globe } from 'lucide-react'; // Added Globe icon
 import { cn } from '@/lib/utils';
 
 const Index: React.FC = () => {
@@ -12,8 +12,14 @@ const Index: React.FC = () => {
   const navigate = useNavigate();
 
   const categoryParam = searchParams.get('category');
+  const subCategoryParam = searchParams.get('subCategory'); // New: for countries within News
+
   const currentCategory = categoryParam
     ? allInOneCategories.find(cat => cat.name === categoryParam)
+    : null;
+
+  const currentSubCategoryItems = currentCategory?.name === "খবর" && subCategoryParam
+    ? currentCategory.items?.find(item => item.name === subCategoryParam)?.subItems
     : null;
 
   const handleCategoryClick = (category: Category) => {
@@ -25,17 +31,29 @@ const Index: React.FC = () => {
   };
 
   const handleItemClick = (item: CategoryItem) => {
-    const encodedUrl = encodeURIComponent(item.url);
-    const encodedItemName = encodeURIComponent(item.name);
-    navigate(`/view/${encodedUrl}/${encodedItemName}`);
+    if (currentCategory?.name === "খবর" && item.subItems) {
+      // If it's a country within the "খবর" category
+      setSearchParams({ category: currentCategory.name, subCategory: item.name });
+    } else if (item.url) {
+      // If it's a final item with a URL (e.g., a newspaper or a regular category item)
+      const encodedUrl = encodeURIComponent(item.url);
+      const encodedItemName = encodeURIComponent(item.name);
+      navigate(`/view/${encodedUrl}/${encodedItemName}`);
+    }
   };
 
-  const handleBackToCategories = () => {
-    setSearchParams({}); // Clear URL param to show all categories
+  const handleBack = () => {
+    if (subCategoryParam) {
+      // If currently viewing newspapers, go back to countries
+      setSearchParams({ category: categoryParam || '' });
+    } else if (categoryParam) {
+      // If currently viewing countries or a regular category, go back to all categories
+      setSearchParams({});
+    }
   };
 
-  // State 1: Displaying Categories
-  if (!currentCategory) { // Use currentCategory derived from URL
+  // State 1: Displaying Top-Level Categories
+  if (!currentCategory) {
     return (
       <Card className="w-full flex flex-col h-full bg-gradient-to-br from-primary/5 to-accent/5 dark:from-primary/10 dark:to-accent/10 shadow-xl border-primary/20">
         <CardHeader className="pb-4 border-b">
@@ -71,21 +89,69 @@ const Index: React.FC = () => {
     );
   }
 
-  // State 2: Displaying Items within a Category
+  // State 2: Displaying Countries for "খবর" or Items for other categories
+  if (currentCategory.name === "খবর" && !subCategoryParam) {
+    // Display countries for "খবর"
+    return (
+      <Card className="w-full flex flex-col h-full bg-gradient-to-br from-primary/5 to-accent/5 dark:from-primary/10 dark:to-accent/10 shadow-xl border-primary/20">
+        <CardHeader className="flex flex-row items-center justify-between pb-4 border-b">
+          <CardTitle className="text-3xl font-extrabold text-primary dark:text-primary-foreground flex items-center">
+            <Button variant="ghost" onClick={handleBack} className="p-0 h-auto mr-2 text-primary dark:text-primary-foreground hover:bg-transparent hover:text-primary/80">
+              <ArrowLeft className="h-6 w-6" />
+            </Button>
+            {currentCategory.name} - দেশ নির্বাচন করুন
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="flex-1 overflow-hidden p-6">
+          <ScrollArea className="h-[calc(100vh-180px)] w-full rounded-xl border-2 border-primary/20 bg-background/80 p-4 shadow-lg">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+              {currentCategory.items?.map((country) => {
+                return (
+                  <Button
+                    key={country.name}
+                    variant="outline"
+                    className={cn(
+                      "h-32 flex flex-col items-center justify-center text-center p-4 rounded-lg shadow-md transition-all duration-200",
+                      "bg-card text-foreground border-primary/30 hover:bg-primary/10 hover:border-primary",
+                      "dark:bg-card dark:text-foreground dark:border-primary/50 dark:hover:bg-primary/20 dark:hover:border-primary"
+                    )}
+                    onClick={() => handleItemClick(country)}
+                  >
+                    <Globe className="h-12 w-12 mb-2 text-primary dark:text-primary-foreground" />
+                    <span className="font-bold text-lg">{country.name}</span>
+                  </Button>
+                );
+              })}
+            </div>
+          </ScrollArea>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // State 3: Displaying Newspapers for a selected country within "খবর" OR Items for other categories
+  const itemsToDisplay = currentCategory.name === "খবর" && subCategoryParam
+    ? currentSubCategoryItems
+    : currentCategory.items;
+
+  const titleText = currentCategory.name === "খবর" && subCategoryParam
+    ? `${subCategoryParam} - সংবাদপত্র`
+    : currentCategory.name;
+
   return (
     <Card className="w-full flex flex-col h-full bg-gradient-to-br from-primary/5 to-accent/5 dark:from-primary/10 dark:to-accent/10 shadow-xl border-primary/20">
       <CardHeader className="flex flex-row items-center justify-between pb-4 border-b">
         <CardTitle className="text-3xl font-extrabold text-primary dark:text-primary-foreground flex items-center">
-          <Button variant="ghost" onClick={handleBackToCategories} className="p-0 h-auto mr-2 text-primary dark:text-primary-foreground hover:bg-transparent hover:text-primary/80">
+          <Button variant="ghost" onClick={handleBack} className="p-0 h-auto mr-2 text-primary dark:text-primary-foreground hover:bg-transparent hover:text-primary/80">
             <ArrowLeft className="h-6 w-6" />
           </Button>
-          {currentCategory.name}
+          {titleText}
         </CardTitle>
       </CardHeader>
       <CardContent className="flex-1 overflow-hidden p-6">
         <ScrollArea className="h-[calc(100vh-180px)] w-full rounded-xl border-2 border-primary/20 bg-background/80 p-4 shadow-lg">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-            {currentCategory.items?.map((item) => ( // Use optional chaining for items
+            {itemsToDisplay?.map((item) => (
               <Button
                 key={item.name}
                 variant="ghost"
@@ -99,9 +165,11 @@ const Index: React.FC = () => {
                 <span className="font-semibold text-base flex items-center mb-1 text-primary dark:text-primary-foreground">
                   {item.name}
                 </span>
-                <span className="text-xs text-muted-foreground text-left truncate w-full flex items-center">
-                  <ExternalLink className="h-3 w-3 mr-1 flex-shrink-0" /> <span className="truncate">{item.url}</span>
-                </span>
+                {item.url && (
+                  <span className="text-xs text-muted-foreground text-left truncate w-full flex items-center">
+                    <ExternalLink className="h-3 w-3 mr-1 flex-shrink-0" /> <span className="truncate">{item.url}</span>
+                  </span>
+                )}
               </Button>
             ))}
           </div>

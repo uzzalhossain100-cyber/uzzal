@@ -10,14 +10,15 @@ import React from 'react';
 
 export interface CategoryItem {
   name: string;
-  url: string;
+  url?: string; // Optional, as a country item won't have a direct URL
+  subItems?: CategoryItem[]; // For nested items like newspapers within a country
 }
 
 export interface Category {
   name: string;
   icon?: React.ElementType;
-  items?: CategoryItem[]; // Made items optional
-  internalRoute?: string; // Added internalRoute property
+  items?: CategoryItem[];
+  internalRoute?: string;
 }
 
 export const allInOneCategories: Category[] = [
@@ -102,7 +103,64 @@ export const allInOneCategories: Category[] = [
   {
     name: "খবর",
     icon: Newspaper,
-    internalRoute: "/news",
+    items: [
+      {
+        name: "বাংলাদেশ",
+        subItems: [
+          { name: "প্রথম আলো", url: "https://www.prothomalo.com/" },
+          { name: "যুগান্তর", url: "https://www.jugantor.com/" },
+          { name: "কালের কণ্ঠ", url: "https://www.kalerkantho.com/" },
+          { name: "বাংলাদেশ প্রতিদিন", url: "https://www.bd-pratidin.com/" },
+          { name: "ইত্তেফাক", url: "https://www.ittefaq.com.bd/" },
+          { name: "জনকণ্ঠ", url: "https://www.dailyjanakantha.com/" },
+          { name: "নয়া দিগন্ত", url: "https://www.dailynayadiganta.com/" },
+          { name: "সংবাদ প্রতিদিন", url: "https://www.sangbadpratidin.in/" },
+          { name: "ভোরের কাগজ", url: "https://www.bhorerkagoj.com/" },
+          { name: "সমকাল", url: "https://samakal.com/" },
+          { name: "মানবজমিন", url: "https://mzamin.com/" },
+          { name: "আলোকিত বাংলাদেশ", url: "https://www.alokitobangladesh.com/" },
+          { name: "ইনকিলাব", url: "https://www.dailyinqilab.com/" },
+          { name: "আমার সংবাদ", url: "https://www.amarsangbad.com/" },
+          { name: "দৈনিক সংগ্রাম", url: "https://dailysangram.com/" },
+          { name: "দৈনিক আজাদী", url: "https://dainikazadi.net/" },
+          { name: "দৈনিক পূর্বকোণ", url: "https://dainikpurbokone.net/" },
+          { name: "দৈনিক সুপ্রভাত বাংলাদেশ", url: "https://suprobhat.com/" },
+          { name: "দৈনিক কক্সবাজার", url: "https://dainikcoxsbazar.com/" },
+          { name: "দৈনিক চাঁদপুর কণ্ঠ", url: "https://chandpurkantho.com/" },
+        ],
+      },
+      {
+        name: "ভারত",
+        subItems: [
+          { name: "আনন্দবাজার পত্রিকা", url: "https://www.anandabazar.com/" },
+          { name: "বর্তমান", url: "https://www.bartamanpatrika.com/" },
+          { name: "এই সময়", url: "https://eisamay.indiatimes.com/" },
+          { name: "সংবাদ প্রতিদিন", url: "https://www.sangbadpratidin.in/" },
+          { name: "দ্য টাইমস অফ ইন্ডিয়া", url: "https://timesofindia.indiatimes.com/" },
+          { name: "হিন্দুস্তান টাইমস", url: "https://www.hindustantimes.com/" },
+          { name: "দ্য হিন্দু", url: "https://www.thehindu.com/" },
+          { name: "ইন্ডিয়ান এক্সপ্রেস", url: "https://indianexpress.com/" },
+        ],
+      },
+      {
+        name: "যুক্তরাজ্য",
+        subItems: [
+          { name: "বিবিসি নিউজ", url: "https://www.bbc.com/news" },
+          { name: "দ্য গার্ডিয়ান", url: "https://www.theguardian.com/uk" },
+          { name: "দ্য টাইমস", url: "https://www.thetimes.co.uk/" },
+          { name: "দ্য ইন্ডিপেন্ডেন্ট", url: "https://www.independent.co.uk/" },
+        ],
+      },
+      {
+        name: "যুক্তরাষ্ট্র",
+        subItems: [
+          { name: "দ্য নিউ ইয়র্ক টাইমস", url: "https://www.nytimes.com/" },
+          { name: "দ্য ওয়াশিংটন পোস্ট", url: "https://www.washingtonpost.com/" },
+          { name: "সিএনএন", url: "https://edition.cnn.com/" },
+          { name: "ফক্স নিউজ", url: "https://www.foxnews.com/" },
+        ],
+      },
+    ],
   },
   {
     name: "লাইভ টিভি", // Updated category

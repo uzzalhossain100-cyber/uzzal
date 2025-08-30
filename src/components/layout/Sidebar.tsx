@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import {
   Home,
-  Newspaper,
+  // Newspaper, // Removed Newspaper icon import as it's no longer a direct route
   Mail,
   // Tv, // Removed Tv icon import as it's no longer a direct route
   LogOut,
@@ -23,11 +23,7 @@ const navItems = [
     icon: Home,
     href: "/",
   },
-  {
-    name: "খবর",
-    icon: Newspaper,
-    href: "/news",
-  },
+  // Removed "খবর" from navItems
   // Removed "লাইভ টিভি" from navItems
   {
     name: "সক্রিয় ইউজার",

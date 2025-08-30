@@ -9,7 +9,7 @@ import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
-import NewsPage from "./pages/NewsPage";
+// import NewsPage from "./pages/NewsPage"; // Removed NewsPage import
 import ContactPage from "./pages/ContactPage";
 // import LiveTVPage from "./pages/LiveTVPage"; // Removed LiveTVPage import
 import EmergencyContactsPage from "./pages/EmergencyContactsPage";
@@ -34,7 +34,7 @@ const App = () => (
             <Route element={<ProtectedRoute />}>
               <Route element={<MainLayout />}>
                 <Route path="/" element={<Index />} />
-                <Route path="/news" element={<NewsPage />} />
+                {/* <Route path="/news" element={<NewsPage />} /> */} {/* Removed News route */}
                 {/* <Route path="/live-tv" element={<LiveTVPage />} /> */} {/* Removed Live TV route */}
                 <Route path="/emergency-contacts" element={<EmergencyContactsPage />} />
                 <Route path="/contact" element={<ContactPage />} />
