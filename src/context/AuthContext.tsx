@@ -246,23 +246,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signUp = async (username: string, email: string, mobileNumber: string, password: string) => {
-    // Check if username already exists
-    const { data: existingUsername, error: usernameCheckError } = await supabase
+    // Check if username, email, or mobile number already exists
+    const { data: existingProfiles, error: checkError } = await supabase
       .from('profiles')
-      .select('id')
-      .eq('username', username)
-      .single();
+      .select('id, username, email, mobile_number')
+      .or(`username.eq.${username},email.eq.${email},mobile_number.eq.${mobileNumber}`);
 
-    if (existingUsername) {
-      showError("এই ইউজারনেমটি ইতিমধ্যেই ব্যবহৃত হয়েছে। অন্য একটি ইউজারনেম ব্যবহার করুন।");
-      return { success: false, error: "Username already taken." };
-    }
-    if (usernameCheckError && usernameCheckError.code !== 'PGRST116') { // PGRST116 means no rows found
-      console.error("Error checking username:", usernameCheckError);
-      showError("ইউজারনেম চেক করতে সমস্যা হয়েছে।");
-      return { success: false, error: "Error checking username." };
+    if (checkError) {
+      console.error("Error checking existing profiles:", checkError);
+      showError("সাইন আপ চেক করতে সমস্যা হয়েছে।");
+      return { success: false, error: "Error checking existing profiles." };
     }
 
+    if (existingProfiles && existingProfiles.length > 0) {
+      showError("আপনার নামে একটি একাউন্ট আছে।");
+      return { success: false, error: "An account already exists with your details." };
+    }
+
+    // Proceed with Supabase Auth signup
     const { data: authData, error: authError } = await supabase.auth.signUp({ email, password });
 
     if (authError) {
@@ -285,7 +286,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return { success: false, error: profileError.message };
       }
     }
-    showSuccess("সাইন আপ সফল! এখন আপনি লগইন করতে পারেন।"); // Changed message
+    showSuccess("সাইন আপ সফল হয়েছে!");
     return { success: true };
   };
 
