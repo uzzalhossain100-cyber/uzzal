@@ -356,23 +356,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const guestSignIn = async (username: string, email: string) => {
-    // Check if username or email already exists in real profiles
-    const { data: existingProfiles, error: checkError } = await supabase
-      .from('profiles')
-      .select('id, username, email')
-      .or(`username.eq.${username},email.eq.${email}`);
-
-    if (checkError) {
-      console.error("Error checking existing profiles for guest:", checkError);
-      showError("গেস্ট লগইন চেক করতে সমস্যা হয়েছে।");
-      return { success: false, error: "Error checking existing profiles for guest." };
-    }
-
-    if (existingProfiles && existingProfiles.length > 0) {
-      showError("এই ইউজারনেম বা ইমেল দিয়ে একটি নিবন্ধিত অ্যাকাউন্ট আছে।");
-      return { success: false, error: "An account already exists with this username or email." };
-    }
-
     // Clear any existing Supabase or mock admin sessions
     await supabase.auth.signOut();
     clearMockAdminSession();
