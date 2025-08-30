@@ -20,6 +20,7 @@ const countries: Country[] = [
   {
     name: "বাংলাদেশ",
     channels: [
+      { name: "সব টিভি", url: "http://tv.roarzone.info/" }, // Added new channel here
       { name: "বাংলাদেশ টেলিভিশন (বিটিভি)", url: "https://www.btvlive.gov.bd/channel/BTV" },
       { name: "সংসদ বাংলাদেশ টেলিভিশন", url: "https://sansad.btv.gov.bd/" },
       { name: "এটিএন বাংলা", url: "https://atnbangla.tv/" },
