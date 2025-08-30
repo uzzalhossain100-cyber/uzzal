@@ -6,7 +6,8 @@ import {
   Mail,
   LogOut,
   Users,
-  MessageSquareText
+  MessageSquareText,
+  MessageCircleMore // Added for Live Chat
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
@@ -35,6 +36,11 @@ export function Sidebar({ className, isCollapsed = false }: SidebarProps) {
       icon: MessageSquareText,
       href: "/active-users",
     }] : []),
+    {
+      name: "লাইভ চ্যাট", // New Live Chat link
+      icon: MessageCircleMore,
+      href: "/live-chat",
+    },
     {
       name: "যোগাযোগ",
       icon: Mail,
