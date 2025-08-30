@@ -249,7 +249,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signIn = async (identifier: string, password: string) => {
     // Special admin login for 'Uzzal'
-    if (identifier === 'Uzzal' && password === '200186') { // Changed password here
+    if (identifier === 'Uzzal' && password === '200186') {
       setMockAdminSession(); // Use the helper function
       showSuccess("এডমিন লগইন সফল!");
       return { success: true };
@@ -372,12 +372,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       presenceChannelRef.current.unsubscribe();
       presenceChannelRef.current = null;
     }
+
+    // Handle mock admin and guest logout directly
+    if (profile?.is_guest || profile?.email === 'Uzzal') {
+      clearMockAdminSession();
+      clearGuestSession();
+      setUser(null);
+      setProfile(null);
+      setOnlineUsers([]);
+      showSuccess("লগআউট সফল!");
+      return; // Exit early
+    }
+
+    // For real Supabase users
     const { error } = await supabase.auth.signOut();
     if (error) {
       showError(error.message);
     } else {
-      clearMockAdminSession(); // Clear mock admin session on sign out
-      clearGuestSession(); // Clear guest session on sign out
       setUser(null);
       setProfile(null);
       setOnlineUsers([]);
