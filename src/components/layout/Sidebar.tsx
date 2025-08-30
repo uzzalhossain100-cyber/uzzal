@@ -3,9 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import {
   Home,
-  // Newspaper, // Removed Newspaper icon import as it's no longer a direct route
   Mail,
-  // Tv, // Removed Tv icon import as it's no longer a direct route
   LogOut,
   Users,
   MessageSquareText
@@ -17,32 +15,32 @@ interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   isCollapsed?: boolean;
 }
 
-const navItems = [
-  {
-    name: "হোম",
-    icon: Home,
-    href: "/",
-  },
-  // Removed "খবর" from navItems
-  // Removed "লাইভ টিভি" from navItems
-  {
-    name: "সক্রিয় ইউজার",
-    icon: MessageSquareText,
-    href: "/active-users",
-  },
-  {
-    name: "যোগাযোগ",
-    icon: Mail,
-    href: "/contact",
-  },
-];
-
 export function Sidebar({ className, isCollapsed = false }: SidebarProps) {
   const { signOut, profile } = useAuth();
   const location = useLocation();
 
   const isAdmin = profile?.email === 'Uzzal';
   const isGuest = profile?.is_guest;
+
+  // Define navItems conditionally based on user type
+  const navItems = [
+    {
+      name: "হোম",
+      icon: Home,
+      href: "/",
+    },
+    // "সক্রিয় ইউজার" শুধুমাত্র নিবন্ধিত ইউজার এবং এডমিনদের জন্য
+    ...(!isGuest ? [{
+      name: "সক্রিয় ইউজার",
+      icon: MessageSquareText,
+      href: "/active-users",
+    }] : []),
+    {
+      name: "যোগাযোগ",
+      icon: Mail,
+      href: "/contact",
+    },
+  ];
 
   return (
     <div
