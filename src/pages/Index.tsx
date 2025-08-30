@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { allInOneCategories, Category, CategoryItem } from '@/data/categories.ts';
-import { ArrowLeft, ExternalLink, Newspaper as NewspaperIcon, Globe } from 'lucide-react'; // Added Globe icon
+import { ArrowLeft, ExternalLink, Newspaper as NewspaperIcon, Globe, Tv } from 'lucide-react'; // Added Tv icon
 import { cn } from '@/lib/utils';
 
 const Index: React.FC = () => {
@@ -12,13 +12,13 @@ const Index: React.FC = () => {
   const navigate = useNavigate();
 
   const categoryParam = searchParams.get('category');
-  const subCategoryParam = searchParams.get('subCategory'); // New: for countries within News
+  const subCategoryParam = searchParams.get('subCategory'); // New: for countries within News/Live TV
 
   const currentCategory = categoryParam
     ? allInOneCategories.find(cat => cat.name === categoryParam)
     : null;
 
-  const currentSubCategoryItems = currentCategory?.name === "খবর" && subCategoryParam
+  const currentSubCategoryItems = (currentCategory?.name === "খবর" || currentCategory?.name === "লাইভ টিভি") && subCategoryParam
     ? currentCategory.items?.find(item => item.name === subCategoryParam)?.subItems
     : null;
 
@@ -31,8 +31,8 @@ const Index: React.FC = () => {
   };
 
   const handleItemClick = (item: CategoryItem) => {
-    if (currentCategory?.name === "খবর" && item.subItems) {
-      // If it's a country within the "খবর" category
+    if ((currentCategory?.name === "খবর" || currentCategory?.name === "লাইভ টিভি") && item.subItems) {
+      // If it's a country within "খবর" or "লাইভ টিভি" category
       setSearchParams({ category: currentCategory.name, subCategory: item.name });
     } else if (item.url) {
       // If it's a final item with a URL (e.g., a newspaper or a regular category item)
@@ -44,7 +44,7 @@ const Index: React.FC = () => {
 
   const handleBack = () => {
     if (subCategoryParam) {
-      // If currently viewing newspapers, go back to countries
+      // If currently viewing newspapers/TV channels, go back to countries
       setSearchParams({ category: categoryParam || '' });
     } else if (categoryParam) {
       // If currently viewing countries or a regular category, go back to all categories
@@ -89,9 +89,12 @@ const Index: React.FC = () => {
     );
   }
 
-  // State 2: Displaying Countries for "খবর" or Items for other categories
-  if (currentCategory.name === "খবর" && !subCategoryParam) {
-    // Display countries for "খবর"
+  // State 2: Displaying Countries for "খবর" or "লাইভ টিভি"
+  if ((currentCategory.name === "খবর" || currentCategory.name === "লাইভ টিভি") && !subCategoryParam) {
+    // Determine icon based on category
+    const CountryIcon = currentCategory.name === "খবর" ? Globe : Tv;
+    const titleSuffix = currentCategory.name === "খবর" ? "দেশ নির্বাচন করুন" : "দেশ নির্বাচন করুন";
+
     return (
       <Card className="w-full flex flex-col h-full bg-gradient-to-br from-primary/5 to-accent/5 dark:from-primary/10 dark:to-accent/10 shadow-xl border-primary/20">
         <CardHeader className="flex flex-row items-center justify-between pb-4 border-b">
@@ -99,7 +102,7 @@ const Index: React.FC = () => {
             <Button variant="ghost" onClick={handleBack} className="p-0 h-auto mr-2 text-primary dark:text-primary-foreground hover:bg-transparent hover:text-primary/80">
               <ArrowLeft className="h-6 w-6" />
             </Button>
-            {currentCategory.name} - দেশ নির্বাচন করুন
+            {currentCategory.name} - {titleSuffix}
           </CardTitle>
         </CardHeader>
         <CardContent className="flex-1 overflow-hidden p-6">
@@ -117,7 +120,7 @@ const Index: React.FC = () => {
                     )}
                     onClick={() => handleItemClick(country)}
                   >
-                    <Globe className="h-12 w-12 mb-2 text-primary dark:text-primary-foreground" />
+                    <CountryIcon className="h-12 w-12 mb-2 text-primary dark:text-primary-foreground" />
                     <span className="font-bold text-lg">{country.name}</span>
                   </Button>
                 );
@@ -129,14 +132,18 @@ const Index: React.FC = () => {
     );
   }
 
-  // State 3: Displaying Newspapers for a selected country within "খবর" OR Items for other categories
+  // State 3: Displaying Newspapers/TV Channels for a selected country within "খবর" OR "লাইভ টিভি" OR Items for other categories
   const itemsToDisplay = currentCategory.name === "খবর" && subCategoryParam
     ? currentSubCategoryItems
-    : currentCategory.items;
+    : currentCategory.name === "লাইভ টিভি" && subCategoryParam
+      ? currentSubCategoryItems
+      : currentCategory.items;
 
   const titleText = currentCategory.name === "খবর" && subCategoryParam
     ? `${subCategoryParam} - সংবাদপত্র`
-    : currentCategory.name;
+    : currentCategory.name === "লাইভ টিভি" && subCategoryParam
+      ? `${subCategoryParam} - টেলিভিশন`
+      : currentCategory.name;
 
   return (
     <Card className="w-full flex flex-col h-full bg-gradient-to-br from-primary/5 to-accent/5 dark:from-primary/10 dark:to-accent/10 shadow-xl border-primary/20">

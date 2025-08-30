@@ -293,16 +293,170 @@ export const allInOneCategories: Category[] = [
     name: "লাইভ টিভি", // Updated category
     icon: Tv,
     items: [
-      { name: "Roar TV", url: "http://tv.roarzone.info/" },
-      { name: "Jago TV", url: "https://www.jagobd.com/category/bangla-channel" },
-      { name: "Toffee TV", url: "https://toffeelive.com/en/live" },
-      { name: "Bioscope Live", url: "https://www.bioscopeplus.com/" },
-      { name: "Chorki", url: "https://www.chorki.com/movie" },
-      { name: "Bongo BD", url: "https://bongobd.com/movies" },
-      { name: "bdlivetv", url: "https://livetv.com.bd/" },
-      { name: "Hoichoi", url: "https://www.hoichoi.tv/bd" },
-      { name: "Moviebazar", url: "https://mymoviebazar.net/movies" },
-      { name: "Channel24", url: "https://www.youtube.com/watch?v=ZZfkQ-4zJtc" },
+      {
+        name: "বাংলাদেশ",
+        subItems: [
+          { name: "Roar TV", url: "http://tv.roarzone.info/" },
+          { name: "Jago TV", url: "https://www.jagobd.com/category/bangla-channel" },
+          { name: "Toffee TV", url: "https://toffeelive.com/en/live" },
+          { name: "Bioscope Live", url: "https://www.bioscopeplus.com/" },
+          { name: "Chorki", url: "https://www.chorki.com/movie" },
+          { name: "Bongo BD", url: "https://bongobd.com/movies" },
+          { name: "bdlivetv", url: "https://livetv.com.bd/" },
+          { name: "Hoichoi", url: "https://www.hoichoi.tv/bd" },
+          { name: "Moviebazar", url: "https://mymoviebazar.net/movies" },
+          { name: "Channel24", url: "https://www.youtube.com/watch?v=ZZfkQ-4zJtc" },
+        ],
+      },
+      {
+        name: "ভারত",
+        subItems: [
+          { name: "স্টার প্লাস", url: "https://www.hotstar.com/in/channels/star-plus/1260000001" },
+          { name: "সনি এন্টারটেইনমেন্ট টেলিভিশন", url: "https://www.sonyliv.com/channels/sony-entertainment-television-1260000001" },
+          { name: "জি টিভি", url: "https://www.zee5.com/channels/zee-tv/0-9-zeetv" },
+          { name: "কালারস টিভি", url: "https://www.voot.com/channels/colors-hindi/451846" },
+          { name: "আজ তাক", url: "https://www.aajtak.in/livetv" },
+          { name: "এনডিটিভি ইন্ডিয়া", url: "https://www.ndtv.com/video/live/channel/ndtv-india" },
+        ],
+      },
+      {
+        name: "যুক্তরাজ্য",
+        subItems: [
+          { name: "বিবিসি ওয়ান", url: "https://www.bbc.co.uk/bbcone/watch/live" },
+          { name: "আইটিভি", url: "https://www.itv.com/hub/itv" },
+          { name: "চ্যানেল ৪", url: "https://www.channel4.com/live-tv" },
+          { name: "স্কাই নিউজ", url: "https://news.sky.com/watch-live" },
+        ],
+      },
+      {
+        name: "যুক্তরাষ্ট্র",
+        subItems: [
+          { name: "সিবিএস", url: "https://www.cbs.com/live-tv/" },
+          { name: "এনবিসি", url: "https://www.nbc.com/live" },
+          { name: "এবিসি", url: "https://abc.com/watch-live" },
+          { name: "ফক্স", url: "https://www.fox.com/live" },
+          { name: "সিএনএন লাইভ", url: "https://edition.cnn.com/tv/cnn-live-tv" },
+          { name: "ফক্স নিউজ লাইভ", url: "https://video.foxnews.com/v/5990784482001" },
+        ],
+      },
+      {
+        name: "কানাডা",
+        subItems: [
+          { name: "সিবিসি নিউজ নেটওয়ার্ক", url: "https://www.cbc.ca/news/cbc-news-network-live-stream-1.5300000" },
+          { name: "সিটিভি নিউজ চ্যানেল", url: "https://www.ctvnews.ca/live" },
+          { name: "গ্লোবাল নিউজ", url: "https://globalnews.ca/live/" },
+        ],
+      },
+      {
+        name: "অস্ট্রেলিয়া",
+        subItems: [
+          { name: "এবিসি নিউজ", url: "https://www.abc.net.au/news/live/news-channel/" },
+          { name: "সেভেন নেটওয়ার্ক", url: "https://7plus.com.au/live-tv" },
+          { name: "নাইন নেটওয়ার্ক", url: "https://www.9now.com.au/live-tv" },
+        ],
+      },
+      {
+        name: "জার্মানি",
+        subItems: [
+          { name: "এআরডি", url: "https://www.ardmediathek.de/live/ard" },
+          { name: "জেডডিএফ", url: "https://www.zdf.de/live-tv" },
+          { name: "আরটিএল", url: "https://www.rtl.de/cms/live-tv.html" },
+        ],
+      },
+      {
+        name: "ফ্রান্স",
+        subItems: [
+          { name: "টিএফ১", url: "https://www.tf1.fr/tf1/direct" },
+          { name: "ফ্রান্স ২", url: "https://www.france.tv/france-2/direct.html" },
+          { name: "বিএফএম টিভি", url: "https://www.bfmtv.com/direct/" },
+        ],
+      },
+      {
+        name: "জাপান",
+        subItems: [
+          { name: "এনএইচকে ওয়ার্ল্ড-জাপান", url: "https://www3.nhk.or.jp/nhkworld/en/live/" },
+          { name: "নিপ্পন টিভি", url: "https://www.ntv.co.jp/english/" },
+          { name: "টিবিএস", url: "https://www.tbs.co.jp/eng/" },
+        ],
+      },
+      {
+        name: "চীন",
+        subItems: [
+          { name: "সিসিটিভি নিউজ", url: "https://english.cctv.com/live/" },
+          { name: "সিজিটিএন", url: "https://www.cgtn.com/live" },
+        ],
+      },
+      {
+        name: "রাশিয়া",
+        subItems: [
+          { name: "আরটি লাইভ", url: "https://www.rt.com/on-air/" },
+          { name: "রাশিয়া ২৪", url: "https://live.russia.tv/" },
+        ],
+      },
+      {
+        name: "দক্ষিণ কোরিয়া",
+        subItems: [
+          { name: "কেবিএস ওয়ার্ল্ড", url: "https://www.youtube.com/c/kbsworld/live" },
+          { name: "এমবিসি", url: "https://www.mbc.co.kr/onair/tv" },
+          { name: "এসবিএস", url: "https://www.sbs.co.kr/onair/pc/index.do" },
+        ],
+      },
+      {
+        name: "ইতালি",
+        subItems: [
+          { name: "রাই উনো", url: "https://www.raiplay.it/dirette/rai1" },
+          { name: "ক্যানালে ৫", url: "https://www.mediasetplay.mediaset.it/dirette/canale5" },
+        ],
+      },
+      {
+        name: "স্পেন",
+        subItems: [
+          { name: "আরটিভিই", url: "https://www.rtve.es/play/videos/directo/" },
+          { name: "এন্টেনা ৩", url: "https://www.atresplayer.com/directos/antena3/" },
+        ],
+      },
+      {
+        name: "ব্রাজিল",
+        subItems: [
+          { name: "গ্লোবো", url: "https://globoplay.globo.com/agora-na-tv/" },
+          { name: "রেকর্ডটিভি", url: "https://playplus.com/aovivo/recordtv" },
+        ],
+      },
+      {
+        name: "দক্ষিণ আফ্রিকা",
+        subItems: [
+          { name: "এসএবিসি ১", url: "https://www.sabc.co.za/sabc/sabc1-live/" },
+          { name: "ইটিভি", url: "https://www.etv.co.za/live-stream" },
+        ],
+      },
+      {
+        name: "মিশর",
+        subItems: [
+          { name: "ইজিপ্টিয়ান টিভি", url: "https://www.ertu.gov.eg/live.aspx" },
+          { name: "আল হায়াত টিভি", url: "https://www.elhayat.com/live" },
+        ],
+      },
+      {
+        name: "পাকিস্তান",
+        subItems: [
+          { name: "জিও নিউজ", url: "https://www.geonews.tv/live" },
+          { name: "এআরওয়াই নিউজ", url: "https://arynews.tv/live/" },
+        ],
+      },
+      {
+        name: "ইন্দোনেশিয়া",
+        subItems: [
+          { name: "আরসিটিআই", url: "https://www.rctiplus.com/tv/rcti" },
+          { name: "এসসিটিভি", url: "https://www.vidio.com/live/204-sctv" },
+        ],
+      },
+      {
+        name: "সৌদি আরব",
+        subItems: [
+          { name: "আল আরাবিয়া", url: "https://www.alarabiya.net/live" },
+          { name: "সৌদি টিভি ১", url: "https://www.sauditv1.tv/live" },
+        ],
+      },
     ],
   },
   {
