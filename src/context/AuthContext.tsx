@@ -34,6 +34,7 @@ interface AuthContextType {
   signOut: () => Promise<void>;
   getUsersProfiles: () => Promise<Profile[] | null>;
   updateUserProfileStatus: (userId: string, isActive: boolean) => Promise<{ success: boolean; error?: string }>;
+  recordVisit: (visitData: { userId?: string; guestId?: string; username?: string; email?: string; ipAddress?: string; isGuestVisit: boolean }) => Promise<void>; // New: Function to record visits
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -462,8 +463,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return { success: true };
   };
 
+  const recordVisit = async (visitData: { userId?: string; guestId?: string; username?: string; email?: string; ipAddress?: string; isGuestVisit: boolean }) => {
+    const { error } = await supabase.from('visits').insert({
+      user_id: visitData.userId,
+      guest_id: visitData.guestId,
+      username: visitData.username,
+      email: visitData.email,
+      ip_address: visitData.ipAddress,
+      is_guest_visit: visitData.isGuestVisit,
+    });
+
+    if (error) {
+      console.error("Error recording visit:", error.message);
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, profile, loading, onlineUsers, signIn, signUp, guestSignIn, signOut, getUsersProfiles, updateUserProfileStatus }}>
+    <AuthContext.Provider value={{ user, profile, loading, onlineUsers, signIn, signUp, guestSignIn, signOut, getUsersProfiles, updateUserProfileStatus, recordVisit }}>
       {children}
     </AuthContext.Provider>
   );

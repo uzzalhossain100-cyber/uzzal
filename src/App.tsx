@@ -15,7 +15,8 @@ import UserManagementPage from "./pages/UserManagementPage";
 import ActiveUsersPage from "./pages/ActiveUsersPage";
 import MainLayout from "./components/layout/MainLayout";
 import ViewPlatformPage from "./pages/ViewPlatformPage";
-import LiveChatPage from "./pages/LiveChatPage"; // Import LiveChatPage
+import LiveChatPage from "./pages/LiveChatPage";
+import VisitorTracker from "./components/VisitorTracker"; // Import VisitorTracker
 
 const queryClient = new QueryClient();
 
@@ -26,6 +27,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AuthProvider>
+          <VisitorTracker /> {/* Place VisitorTracker here to track all visits */}
           <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
@@ -37,7 +39,7 @@ const App = () => (
                 <Route path="/contact" element={<ContactPage />} />
                 <Route path="/user-management" element={<UserManagementPage />} />
                 <Route path="/active-users" element={<ActiveUsersPage />} />
-                <Route path="/live-chat" element={<LiveChatPage />} /> {/* New Live Chat Route */}
+                <Route path="/live-chat" element={<LiveChatPage />} />
                 <Route path="/view/:encodedUrl/:itemName" element={<ViewPlatformPage />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               </Route>
