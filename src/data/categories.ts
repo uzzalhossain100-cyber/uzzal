@@ -100,20 +100,30 @@ export const allInOneCategories: Category[] = [
     ],
   },
   {
-    name: "খবর", // This is the category to be updated
+    name: "খবর",
     icon: Newspaper,
-    internalRoute: "/news", // Direct navigation to the internal NewsPage
-    // Removed the 'items' array as it's now a direct link
+    internalRoute: "/news",
   },
   {
-    name: "লাইভ টিভি", // New category
+    name: "লাইভ টিভি", // Updated category
     icon: Tv,
-    internalRoute: "/live-tv", // Direct navigation to the existing LiveTVPage
+    items: [
+      { name: "Roar TV", url: "http://tv.roarzone.info/" },
+      { name: "Jago TV", url: "https://www.jagobd.com/category/bangla-channel" },
+      { name: "Toffee TV", url: "https://toffeelive.com/en/live" },
+      { name: "Bioscope Live", url: "https://www.bioscopeplus.com/" },
+      { name: "Chorki", url: "https://www.chorki.com/movie" },
+      { name: "Bongo BD", url: "https://bongobd.com/movies" },
+      { name: "bdlivetv", url: "https://livetv.com.bd/" },
+      { name: "Hoichoi", url: "https://www.hoichoi.tv/bd" },
+      { name: "Moviebazar", url: "https://mymoviebazar.net/movies" },
+      { name: "Channel24", url: "https://www.youtube.com/watch?v=ZZfkQ-4zJtc" },
+    ],
   },
   {
-    name: "জরুরি যোগাযোগ", // New category
-    icon: LifeBuoy, // Using LifeBuoy icon for emergency contacts
-    internalRoute: "/emergency-contacts", // Direct navigation to the new EmergencyContactsPage
+    name: "জরুরি যোগাযোগ",
+    icon: LifeBuoy,
+    internalRoute: "/emergency-contacts",
   },
   {
     name: "কেনাকাটা",

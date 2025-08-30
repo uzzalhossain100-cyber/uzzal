@@ -5,10 +5,10 @@ import {
   Home,
   Newspaper,
   Mail,
-  Tv,
+  // Tv, // Removed Tv icon import as it's no longer a direct route
   LogOut,
-  Users, // Added Users icon for User Management
-  MessageSquareText // Added MessageSquareText for Active Users
+  Users,
+  MessageSquareText
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
@@ -28,13 +28,9 @@ const navItems = [
     icon: Newspaper,
     href: "/news",
   },
+  // Removed "লাইভ টিভি" from navItems
   {
-    name: "লাইভ টিভি",
-    icon: Tv,
-    href: "/live-tv",
-  },
-  {
-    name: "সক্রিয় ইউজার", // New menu item
+    name: "সক্রিয় ইউজার",
     icon: MessageSquareText,
     href: "/active-users",
   },
