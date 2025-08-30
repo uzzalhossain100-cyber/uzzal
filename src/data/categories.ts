@@ -3,8 +3,7 @@ import {
   Building, MessageSquare, Settings, Utensils, Gamepad, Laptop, MessageCircle,
   Camera, Briefcase, Sparkles, GraduationCap, Landmark, Map, Syringe, Gavel,
   Phone, ChefHat, Dumbbell, Code, Rss, Palette, TrendingUp, MoreHorizontal,
-  LifeBuoy, // Added LifeBuoy icon for Emergency Contacts
-  Tv // Added Tv icon
+  LifeBuoy, Tv
 } from 'lucide-react';
 import React from 'react';
 
@@ -158,6 +157,134 @@ export const allInOneCategories: Category[] = [
           { name: "দ্য ওয়াশিংটন পোস্ট", url: "https://www.washingtonpost.com/" },
           { name: "সিএনএন", url: "https://edition.cnn.com/" },
           { name: "ফক্স নিউজ", url: "https://www.foxnews.com/" },
+        ],
+      },
+      {
+        name: "কানাডা",
+        subItems: [
+          { name: "The Globe and Mail", url: "https://www.theglobeandmail.com/" },
+          { name: "National Post", url: "https://nationalpost.com/" },
+          { name: "Toronto Star", url: "https://www.thestar.com/" },
+        ],
+      },
+      {
+        name: "অস্ট্রেলিয়া",
+        subItems: [
+          { name: "The Australian", url: "https://www.theaustralian.com.au/" },
+          { name: "The Sydney Morning Herald", url: "https://www.smh.com.au/" },
+          { name: "ABC News", url: "https://www.abc.net.au/news/" },
+        ],
+      },
+      {
+        name: "জার্মানি",
+        subItems: [
+          { name: "Der Spiegel", url: "https://www.spiegel.de/" },
+          { name: "Frankfurter Allgemeine Zeitung", url: "https://www.faz.net/" },
+          { name: "Bild", url: "https://www.bild.de/" },
+        ],
+      },
+      {
+        name: "ফ্রান্স",
+        subItems: [
+          { name: "Le Monde", url: "https://www.lemonde.fr/" },
+          { name: "Le Figaro", url: "https://www.lefigaro.fr/" },
+          { name: "Libération", url: "https://www.liberation.fr/" },
+        ],
+      },
+      {
+        name: "জাপান",
+        subItems: [
+          { name: "The Japan Times", url: "https://www.japantimes.co.jp/" },
+          { name: "Asahi Shimbun", url: "https://www.asahi.com/" },
+          { name: "Yomiuri Shimbun", url: "https://www.yomiuri.co.jp/" },
+        ],
+      },
+      {
+        name: "চীন",
+        subItems: [
+          { name: "Xinhua News Agency", url: "http://www.xinhuanet.com/english/" },
+          { name: "China Daily", url: "https://www.chinadaily.com.cn/" },
+          { name: "Global Times", url: "https://www.globaltimes.cn/" },
+        ],
+      },
+      {
+        name: "রাশিয়া",
+        subItems: [
+          { name: "RT (Russia Today)", url: "https://www.rt.com/" },
+          { name: "Sputnik News", url: "https://sputnikglobe.com/" },
+          { name: "TASS", url: "https://tass.com/" },
+        ],
+      },
+      {
+        name: "দক্ষিণ কোরিয়া",
+        subItems: [
+          { name: "The Korea Herald", url: "https://www.koreaherald.com/" },
+          { name: "The Korea Times", url: "https://www.koreatimes.co.kr/" },
+          { name: "Yonhap News Agency", url: "https://en.yna.co.kr/" },
+        ],
+      },
+      {
+        name: "ইতালি",
+        subItems: [
+          { name: "Corriere della Sera", url: "https://www.corriere.it/" },
+          { name: "La Repubblica", url: "https://www.repubblica.it/" },
+          { name: "La Stampa", url: "https://www.lastampa.it/" },
+        ],
+      },
+      {
+        name: "স্পেন",
+        subItems: [
+          { name: "El País", url: "https://elpais.com/" },
+          { name: "El Mundo", url: "https://www.elmundo.es/" },
+          { name: "ABC", url: "https://www.abc.es/" },
+        ],
+      },
+      {
+        name: "ব্রাজিল",
+        subItems: [
+          { name: "Folha de S.Paulo", url: "https://www.folha.uol.com.br/" },
+          { name: "O Globo", url: "https://oglobo.globo.com/" },
+          { name: "Estadão", url: "https://www.estadao.com.br/" },
+        ],
+      },
+      {
+        name: "দক্ষিণ আফ্রিকা",
+        subItems: [
+          { name: "News24", url: "https://www.news24.com/" },
+          { name: "Mail & Guardian", url: "https://mg.co.za/" },
+          { name: "The Sowetan", url: "https://www.sowetanlive.co.za/" },
+        ],
+      },
+      {
+        name: "মিশর",
+        subItems: [
+          { name: "Al-Ahram", url: "https://english.ahram.org.eg/" },
+          { name: "Daily News Egypt", url: "https://dailynewsegypt.com/" },
+          { name: "Egypt Today", url: "https://www.egypttoday.com/" },
+        ],
+      },
+      {
+        name: "পাকিস্তান",
+        subItems: [
+          { name: "Dawn", url: "https://www.dawn.com/" },
+          { name: "The News International", url: "https://www.thenews.com.pk/" },
+          { name: "Express Tribune", url: "https://tribune.com.pk/" },
+        ],
+      },
+      {
+        name: "ইন্দোনেশিয়া",
+        subItems: [
+          { name: "The Jakarta Post", url: "https://www.thejakartapost.com/" },
+          { name: "Kompas", url: "https://www.kompas.com/" },
+          { name: "Tempo", url: "https://www.tempo.co/" },
+        ],
+      },
+      {
+        name: "সৌদি আরব",
+        subItems: [
+          { name: "Arab News", url: "https://www.arabnews.com/" },
+          { name: "Saudi Gazette", url: "https://saudigazette.com.sa/" },
+          { name: "Asharq Al-Awsat", url: "https://english.aawsat.com/" },
         ],
       },
     ],
