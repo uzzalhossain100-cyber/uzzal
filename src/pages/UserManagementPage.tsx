@@ -39,7 +39,7 @@ interface VisitCounts {
 }
 
 const UserManagementPage: React.FC = () => {
-  const { profile, getUsersProfiles, updateUserProfileStatus, loading: authLoading } = useAuth();
+  const { profile: currentUserProfile, getUsersProfiles, updateUserProfileStatus, loading: authLoading } = useAuth();
   const [users, setUsers] = useState<Profile[]>([]);
   const [recentVisits, setRecentVisits] = useState<Visit[]>([]);
   const [visitCounts, setVisitCounts] = useState<VisitCounts>({ today: 0, thisMonth: 0, thisYear: 0, total: 0 });
@@ -50,7 +50,7 @@ const UserManagementPage: React.FC = () => {
 
   useEffect(() => {
     if (!authLoading) {
-      if (profile?.email !== 'Uzzal') {
+      if (currentUserProfile?.email !== 'Uzzal') {
         showError("এই পেজটি শুধুমাত্র এডমিনদের জন্য।");
         navigate('/'); // Redirect non-admin users
         return;
@@ -58,14 +58,24 @@ const UserManagementPage: React.FC = () => {
       fetchUsers();
       fetchVisitsData();
     }
-  }, [profile, authLoading, navigate]);
+  }, [currentUserProfile, authLoading, navigate]);
 
   const fetchUsers = async () => {
     setLoadingUsers(true);
-    const fetchedUsers = await getUsersProfiles();
-    if (fetchedUsers) {
-      setUsers(fetchedUsers);
+    let fetchedUsers = await getUsersProfiles();
+    if (!fetchedUsers) {
+      fetchedUsers = [];
     }
+
+    // If the current user is the mock admin, add them to the list if not already present
+    if (currentUserProfile && currentUserProfile.email === 'Uzzal' && !fetchedUsers.some(u => u.id === currentUserProfile.id)) {
+      fetchedUsers.push({
+        ...currentUserProfile,
+        is_active: true, // Admin is always active when logged in
+      });
+    }
+    
+    setUsers(fetchedUsers);
     setLoadingUsers(false);
   };
 
@@ -141,7 +151,7 @@ const UserManagementPage: React.FC = () => {
     );
   }
 
-  if (profile?.email !== 'Uzzal') {
+  if (currentUserProfile?.email !== 'Uzzal') {
     return null; // Should have been redirected by now, but as a fallback
   }
 
@@ -257,7 +267,7 @@ const UserManagementPage: React.FC = () => {
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">
-                      {userProfile.id !== profile?.id && ( // Admin cannot block/unblock themselves
+                      {userProfile.id !== currentUserProfile?.id && ( // Admin cannot block/unblock themselves
                         <Button
                           variant={userProfile.is_active ? "destructive" : "default"}
                           size="sm"
