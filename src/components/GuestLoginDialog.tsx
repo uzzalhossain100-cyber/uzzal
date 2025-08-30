@@ -13,6 +13,7 @@ import { Label } from '@/components/ui/label';
 import { User, Mail } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { showError } from '@/utils/toast';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 interface GuestLoginDialogProps {
   onOpenChange: (open: boolean) => void;
@@ -24,6 +25,7 @@ const GuestLoginDialog: React.FC<GuestLoginDialogProps> = ({ onOpenChange, isOpe
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { guestSignIn } = useAuth();
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -43,7 +45,8 @@ const GuestLoginDialog: React.FC<GuestLoginDialogProps> = ({ onOpenChange, isOpe
     setIsLoading(true);
     const { success, error } = await guestSignIn(username, email);
     if (success) {
-      onOpenChange(false); // Close dialog on successful guest login
+      onOpenChange(false); // Close dialog
+      navigate('/'); // Navigate to home page
     } else {
       showError(error || "সাধারণ ইউজার হিসেবে লগইন ব্যর্থ হয়েছে।");
     }
