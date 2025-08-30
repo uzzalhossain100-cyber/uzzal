@@ -28,10 +28,11 @@ export const allInOneCategories: Category[] = [
       {
         name: "বাংলাদেশ",
         subItems: [
+          { name: "উদ্ভাস উন্মেষ", url: "https://udvash.com/HomePage" }, // Moved to first, URL updated
+          { name: "উত্তরণ", url: "https://uttoron.academy/HomePage" }, // Added new
           { name: "১০ মিনিট স্কুল", url: "https://10minuteschool.com/" },
           { name: "খান একাডেমি বাংলা", url: "https://bn.khanacademy.org/" },
           { name: "উইকিপিডিয়া বাংলা", url: "https://bn.wikipedia.org/" },
-          { name: "উদ্ভাস উন্মেষ", url: "https://udvash.com/" },
           { name: "রেটিনা", url: "https://retina.com.bd/" },
           { name: "আইকন প্লাস", url: "https://iconplus.com.bd/" },
           { name: "ওমেকা", url: "https://omegabangladesh.com/" },
