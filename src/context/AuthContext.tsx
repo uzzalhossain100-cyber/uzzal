@@ -75,8 +75,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Helper function to set mock admin state
   const setMockAdminSession = () => {
-    const adminUser: User = { id: 'admin-id', email: 'Uzzal', app_metadata: {}, user_metadata: {}, aud: 'authenticated', created_at: new Date().toISOString() } as User;
-    const adminProfile: Profile = { id: 'admin-id', username: 'Uzzal', mobile_number: '01713236980', is_active: true, email: 'Uzzal', created_at: new Date().toISOString(), is_guest: false };
+    const adminUser: User = { id: 'admin-id', email: 'uzzal@admin.com', app_metadata: {}, user_metadata: {}, aud: 'authenticated', created_at: new Date().toISOString() } as User;
+    const adminProfile: Profile = { id: 'admin-id', username: 'Uzzal', mobile_number: '01713236980', is_active: true, email: 'uzzal@admin.com', created_at: new Date().toISOString(), is_guest: false };
     setUser(adminUser);
     setProfile(adminProfile);
     localStorage.setItem('isMockAdminLoggedIn', 'true'); // Persist mock admin state
@@ -203,8 +203,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (localStorage.getItem('isMockAdminLoggedIn') === 'true') {
           setMockAdminSession();
           // Setup presence for mock admin
-          const adminUser: User = { id: 'admin-id', email: 'Uzzal', app_metadata: {}, user_metadata: {}, aud: 'authenticated', created_at: new Date().toISOString() } as User;
-          const adminProfile: Profile = { id: 'admin-id', username: 'Uzzal', mobile_number: '01713236980', is_active: true, email: 'Uzzal', created_at: new Date().toISOString(), is_guest: false };
+          const adminUser: User = { id: 'admin-id', email: 'uzzal@admin.com', app_metadata: {}, user_metadata: {}, aud: 'authenticated', created_at: new Date().toISOString() } as User;
+          const adminProfile: Profile = { id: 'admin-id', username: 'Uzzal', mobile_number: '01713236980', is_active: true, email: 'uzzal@admin.com', created_at: new Date().toISOString(), is_guest: false };
           setupPresenceChannel(adminUser, adminProfile);
         }
         // If no Supabase user and no mock admin, check for guest session
@@ -446,7 +446,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const updateUserProfileStatus = async (userId: string, isActive: boolean): Promise<{ success: boolean; error?: string }> => {
-    if (profile?.email !== 'Uzzal') {
+    if (profile?.email !== 'uzzal@admin.com') { // Updated email check
       showError("এই অ্যাকশন করার অনুমতি আপনার নেই।");
       return { success: false, error: "অনুমতি নেই।" };
     }
