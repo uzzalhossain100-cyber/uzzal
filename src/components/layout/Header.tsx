@@ -52,7 +52,7 @@ export function Header({ onToggleSidebar, isSidebarCollapsed }: HeaderProps) {
         <SheetContent side="left" className="sm:max-w-xs p-0">
           <Sidebar />
         </SheetContent>
-      </Button>
+      </Sheet>
       <Button
         variant="ghost"
         size="icon"
