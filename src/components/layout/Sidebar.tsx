@@ -7,7 +7,8 @@ import {
   LogOut,
   Users,
   MessageSquareText,
-  MessageCircleMore // Added for Live Chat
+  MessageCircleMore,
+  Image as ImageIcon // Added for Advertisement page
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
@@ -47,6 +48,12 @@ export function Sidebar({ className, isCollapsed = false }: SidebarProps) {
       icon: Mail,
       href: "/contact",
     },
+    // "বিজ্ঞাপন" শুধুমাত্র এডমিনদের জন্য
+    ...(isAdmin ? [{
+      name: "বিজ্ঞাপন",
+      icon: ImageIcon,
+      href: "/advertisements",
+    }] : []),
   ];
 
   return (
