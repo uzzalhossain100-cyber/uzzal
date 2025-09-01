@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Phone, Mail, User } from 'lucide-react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'; // Import Avatar components
+// Removed Avatar imports as we're using a regular img tag for full image display
 
 const ContactPage: React.FC = () => {
   return (
@@ -13,10 +13,12 @@ const ContactPage: React.FC = () => {
         </CardHeader>
         <CardContent className="grid gap-6 p-6">
           <div className="flex flex-col items-center gap-4 p-3 rounded-lg bg-accent/20 dark:bg-accent/30 border border-primary/10">
-            <Avatar className="h-24 w-24">
-              <AvatarImage src="/images/uzzal-hossain.jpg" alt="Uzzal Hossain" />
-              <AvatarFallback>UH</AvatarFallback>
-            </Avatar>
+            {/* Replaced Avatar with a regular img tag for full image display */}
+            <img
+              src="/images/uzzal-hossain.jpg"
+              alt="Uzzal Hossain"
+              className="h-48 w-48 object-cover rounded-lg shadow-md border-2 border-primary/30" // Larger square image
+            />
             <div className="text-center">
               <p className="text-sm font-medium text-muted-foreground">এডমিন নাম</p>
               <p className="text-xl font-semibold text-foreground">উজ্জ্বল হোসেন</p>

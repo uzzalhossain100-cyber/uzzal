@@ -5,11 +5,13 @@ import { useAuth } from '@/context/AuthContext';
 import PublicChatPanel from '@/components/chat/PublicChatPanel';
 import ActiveUsersPanel from '@/components/chat/ActiveUsersPanel';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
+import { Navigate } from 'react-router-dom';
+import { showError } from '@/utils/toast';
 
 const LiveChatPage: React.FC = () => {
   const { user, profile, loading: authLoading } = useAuth();
 
-  const isAdmin = profile?.email === 'Uzzal';
+  const isAdmin = profile?.email === 'uzzal@admin.com';
 
   if (authLoading) {
     return (
@@ -20,12 +22,15 @@ const LiveChatPage: React.FC = () => {
     );
   }
 
+  // Redirect if not logged in or not admin
   if (!user || !profile) {
-    return (
-      <div className="flex items-center justify-center min-h-[calc(100vh-100px)] text-center text-muted-foreground">
-        <p>চ্যাট ব্যবহার করার জন্য আপনাকে লগইন করতে হবে।</p>
-      </div>
-    );
+    showError("চ্যাট ব্যবহার করার জন্য আপনাকে লগইন করতে হবে।");
+    return <Navigate to="/login" replace />;
+  }
+
+  if (!isAdmin) {
+    showError("আপনার এই পেজটি অ্যাক্সেস করার অনুমতি নেই।");
+    return <Navigate to="/" replace />; // Redirect non-admin users to home
   }
 
   return (

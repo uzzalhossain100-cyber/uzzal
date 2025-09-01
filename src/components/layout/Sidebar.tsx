@@ -36,11 +36,12 @@ export function Sidebar({ className, isCollapsed = false }: SidebarProps) {
       icon: MessageSquareText,
       href: "/active-users",
     }] : []),
-    {
+    // "লাইভ চ্যাট" শুধুমাত্র এডমিনদের জন্য
+    ...(isAdmin ? [{
       name: "লাইভ চ্যাট", // New Live Chat link
       icon: MessageCircleMore,
       href: "/live-chat",
-    },
+    }] : []),
     {
       name: "যোগাযোগ",
       icon: Mail,
