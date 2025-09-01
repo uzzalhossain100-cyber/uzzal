@@ -53,6 +53,7 @@ const AdvertisementPage: React.FC = () => {
       showError("বিজ্ঞাপন লোড করতে ব্যর্থ: " + error.message);
     } else {
       setAdvertisements(data || []);
+      console.log("Fetched Advertisements:", data); // Debugging: Log fetched data
     }
     setLoadingAds(false);
   };
@@ -92,6 +93,7 @@ const AdvertisementPage: React.FC = () => {
     }
 
     const publicUrl = supabase.storage.from('advertisement-images').getPublicUrl(filePath).data.publicUrl;
+    console.log("Generated public URL:", publicUrl); // Debugging: Log the public URL
 
     // Check if an ad already exists at this position
     const existingAd = advertisements.find(
@@ -102,7 +104,10 @@ const AdvertisementPage: React.FC = () => {
       // If exists, update the image and delete old one from storage
       const oldFilePath = existingAd.image_url.split('advertisement-images/')[1];
       if (oldFilePath) {
-        await supabase.storage.from('advertisement-images').remove([oldFilePath]);
+        const { error: removeOldError } = await supabase.storage.from('advertisement-images').remove([oldFilePath]);
+        if (removeOldError) {
+          console.error("Error removing old image from storage:", removeOldError.message);
+        }
       }
 
       const { error: updateError } = await supabase
@@ -114,7 +119,7 @@ const AdvertisementPage: React.FC = () => {
         showError("বিজ্ঞাপন আপডেট করতে ব্যর্থ: " + updateError.message);
       } else {
         showSuccess("বিজ্ঞাপন সফলভাবে আপডেট করা হয়েছে!");
-        fetchAdvertisements();
+        await fetchAdvertisements(); // Await to ensure state is updated before next render
       }
     } else {
       // If not, insert new ad
@@ -128,7 +133,7 @@ const AdvertisementPage: React.FC = () => {
         showError("বিজ্ঞাপন যোগ করতে ব্যর্থ: " + insertError.message);
       } else {
         showSuccess("বিজ্ঞাপন সফলভাবে যোগ করা হয়েছে!");
-        fetchAdvertisements();
+        await fetchAdvertisements(); // Await to ensure state is updated before next render
       }
     }
     setUploading(prev => ({ ...prev, [slotKey]: false }));
@@ -186,15 +191,13 @@ const AdvertisementPage: React.FC = () => {
   const rows = getRows();
   const maxRowIndex = rows.length > 0 ? Math.max(...rows.map((_, i) => i)) : -1;
 
-  const handleAddRow = async () => {
-    // Add a placeholder for the new row to trigger UI update
-    // The actual image upload will create the first ad in this row
-    // For now, just re-render to show a new empty row
+  const handleAddRow = () => {
+    // This function now just adds a visual placeholder row.
+    // The actual database insertion happens when an image is uploaded to a slot in this new row.
     setAdvertisements(prev => {
       const newRowIndex = maxRowIndex + 1;
-      // Add 4 empty slots for the new row
       const newAdsInRow: Advertisement[] = Array.from({ length: ADS_PER_ROW }).map((_, colIndex) => ({
-        id: `temp-${newRowIndex}-${colIndex}`, // Temporary ID
+        id: `temp-${newRowIndex}-${colIndex}`, // Temporary ID for empty slots
         row_index: newRowIndex,
         col_index: colIndex,
         image_url: '', // Empty URL
