@@ -36,6 +36,16 @@ const GuestLoginDialog: React.FC<GuestLoginDialogProps> = ({ onOpenChange, isOpe
     }
   };
 
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    // Allow only ASCII characters for email
+    if (/^[\x00-\x7F]*$/.test(value)) {
+      setEmail(value);
+    } else {
+      showError("ইমেল শুধুমাত্র ইংরেজি অক্ষর, সংখ্যা এবং নির্দিষ্ট চিহ্ন দিয়ে গঠিত হতে পারে।");
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!username.trim() || !email.trim()) {
@@ -85,9 +95,9 @@ const GuestLoginDialog: React.FC<GuestLoginDialogProps> = ({ onOpenChange, isOpe
               <Input
                 id="guest-email"
                 type="email"
-                placeholder="m@example.com"
+                placeholder="m@example.com (শুধুমাত্র ইংরেজি)"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={handleEmailChange}
                 className="pl-8 border-primary/30 focus-visible:ring-primary"
                 required
               />
