@@ -17,7 +17,7 @@ const ContactPage: React.FC = () => {
             <img
               src="/images/uzzal-hossain.jpg"
               alt="Uzzal Hossain"
-              className="h-48 w-48 object-cover rounded-lg shadow-md border-2 border-primary/30" // Larger square image
+              className="h-64 w-48 object-cover rounded-lg shadow-md border-2 border-primary/30" // Increased height to h-64
             />
             <div className="text-center">
               <p className="text-sm font-medium text-muted-foreground">এডমিন নাম</p>
