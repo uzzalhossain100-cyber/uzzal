@@ -50,7 +50,7 @@ const UserManagementPage: React.FC = () => {
 
   useEffect(() => {
     if (!authLoading) {
-      if (currentUserProfile?.email !== 'Uzzal') {
+      if (currentUserProfile?.email !== 'uzzal@admin.com') { // Corrected admin email check
         showError("এই পেজটি শুধুমাত্র এডমিনদের জন্য।");
         navigate('/'); // Redirect non-admin users
         return;
@@ -68,7 +68,7 @@ const UserManagementPage: React.FC = () => {
     }
 
     // If the current user is the mock admin, add them to the list if not already present
-    if (currentUserProfile && currentUserProfile.email === 'Uzzal' && !fetchedUsers.some(u => u.id === currentUserProfile.id)) {
+    if (currentUserProfile && currentUserProfile.email === 'uzzal@admin.com' && !fetchedUsers.some(u => u.id === currentUserProfile.id)) {
       fetchedUsers.push({
         ...currentUserProfile,
         is_active: true, // Admin is always active when logged in
@@ -162,7 +162,7 @@ const UserManagementPage: React.FC = () => {
     );
   }
 
-  if (currentUserProfile?.email !== 'Uzzal') {
+  if (currentUserProfile?.email !== 'uzzal@admin.com') { // Corrected admin email check
     return null; // Should have been redirected by now, but as a fallback
   }
 

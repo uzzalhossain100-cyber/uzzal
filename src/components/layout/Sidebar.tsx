@@ -20,7 +20,7 @@ export function Sidebar({ className, isCollapsed = false }: SidebarProps) {
   const { signOut, profile } = useAuth();
   const location = useLocation();
 
-  const isAdmin = profile?.email === 'Uzzal';
+  const isAdmin = profile?.email === 'uzzal@admin.com'; // Corrected admin email check
   const isGuest = profile?.is_guest;
 
   // Define navItems conditionally based on user type
