@@ -97,7 +97,7 @@ const ActiveUsersPage: React.FC = () => {
 
   return (
     <div className="flex flex-col h-full">
-      <Card className="w-full flex flex-col flex-1 shadow-lg border-primary/20 dark:border-primary/50">
+      <Card className="w-full flex flex-col flex-1 bg-background/80 backdrop-blur-sm shadow-lg border-primary/20 dark:border-primary/50"> {/* Added bg-background/80 backdrop-blur-sm */}
         <CardHeader className="flex flex-row items-center justify-between pb-4 border-b">
           <CardTitle className="text-3xl font-extrabold text-primary dark:text-primary-foreground flex items-center">
             <Users className="h-7 w-7 mr-2" /> সক্রিয় ইউজার
@@ -123,7 +123,7 @@ const ActiveUsersPage: React.FC = () => {
                 <div className="text-center text-muted-foreground p-4">কোনো ইউজার পাওয়া যায়নি।</div>
               ) : (
                 filteredUsers.map((user) => (
-                  <Card key={user.id} className="flex items-center justify-between p-4 shadow-sm border-primary/10 dark:border-primary/20">
+                  <Card key={user.id} className="flex items-center justify-between p-4 shadow-sm border-primary/10 dark:border-primary/20 bg-background/60 backdrop-blur-sm"> {/* Added bg-background/60 backdrop-blur-sm */}
                     <div className="flex items-center gap-3">
                       <Circle
                         className={cn(

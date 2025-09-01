@@ -229,7 +229,7 @@ const PublicChatPanel: React.FC<PublicChatPanelProps> = ({ user, profile, isAdmi
             <div className="text-center text-muted-foreground p-4">কোনো মেসেজ নেই। একটি নতুন মেসেজ পোস্ট করুন!</div>
           ) : (
             messages.map((msg) => (
-              <div key={msg.id} className="flex flex-col gap-2 p-4 bg-accent/10 dark:bg-accent/20 rounded-lg shadow-sm border border-primary/10">
+              <div key={msg.id} className="flex flex-col gap-2 p-4 bg-background/60 backdrop-blur-sm rounded-lg shadow-sm border border-primary/10"> {/* Changed bg-accent/10 to bg-background/60 */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Avatar className="h-8 w-8">
@@ -325,7 +325,7 @@ const PublicChatPanel: React.FC<PublicChatPanelProps> = ({ user, profile, isAdmi
           )}
         </div>
       </ScrollArea>
-      <div className="p-4 border-t">
+      <div className="p-4 border-t bg-background/80 backdrop-blur-sm"> {/* Added bg-background/80 backdrop-blur-sm */}
         <form onSubmit={handlePostMessage} className="flex gap-2">
           <Input
             placeholder="আপনার মেসেজ লিখুন..."

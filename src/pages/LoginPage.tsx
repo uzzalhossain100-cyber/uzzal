@@ -31,8 +31,8 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen p-4"> {/* Removed bg-gradient-to-br classes */}
-      <Card className="w-full max-w-md shadow-lg border-primary/20 dark:border-primary/50">
+    <div className="flex items-center justify-center min-h-screen p-4">
+      <Card className="w-full max-w-md bg-background/80 backdrop-blur-sm shadow-lg border-primary/20 dark:border-primary/50"> {/* Added bg-background/80 backdrop-blur-sm */}
         <CardHeader className="text-center">
           <CardTitle className="text-3xl font-bold text-primary dark:text-primary-foreground">
             {showAdminLoginForm ? 'এডমিন লগইন' : 'লগইন'}

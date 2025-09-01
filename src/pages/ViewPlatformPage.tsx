@@ -28,7 +28,7 @@ const ViewPlatformPage: React.FC = () => {
 
   return (
     <div className="flex flex-col h-full">
-      <Card className="w-full flex flex-col flex-1 shadow-lg border-primary/20 dark:border-primary/50">
+      <Card className="w-full flex flex-col flex-1 bg-background/80 backdrop-blur-sm shadow-lg border-primary/20 dark:border-primary/50"> {/* Added bg-background/80 backdrop-blur-sm */}
         <CardHeader className="flex flex-row items-center justify-between pb-4 border-b">
           <CardTitle className="text-2xl font-extrabold text-primary dark:text-primary-foreground flex items-center">
             <Button variant="ghost" onClick={handleBack} className="p-0 h-auto mr-2 text-primary dark:text-primary-foreground hover:bg-transparent hover:text-primary/80">

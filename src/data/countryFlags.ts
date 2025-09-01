@@ -1,0 +1,23 @@
+export const countryFlags: { [key: string]: string } = {
+  "বাংলাদেশ": "/flags/bangladesh.png",
+  "ভারত": "/flags/india.png",
+  "যুক্তরাজ্য": "/flags/united-kingdom.png",
+  "যুক্তরাষ্ট্র": "/flags/united-states.png",
+  "কানাডা": "/flags/canada.png",
+  "অস্ট্রেলিয়া": "/flags/australia.png",
+  "জার্মানি": "/flags/germany.png",
+  "ফ্রান্স": "/flags/france.png",
+  "জাপান": "/flags/japan.png",
+  "চীন": "/flags/china.png",
+  "রাশিয়া": "/flags/russia.png",
+  "দক্ষিণ কোরিয়া": "/flags/south-korea.png",
+  "ইতালি": "/flags/italy.png",
+  "স্পেন": "/flags/spain.png",
+  "ব্রাজিল": "/flags/brazil.png",
+  "দক্ষিণ আফ্রিকা": "/flags/south-africa.png",
+  "মিশর": "/flags/egypt.png",
+  "পাকিস্তান": "/flags/pakistan.png",
+  "ইন্দোনেশিয়া": "/flags/indonesia.png",
+  "সৌদি আরব": "/flags/saudi-arabia.png",
+  // Add more countries and their flag paths as needed
+};

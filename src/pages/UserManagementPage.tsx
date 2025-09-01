@@ -169,7 +169,7 @@ const UserManagementPage: React.FC = () => {
   return (
     <div className="flex flex-col h-full gap-6">
       {/* Visit Statistics Section */}
-      <Card className="w-full shadow-lg border-primary/20 dark:border-primary/50">
+      <Card className="w-full bg-background/80 backdrop-blur-sm shadow-lg border-primary/20 dark:border-primary/50"> {/* Added bg-background/80 backdrop-blur-sm */}
         <CardHeader className="pb-4 border-b">
           <CardTitle className="text-2xl font-extrabold text-primary dark:text-primary-foreground flex items-center">
             <Eye className="h-6 w-6 mr-2" /> ভিজিটর পরিসংখ্যান
@@ -201,7 +201,7 @@ const UserManagementPage: React.FC = () => {
       </Card>
 
       {/* Recent Visitors List */}
-      <Card className="w-full flex flex-col flex-1 shadow-lg border-primary/20 dark:border-primary/50">
+      <Card className="w-full flex flex-col flex-1 bg-background/80 backdrop-blur-sm shadow-lg border-primary/20 dark:border-primary/50"> {/* Added bg-background/80 backdrop-blur-sm */}
         <CardHeader className="flex flex-row items-center justify-between pb-4 border-b">
           <CardTitle className="text-2xl font-extrabold text-primary dark:text-primary-foreground flex items-center">
             <User className="h-6 w-6 mr-2" /> সাম্প্রতিক ভিজিটর
@@ -213,6 +213,7 @@ const UserManagementPage: React.FC = () => {
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead className="w-[50px]"></TableHead>
                   <TableHead>ইউজারনেম</TableHead>
                   <TableHead>ইমেল</TableHead>
                   <TableHead>আইপি অ্যাড্রেস</TableHead>
@@ -247,7 +248,7 @@ const UserManagementPage: React.FC = () => {
       </Card>
 
       {/* User Management Section (Existing) */}
-      <Card className="w-full flex flex-col flex-1 shadow-lg border-primary/20 dark:border-primary/50">
+      <Card className="w-full flex flex-col flex-1 bg-background/80 backdrop-blur-sm shadow-lg border-primary/20 dark:border-primary/50"> {/* Added bg-background/80 backdrop-blur-sm */}
         <CardHeader className="flex flex-row items-center justify-between pb-4 border-b">
           <CardTitle className="text-3xl font-extrabold text-primary dark:text-primary-foreground flex items-center">
             <User className="h-7 w-7 mr-2" /> ইউজার ম্যানেজমেন্ট

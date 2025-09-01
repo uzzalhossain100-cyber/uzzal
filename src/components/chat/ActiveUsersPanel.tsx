@@ -7,6 +7,7 @@ import { Users, Circle, MessageSquareText, Search as SearchIcon, Loader2, User a
 import { useAuth } from '@/context/AuthContext';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
+import { Badge } from '@/components/ui/badge'; // Import Badge component
 
 interface Profile {
   id: string;
@@ -54,7 +55,7 @@ const ActiveUsersPanel: React.FC = () => {
   };
 
   return (
-    <Card className="w-full flex flex-col h-full shadow-lg border-primary/20 dark:border-primary/50">
+    <Card className="w-full flex flex-col h-full bg-background/80 backdrop-blur-sm shadow-lg border-primary/20 dark:border-primary/50"> {/* Added bg-background/80 backdrop-blur-sm */}
       <CardHeader className="pb-4 border-b">
         <CardTitle className="text-xl font-extrabold text-primary dark:text-primary-foreground flex items-center">
           <Users className="h-5 w-5 mr-2" /> সক্রিয় ইউজার
@@ -84,7 +85,7 @@ const ActiveUsersPanel: React.FC = () => {
                   key={user.id}
                   className={cn(
                     "flex items-center justify-between p-3 rounded-lg shadow-sm border transition-all duration-200 cursor-pointer",
-                    "bg-card text-foreground border-primary/10 hover:bg-primary/5 dark:border-primary/20 dark:hover:bg-primary/10",
+                    "bg-background/60 text-foreground border-primary/10 hover:bg-primary/5 dark:border-primary/20 dark:hover:bg-primary/10", // Changed bg-card to bg-background/60
                     selectedUsers.some(u => u.id === user.id) && "bg-primary/10 border-primary dark:bg-primary/20"
                   )}
                   onClick={() => handleUserSelect(user)}

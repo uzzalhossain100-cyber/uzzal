@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { allInOneCategories, Category, CategoryItem } from '@/data/categories.ts';
+import { countryFlags } from '@/data/countryFlags'; // Import countryFlags
 import { ArrowLeft, ExternalLink, Newspaper as NewspaperIcon, Globe, Tv, GraduationCap, BookOpen, Film } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -26,7 +27,7 @@ const categoryGradientColors = [
   "from-fuchsia-500 to-purple-600",
 ];
 
-// Define a set of slightly different gradient colors for sub-categories (countries) and items
+// Define a set of slightly different gradient colors for sub-categories (items)
 const itemGradientColors = [
   "from-gray-700 to-gray-800", // Darker for contrast
   "from-blue-600 to-blue-700",
@@ -89,7 +90,7 @@ const Index: React.FC = () => {
   // State 1: Displaying Top-Level Categories
   if (!currentCategory) {
     return (
-      <Card className="w-full flex flex-col h-full shadow-xl border-primary/20"> {/* Removed bg-gradient-to-br classes */}
+      <Card className="w-full flex flex-col h-full bg-background/80 backdrop-blur-sm shadow-xl border-primary/20"> {/* Added bg-background/80 backdrop-blur-sm */}
         <CardHeader className="pb-4 border-b">
           <CardTitle className="text-3xl font-extrabold text-center text-primary dark:text-primary-foreground">
             সমস্ত ক্যাটাগরি
@@ -145,7 +146,7 @@ const Index: React.FC = () => {
     }
 
     return (
-      <Card className="w-full flex flex-col h-full shadow-xl border-primary/20"> {/* Removed bg-gradient-to-br classes */}
+      <Card className="w-full flex flex-col h-full bg-background/80 backdrop-blur-sm shadow-xl border-primary/20"> {/* Added bg-background/80 backdrop-blur-sm */}
         <CardHeader className="flex flex-row items-center justify-between pb-4 border-b">
           <CardTitle className="text-3xl font-extrabold text-primary dark:text-primary-foreground flex items-center">
             <Button variant="ghost" onClick={handleBack} className="p-0 h-auto mr-2 text-primary dark:text-primary-foreground hover:bg-transparent hover:text-primary/80">
@@ -158,20 +159,27 @@ const Index: React.FC = () => {
           <ScrollArea className="h-[calc(100vh-180px)] w-full rounded-xl border-2 border-primary/20 bg-background/80 p-4 shadow-lg">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
               {currentCategory.items?.map((country, index) => {
-                const gradientClass = itemGradientColors[index % itemGradientColors.length]; // Use item colors
+                const flagUrl = countryFlags[country.name];
                 return (
                   <Button
                     key={country.name}
                     variant="outline"
                     className={cn(
-                      "h-32 flex flex-col items-center justify-center text-center p-4 rounded-lg shadow-md transition-all duration-200",
-                      `bg-gradient-to-br ${gradientClass} text-white border-none hover:scale-105 transform`, // Apply gradient and white text
+                      "h-32 flex flex-col items-center justify-center text-center p-4 rounded-lg shadow-md transition-all duration-200 relative overflow-hidden",
+                      "text-white border-none hover:scale-105 transform", // Apply white text
                       "hover:shadow-lg", // Add hover shadow
                     )}
+                    style={{
+                      backgroundImage: flagUrl ? `url(${flagUrl})` : undefined,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                    }}
                     onClick={() => handleItemClick(country)}
                   >
-                    <CountryIcon className="h-12 w-12 mb-2 text-white" /> {/* Icon color white */}
-                    <span className="font-extrabold text-xl tracking-wide">{country.name}</span> {/* Attractive text style */}
+                    {/* Overlay for better text readability */}
+                    <div className="absolute inset-0 bg-black opacity-30 group-hover:opacity-20 transition-opacity duration-200 rounded-lg"></div>
+                    <CountryIcon className="h-12 w-12 mb-2 text-white relative z-10" /> {/* Icon color white */}
+                    <span className="font-extrabold text-xl tracking-wide relative z-10 text-shadow-sm">{country.name}</span> {/* Attractive text style */}
                   </Button>
                 );
               })}
@@ -223,7 +231,7 @@ const Index: React.FC = () => {
   }
 
   return (
-    <Card className="w-full flex flex-col h-full shadow-xl border-primary/20"> {/* Removed bg-gradient-to-br classes */}
+    <Card className="w-full flex flex-col h-full bg-background/80 backdrop-blur-sm shadow-xl border-primary/20"> {/* Added bg-background/80 backdrop-blur-sm */}
       <CardHeader className="flex flex-row items-center justify-between pb-4 border-b">
         <CardTitle className="text-3xl font-extrabold text-primary dark:text-primary-foreground flex items-center">
           <Button variant="ghost" onClick={handleBack} className="p-0 h-auto mr-2 text-primary dark:text-primary-foreground hover:bg-transparent hover:text-primary/80">
