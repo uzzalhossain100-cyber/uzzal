@@ -30,7 +30,7 @@ interface AuthContextType {
   onlineUsers: Profile[]; // New: List of currently online users
   signIn: (identifier: string, password: string) => Promise<{ success: boolean; error?: string }>;
   signUp: (username: string, email: string, mobileNumber: string, password: string) => Promise<{ success: boolean; error?: string }>;
-  guestSignIn: (username: string, email: string) => Promise<{ success: boolean; error?: string }>; // New: Guest sign-in
+  guestSignIn: (username: string) => Promise<{ success: boolean; error?: string }>; // Updated: Only username
   signOut: () => Promise<void>;
   getUsersProfiles: () => Promise<Profile[] | null>;
   updateUserProfileStatus: (userId: string, isActive: boolean) => Promise<{ success: boolean; error?: string }>;
@@ -100,8 +100,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   // Helper function to set guest session
-  const setGuestSession = (guestUsername: string, guestEmail: string) => {
+  const setGuestSession = (guestUsername: string) => {
     const guestId = `guest-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+    const guestEmail = `${guestUsername.toLowerCase().replace(/[^a-z0-9]/g, '')}@guest.com`; // Generate dummy email
     const guestUser: User = {
       id: guestId,
       email: guestEmail,
@@ -382,11 +383,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return { success: true };
   };
 
-  const guestSignIn = async (username: string, email: string) => {
+  const guestSignIn = async (username: string) => { // Only username as parameter
     await supabase.auth.signOut();
     clearMockAdminSession();
 
-    setGuestSession(username, email);
+    setGuestSession(username); // Pass only username
     showSuccess("সাধারণ ইউজার হিসেবে লগইন সফল!");
     return { success: true };
   };

@@ -5,15 +5,14 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { User, Mail } from 'lucide-react';
+import { User } from 'lucide-react'; // Removed Mail icon as email is no longer needed
 import { useAuth } from '@/context/AuthContext';
 import { showError } from '@/utils/toast';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
 
 interface GuestLoginDialogProps {
   onOpenChange: (open: boolean) => void;
@@ -22,10 +21,9 @@ interface GuestLoginDialogProps {
 
 const GuestLoginDialog: React.FC<GuestLoginDialogProps> = ({ onOpenChange, isOpen }) => {
   const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { guestSignIn } = useAuth();
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -36,24 +34,14 @@ const GuestLoginDialog: React.FC<GuestLoginDialogProps> = ({ onOpenChange, isOpe
     }
   };
 
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    // Allow only ASCII characters for email
-    if (/^[\x00-\x7F]*$/.test(value)) {
-      setEmail(value);
-    } else {
-      showError("ইমেল শুধুমাত্র ইংরেজি অক্ষর, সংখ্যা এবং নির্দিষ্ট চিহ্ন দিয়ে গঠিত হতে পারে।");
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!username.trim() || !email.trim()) {
-      showError("ইউজারনেম এবং ইমেল উভয়ই প্রয়োজন।");
+    if (!username.trim()) {
+      showError("ইউজারনেম প্রয়োজন।");
       return;
     }
     setIsLoading(true);
-    const { success, error } = await guestSignIn(username, email);
+    const { success, error } = await guestSignIn(username); // Only pass username
     if (success) {
       onOpenChange(false); // Close dialog
       navigate('/'); // Navigate to home page
@@ -69,8 +57,8 @@ const GuestLoginDialog: React.FC<GuestLoginDialogProps> = ({ onOpenChange, isOpe
         <DialogHeader>
           <DialogTitle className="text-primary">সাধারণ ইউজার হিসেবে প্রবেশ করুন</DialogTitle>
           <DialogDescription>
-            আপনার ইউজারনেম এবং ইমেল আইডি দিয়ে সাইটে প্রবেশ করুন।
-          </DialogDescription>
+            আপনার ইউজারনেম দিয়ে সাইটে প্রবেশ করুন।
+          </Dialogশন>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="grid gap-4 py-4">
           <div className="grid gap-2">
@@ -83,21 +71,6 @@ const GuestLoginDialog: React.FC<GuestLoginDialogProps> = ({ onOpenChange, isOpe
                 placeholder="আপনার ইউজারনেম (শুধুমাত্র ইংরেজি)"
                 value={username}
                 onChange={handleUsernameChange}
-                className="pl-8 border-primary/30 focus-visible:ring-primary"
-                required
-              />
-            </div>
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="guest-email">ইমেল</Label>
-            <div className="relative">
-              <Mail className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input
-                id="guest-email"
-                type="email"
-                placeholder="m@example.com (শুধুমাত্র ইংরেজি)"
-                value={email}
-                onChange={handleEmailChange}
                 className="pl-8 border-primary/30 focus-visible:ring-primary"
                 required
               />
