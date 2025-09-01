@@ -9,7 +9,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { User } from 'lucide-react'; // Removed Mail icon as email is no longer needed
+import { User } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { showError } from '@/utils/toast';
 import { useNavigate } from 'react-router-dom';
@@ -41,10 +41,10 @@ const GuestLoginDialog: React.FC<GuestLoginDialogProps> = ({ onOpenChange, isOpe
       return;
     }
     setIsLoading(true);
-    const { success, error } = await guestSignIn(username); // Only pass username
+    const { success, error } = await guestSignIn(username);
     if (success) {
-      onOpenChange(false); // Close dialog
-      navigate('/'); // Navigate to home page
+      onOpenChange(false);
+      navigate('/');
     } else {
       showError(error || "সাধারণ ইউজার হিসেবে লগইন ব্যর্থ হয়েছে।");
     }
@@ -58,7 +58,7 @@ const GuestLoginDialog: React.FC<GuestLoginDialogProps> = ({ onOpenChange, isOpe
           <DialogTitle className="text-primary">সাধারণ ইউজার হিসেবে প্রবেশ করুন</DialogTitle>
           <DialogDescription>
             আপনার ইউজারনেম দিয়ে সাইটে প্রবেশ করুন।
-          </Dialogশন>
+          </DialogDescription> {/* Fixed closing tag here */}
         </DialogHeader>
         <form onSubmit={handleSubmit} className="grid gap-4 py-4">
           <div className="grid gap-2">
