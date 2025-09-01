@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Menu, Bell, Search, LogOut, User as UserIcon } from "lucide-react"; // Added UserIcon
+import { Menu, Bell, Search, LogOut, User as UserIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -25,11 +25,11 @@ export function Header({ onToggleSidebar, isSidebarCollapsed }: HeaderProps) {
   const { user, profile, signOut } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Determine if the logged-in user is the admin 'Uzzal'
-  const isAdmin = user?.email === 'Uzzal';
+  // Determine if the logged-in user is the mock admin
+  const isAdmin = profile?.email === 'uzzal@admin.com'; // Corrected admin email check
   const isGuest = profile?.is_guest;
 
-  const avatarSrc = isAdmin ? "/images/uzzal-hossain.jpg" : "https://github.com/shadcn.png";
+  const avatarSrc = isAdmin ? "/images/uzzal-hossain.jpg" : (user?.user_metadata?.avatar_url || "https://github.com/shadcn.png");
   const avatarFallback = user?.email ? user.email.charAt(0).toUpperCase() : (profile?.username ? profile.username.charAt(0).toUpperCase() : 'U');
 
   const handleSearchSubmit = (e: React.FormEvent) => {
@@ -52,7 +52,7 @@ export function Header({ onToggleSidebar, isSidebarCollapsed }: HeaderProps) {
         <SheetContent side="left" className="sm:max-w-xs p-0">
           <Sidebar />
         </SheetContent>
-      </Sheet>
+      </Button>
       <Button
         variant="ghost"
         size="icon"
