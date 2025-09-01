@@ -166,15 +166,13 @@ const Index: React.FC = () => {
                     key={country.name}
                     variant="outline"
                     className={cn(
-                      "h-32 flex flex-col items-center justify-center text-center p-4 rounded-lg shadow-md transition-all duration-200 relative overflow-hidden",
+                      "group h-32 flex flex-col items-center justify-center text-center p-4 rounded-lg shadow-md transition-all duration-200 relative overflow-hidden",
                       "text-white border-none hover:scale-105 transform", // Apply white text
                       "hover:shadow-lg", // Add hover shadow
-                      !flagUrl && `bg-gradient-to-br ${gradientClass}`, // Apply gradient ONLY if no flag
+                      flagUrl ? "bg-cover bg-center" : `bg-gradient-to-br ${gradientClass}`, // Apply gradient if no flag
                     )}
                     style={{
                       backgroundImage: flagUrl ? `url(${flagUrl})` : undefined,
-                      backgroundSize: 'cover',
-                      backgroundPosition: 'center',
                     }}
                     onClick={() => handleItemClick(country)}
                   >
