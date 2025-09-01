@@ -215,6 +215,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setupPresenceChannel(sessionUser, data);
           }
         }
+        // Ensure these are cleared if a real user logs in over a mock/guest session
         localStorage.removeItem('isMockAdminLoggedIn');
         localStorage.removeItem('guestUser');
         localStorage.removeItem('guestProfile');
@@ -391,6 +392,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signOut = async () => {
+    // Always untrack/unsubscribe presence
     if (presenceChannelRef.current) {
       try {
         await presenceChannelRef.current.untrack();
@@ -408,24 +410,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     }
 
-    if (profile?.is_guest || profile?.email === 'uzzal@admin.com') { // Check for mock admin email
-      clearMockAdminSession();
-      clearGuestSession();
-      setUser(null);
-      setProfile(null);
-      setOnlineUsers([]);
-      showSuccess("লগআউট সফল!");
-      return;
-    }
+    // Always clear local storage items related to mock/guest sessions
+    localStorage.removeItem('isMockAdminLoggedIn');
+    localStorage.removeItem('guestUser');
+    localStorage.removeItem('guestProfile');
 
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      showError(error.message);
-    } else {
+    if (profile?.is_guest || profile?.email === 'uzzal@admin.com') {
+      // For mock admin or guest, manually clear state
       setUser(null);
       setProfile(null);
       setOnlineUsers([]);
       showSuccess("লগআউট সফল!");
+    } else {
+      // For real Supabase users, call Supabase signOut
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        showError(error.message);
+      } else {
+        // The onAuthStateChange listener will handle setting user/profile to null
+        // But we can also set them here for immediate UI update
+        setUser(null);
+        setProfile(null);
+        setOnlineUsers([]);
+        showSuccess("লগআউট সফল!");
+      }
     }
   };
 

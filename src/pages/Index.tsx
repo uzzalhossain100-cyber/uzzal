@@ -147,9 +147,17 @@ const Index: React.FC = () => {
   }
 
   // State 3: Displaying Newspapers/TV Channels/Educational Sites/Entertainment Sites for a selected country
-  const itemsToDisplay = (currentCategory.name === "খবর" || currentCategory.name === "লাইভ টিভি" || currentCategory.name === "শিক্ষা" || currentCategory.name === "বিনোদন") && subCategoryParam
-    ? currentSubCategoryItems
-    : currentCategory.items;
+  let itemsToDisplay: CategoryItem[] | undefined = [];
+
+  if ((currentCategory.name === "খবর" || currentCategory.name === "লাইভ টিভি" || currentCategory.name === "শিক্ষা" || currentCategory.name === "বিনোদন") && subCategoryParam) {
+    itemsToDisplay = currentSubCategoryItems;
+    if (currentCategory.name === "লাইভ টিভি" && itemsToDisplay) {
+      // Prepend "All In One TV" for Live TV sub-items
+      itemsToDisplay = [{ name: "All In One TV", url: "https://tv.garden/" }, ...itemsToDisplay];
+    }
+  } else {
+    itemsToDisplay = currentCategory.items;
+  }
 
   let titleText: string;
   if (currentCategory.name === "খবর" && subCategoryParam) {
