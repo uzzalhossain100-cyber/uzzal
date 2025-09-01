@@ -213,11 +213,7 @@ const Index: React.FC = () => {
                 <span className="font-semibold text-base flex items-center mb-1 text-primary dark:text-primary-foreground">
                   {item.name}
                 </span>
-                {item.url && (
-                  <span className="text-xs text-muted-foreground text-left truncate w-full flex items-center">
-                    <ExternalLink className="h-3 w-3 mr-1 flex-shrink-0" /> <span className="truncate">{item.url}</span>
-                  </span>
-                )}
+                {/* Removed the URL display */}
               </Button>
             ))}
           </div>
