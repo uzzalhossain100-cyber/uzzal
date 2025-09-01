@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Input } from '@/components/ui/input';
-import { Users, Circle, MessageSquareText, Search as SearchIcon, Loader2, User as UserIcon } from 'lucide-react'; // Added UserIcon
+import { Users, Circle, MessageSquareText, Search as SearchIcon, Loader2, User as UserIcon, Group } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
@@ -15,7 +15,8 @@ interface Profile {
   is_active: boolean;
   email: string;
   created_at: string;
-  is_guest?: boolean; // Added for guest users
+  is_guest?: boolean;
+  isOnline?: boolean; // Added for online status
 }
 
 const ActiveUsersPage: React.FC = () => {
@@ -34,7 +35,7 @@ const ActiveUsersPage: React.FC = () => {
       }
 
       // If the current user is the mock admin, add them to the list if not already present
-      if (currentUserProfile && currentUserProfile.email === 'Uzzal' && !fetchedUsers.some(u => u.id === currentUserProfile.id)) {
+      if (currentUserProfile && currentUserProfile.email === 'uzzal@admin.com' && !fetchedUsers.some(u => u.id === currentUserProfile.id)) {
         fetchedUsers.push({
           ...currentUserProfile,
           is_active: true, // Admin is always active when logged in
@@ -60,7 +61,7 @@ const ActiveUsersPage: React.FC = () => {
 
     const usersWithStatus = combinedUsers.map(user => ({
       ...user,
-      isOnline: onlineUserIds.has(user.id) || (currentUserProfile?.id === user.id && (currentUserProfile.email === 'Uzzal' || currentUserProfile.is_guest)), // Admin/Guest is online if logged in
+      isOnline: onlineUserIds.has(user.id) || (currentUserProfile?.id === user.id && (currentUserProfile.email === 'uzzal@admin.com' || currentUserProfile.is_guest)), // Admin/Guest is online if logged in
     }));
 
     // Filter based on search query
