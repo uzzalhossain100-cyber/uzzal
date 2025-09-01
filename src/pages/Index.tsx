@@ -7,6 +7,40 @@ import { allInOneCategories, Category, CategoryItem } from '@/data/categories.ts
 import { ArrowLeft, ExternalLink, Newspaper as NewspaperIcon, Globe, Tv, GraduationCap, BookOpen, Film } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+// Define a set of vibrant gradient colors for top-level categories
+const categoryGradientColors = [
+  "from-blue-500 to-purple-600",
+  "from-green-500 to-teal-600",
+  "from-yellow-500 to-orange-600",
+  "from-pink-500 to-red-600",
+  "from-indigo-500 to-violet-600",
+  "from-cyan-500 to-blue-600",
+  "from-rose-500 to-fuchsia-600",
+  "from-emerald-500 to-lime-600",
+  "from-orange-500 to-red-700",
+  "from-purple-500 to-pink-600",
+  "from-sky-500 to-indigo-600",
+  "from-amber-500 to-yellow-600",
+  "from-teal-500 to-green-600",
+  "from-red-500 to-orange-600",
+  "from-fuchsia-500 to-purple-600",
+];
+
+// Define a set of slightly different gradient colors for sub-categories (countries) and items
+const itemGradientColors = [
+  "from-gray-700 to-gray-800", // Darker for contrast
+  "from-blue-600 to-blue-700",
+  "from-green-600 to-green-700",
+  "from-yellow-600 to-yellow-700",
+  "from-red-600 to-red-700",
+  "from-purple-600 to-purple-700",
+  "from-indigo-600 to-indigo-700",
+  "from-pink-600 to-pink-700",
+  "from-teal-600 to-teal-700",
+  "from-orange-600 to-orange-700",
+];
+
+
 const Index: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -64,21 +98,22 @@ const Index: React.FC = () => {
         <CardContent className="flex-1 overflow-hidden p-6">
           <ScrollArea className="h-[calc(100vh-180px)] w-full rounded-xl border-2 border-primary/20 bg-background/80 p-4 shadow-lg">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-              {allInOneCategories.map((category) => {
+              {allInOneCategories.map((category, index) => {
                 const Icon = category.icon;
+                const gradientClass = categoryGradientColors[index % categoryGradientColors.length];
                 return (
                   <Button
                     key={category.name}
                     variant="outline"
                     className={cn(
                       "h-32 flex flex-col items-center justify-center text-center p-4 rounded-lg shadow-md transition-all duration-200",
-                      "bg-card text-foreground border-primary/30 hover:bg-primary/10 hover:border-primary",
-                      "dark:bg-card dark:text-foreground dark:border-primary/50 dark:hover:bg-primary/20 dark:hover:border-primary"
+                      `bg-gradient-to-br ${gradientClass} text-white border-none hover:scale-105 transform`, // Apply gradient and white text
+                      "hover:shadow-lg", // Add hover shadow
                     )}
                     onClick={() => handleCategoryClick(category)}
                   >
-                    {Icon && <Icon className="h-12 w-12 mb-2 text-primary dark:text-primary-foreground" />}
-                    <span className="font-bold text-lg">{category.name}</span>
+                    {Icon && <Icon className="h-12 w-12 mb-2 text-white" />} {/* Icon color white */}
+                    <span className="font-extrabold text-xl tracking-wide">{category.name}</span> {/* Attractive text style */}
                   </Button>
                 );
               })}
@@ -122,20 +157,21 @@ const Index: React.FC = () => {
         <CardContent className="flex-1 overflow-hidden p-6">
           <ScrollArea className="h-[calc(100vh-180px)] w-full rounded-xl border-2 border-primary/20 bg-background/80 p-4 shadow-lg">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-              {currentCategory.items?.map((country) => {
+              {currentCategory.items?.map((country, index) => {
+                const gradientClass = itemGradientColors[index % itemGradientColors.length]; // Use item colors
                 return (
                   <Button
                     key={country.name}
                     variant="outline"
                     className={cn(
                       "h-32 flex flex-col items-center justify-center text-center p-4 rounded-lg shadow-md transition-all duration-200",
-                      "bg-card text-foreground border-primary/30 hover:bg-primary/10 hover:border-primary",
-                      "dark:bg-card dark:text-foreground dark:border-primary/50 dark:hover:bg-primary/20 dark:hover:border-primary"
+                      `bg-gradient-to-br ${gradientClass} text-white border-none hover:scale-105 transform`, // Apply gradient and white text
+                      "hover:shadow-lg", // Add hover shadow
                     )}
                     onClick={() => handleItemClick(country)}
                   >
-                    <CountryIcon className="h-12 w-12 mb-2 text-primary dark:text-primary-foreground" />
-                    <span className="font-bold text-lg">{country.name}</span>
+                    <CountryIcon className="h-12 w-12 mb-2 text-white" /> {/* Icon color white */}
+                    <span className="font-extrabold text-xl tracking-wide">{country.name}</span> {/* Attractive text style */}
                   </Button>
                 );
               })}
@@ -199,18 +235,18 @@ const Index: React.FC = () => {
       <CardContent className="flex-1 overflow-hidden p-6">
         <ScrollArea className="h-[calc(100vh-180px)] w-full rounded-xl border-2 border-primary/20 bg-background/80 p-4 shadow-lg">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-            {itemsToDisplay?.map((item) => (
+            {itemsToDisplay?.map((item, index) => (
               <Button
                 key={item.name}
                 variant="ghost"
                 className={cn(
                   "w-full justify-start text-left flex flex-col items-start h-auto py-3 px-4 rounded-lg shadow-sm transition-all duration-200",
-                  "bg-card text-foreground border border-primary/20 hover:bg-primary/10 hover:border-primary",
-                  "dark:bg-card dark:text-foreground dark:border-primary/30 dark:hover:bg-primary/20 dark:hover:border-primary"
+                  `bg-gradient-to-br ${itemGradientColors[index % itemGradientColors.length]} text-white border-none hover:scale-105 transform`, // Apply gradient and white text
+                  "hover:shadow-lg", // Add hover shadow
                 )}
                 onClick={() => handleItemClick(item)}
               >
-                <span className="font-semibold text-base flex items-center mb-1 text-primary dark:text-primary-foreground">
+                <span className="font-extrabold text-lg flex items-center mb-1 text-white"> {/* Attractive text style */}
                   {item.name}
                 </span>
                 {/* Removed the URL display */}
