@@ -89,7 +89,7 @@ const Index: React.FC = () => {
   // State 1: Displaying Top-Level Categories
   if (!currentCategory) {
     return (
-      <Card className="w-full flex flex-col h-full bg-gradient-to-br from-primary/5 to-accent/5 dark:from-primary/10 dark:to-accent/10 shadow-xl border-primary/20">
+      <Card className="w-full flex flex-col h-full shadow-xl border-primary/20"> {/* Removed bg-gradient-to-br classes */}
         <CardHeader className="pb-4 border-b">
           <CardTitle className="text-3xl font-extrabold text-center text-primary dark:text-primary-foreground">
             সমস্ত ক্যাটাগরি
@@ -145,7 +145,7 @@ const Index: React.FC = () => {
     }
 
     return (
-      <Card className="w-full flex flex-col h-full bg-gradient-to-br from-primary/5 to-accent/5 dark:from-primary/10 dark:to-accent/10 shadow-xl border-primary/20">
+      <Card className="w-full flex flex-col h-full shadow-xl border-primary/20"> {/* Removed bg-gradient-to-br classes */}
         <CardHeader className="flex flex-row items-center justify-between pb-4 border-b">
           <CardTitle className="text-3xl font-extrabold text-primary dark:text-primary-foreground flex items-center">
             <Button variant="ghost" onClick={handleBack} className="p-0 h-auto mr-2 text-primary dark:text-primary-foreground hover:bg-transparent hover:text-primary/80">
@@ -223,7 +223,7 @@ const Index: React.FC = () => {
   }
 
   return (
-    <Card className="w-full flex flex-col h-full bg-gradient-to-br from-primary/5 to-accent/5 dark:from-primary/10 dark:to-accent/10 shadow-xl border-primary/20">
+    <Card className="w-full flex flex-col h-full shadow-xl border-primary/20"> {/* Removed bg-gradient-to-br classes */}
       <CardHeader className="flex flex-row items-center justify-between pb-4 border-b">
         <CardTitle className="text-3xl font-extrabold text-primary dark:text-primary-foreground flex items-center">
           <Button variant="ghost" onClick={handleBack} className="p-0 h-auto mr-2 text-primary dark:text-primary-foreground hover:bg-transparent hover:text-primary/80">

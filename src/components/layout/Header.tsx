@@ -41,7 +41,7 @@ export function Header({ onToggleSidebar, isSidebarCollapsed }: HeaderProps) {
   };
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background px-4 sm:static sm:px-6 shadow-sm">
+    <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background/80 backdrop-blur-sm px-4 sm:static sm:px-6 shadow-sm"> {/* Changed bg-background to bg-background/80 backdrop-blur-sm */}
       <Sheet>
         <SheetTrigger asChild>
           <Button size="icon" variant="outline" className="sm:hidden">

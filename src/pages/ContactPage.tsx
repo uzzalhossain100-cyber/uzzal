@@ -5,7 +5,7 @@ import { Phone, Mail, User } from 'lucide-react';
 
 const ContactPage: React.FC = () => {
   return (
-    <div className="flex items-center justify-center min-h-[calc(100vh-100px)] p-4 bg-gradient-to-br from-primary/5 to-accent/5 dark:from-primary/10 dark:to-accent/10 rounded-lg shadow-xl">
+    <div className="flex items-center justify-center min-h-[calc(100vh-100px)] p-4 rounded-lg shadow-xl"> {/* Removed bg-gradient-to-br classes */}
       <Card className="w-full max-w-md shadow-lg border-primary/20 dark:border-primary/50">
         <CardHeader className="text-center border-b pb-4">
           <CardTitle className="text-3xl font-bold text-primary dark:text-primary-foreground">যোগাযোগ</CardTitle>

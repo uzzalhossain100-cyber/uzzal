@@ -85,7 +85,7 @@ const EmergencyContactsPage: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="min-h-screen flex flex-col h-full bg-transparent"> {/* Changed bg-gray-100 to bg-transparent */}
       <Card className="w-full flex flex-col flex-1 shadow-lg border-primary/20 dark:border-primary/50">
         <CardHeader className="flex flex-row items-center justify-between pb-4 border-b">
           <CardTitle className="text-3xl font-extrabold text-primary dark:text-primary-foreground flex items-center">

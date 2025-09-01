@@ -52,7 +52,7 @@ export function Sidebar({ className, isCollapsed = false }: SidebarProps) {
   return (
     <div
       className={cn(
-        "flex h-full flex-col space-y-4 border-r bg-sidebar p-4 transition-all duration-300 shadow-md",
+        "flex h-full flex-col space-y-4 border-r bg-sidebar/80 backdrop-blur-sm p-4 transition-all duration-300 shadow-md", // Changed bg-sidebar to bg-sidebar/80 backdrop-blur-sm
         isCollapsed ? "w-16 items-center" : "w-64",
         className,
       )}
@@ -91,7 +91,7 @@ export function Sidebar({ className, isCollapsed = false }: SidebarProps) {
               <item.icon className="h-5 w-5" />
               <span
                 className={cn(
-                  "transition-opacity duration-300",
+                  "ml-3 transition-opacity duration-300", // Added ml-3 for spacing
                   isCollapsed ? "opacity-0 w-0" : "opacity-100 w-auto",
                 )}
               >
@@ -112,7 +112,7 @@ export function Sidebar({ className, isCollapsed = false }: SidebarProps) {
             <Users className="h-5 w-5" />
             <span
               className={cn(
-                "transition-opacity duration-300",
+                "ml-3 transition-opacity duration-300", // Added ml-3 for spacing
                 isCollapsed ? "opacity-0 w-0" : "opacity-100 w-auto",
               )}
             >
