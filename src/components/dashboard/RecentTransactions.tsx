@@ -58,7 +58,7 @@ const transactions: Transaction[] = [
 
 export function RecentTransactions() {
   return (
-    <Card className="bg-background/80 backdrop-blur-sm"> {/* Added bg-background/80 backdrop-blur-sm */}
+    <Card>
       <CardHeader>
         <CardTitle>Recent Transactions</CardTitle>
       </CardHeader>

@@ -1,65 +1,70 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import {
   Home,
-  Mail,
-  LogOut,
+  DollarSign,
+  Receipt,
   Users,
-  MessageSquareText,
-  MessageCircleMore,
-  Image as ImageIcon // Added for Advertisement page
+  Settings,
+  BarChart,
+  Package,
+  CreditCard,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/context/AuthContext";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   isCollapsed?: boolean;
 }
 
+const navItems = [
+  {
+    name: "Dashboard",
+    icon: Home,
+    href: "/",
+  },
+  {
+    name: "Transactions",
+    icon: Receipt,
+    href: "/transactions",
+  },
+  {
+    name: "Accounts",
+    icon: DollarSign,
+    href: "/accounts",
+  },
+  {
+    name: "Customers",
+    icon: Users,
+    href: "/customers",
+  },
+  {
+    name: "Products",
+    icon: Package,
+    href: "/products",
+  },
+  {
+    name: "Payments",
+    icon: CreditCard,
+    href: "/payments",
+  },
+  {
+    name: "Reports",
+    icon: BarChart,
+    href: "/reports",
+  },
+  {
+    name: "Settings",
+    icon: Settings,
+    href: "/settings",
+  },
+];
+
 export function Sidebar({ className, isCollapsed = false }: SidebarProps) {
-  const { signOut, profile } = useAuth();
-  const location = useLocation();
-
-  const isAdmin = profile?.email === 'uzzal@admin.com'; // Corrected admin email check
-  const isGuest = profile?.is_guest;
-
-  // Define navItems conditionally based on user type
-  const navItems = [
-    {
-      name: "হোম",
-      icon: Home,
-      href: "/",
-    },
-    // "সক্রিয় ইউজার" শুধুমাত্র নিবন্ধিত ইউজার এবং এডমিনদের জন্য
-    ...(!isGuest ? [{
-      name: "সক্রিয় ইউজার",
-      icon: MessageSquareText,
-      href: "/active-users",
-    }] : []),
-    // "লাইভ চ্যাট" শুধুমাত্র এডমিনদের জন্য
-    ...(isAdmin ? [{
-      name: "লাইভ চ্যাট", // New Live Chat link
-      icon: MessageCircleMore,
-      href: "/live-chat",
-    }] : []),
-    {
-      name: "যোগাযোগ",
-      icon: Mail,
-      href: "/contact",
-    },
-    // "বিজ্ঞাপন" শুধুমাত্র এডমিনদের জন্য
-    ...(isAdmin ? [{
-      name: "বিজ্ঞাপন",
-      icon: ImageIcon,
-      href: "/advertisements",
-    }] : []),
-  ];
-
   return (
     <div
       className={cn(
-        "flex h-full flex-col space-y-4 border-r bg-sidebar/80 backdrop-blur-sm p-4 transition-all duration-300 shadow-md", // Changed bg-sidebar to bg-sidebar/80 backdrop-blur-sm
+        "flex h-full flex-col space-y-4 border-r bg-sidebar p-4 transition-all duration-300",
         isCollapsed ? "w-16 items-center" : "w-64",
         className,
       )}
@@ -71,7 +76,7 @@ export function Sidebar({ className, isCollapsed = false }: SidebarProps) {
             isCollapsed ? "opacity-0 w-0" : "opacity-100 w-auto",
           )}
         >
-          ড্যাশবোর্ড
+          Accounting
         </h1>
         <h1
           className={cn(
@@ -79,54 +84,30 @@ export function Sidebar({ className, isCollapsed = false }: SidebarProps) {
             isCollapsed ? "opacity-100 w-auto" : "opacity-0 w-0",
           )}
         >
-          D
+          A
         </h1>
       </div>
       <nav className="flex-1 space-y-2">
-        {navItems.map((item) => {
-          const isActive = location.pathname === item.href;
-          return (
-            <Link
-              key={item.name}
-              to={item.href}
-              className={cn(
-                "flex items-center gap-3 rounded-lg px-3 py-2 text-sidebar-foreground transition-all hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
-                isActive && "bg-sidebar-primary text-sidebar-primary-foreground hover:bg-sidebar-primary hover:text-sidebar-primary-foreground",
-                isCollapsed ? "justify-center" : "",
-              )}
-            >
-              <item.icon className="h-5 w-5" />
-              <span
-                className={cn(
-                  "ml-3 transition-opacity duration-300", // Added ml-3 for spacing
-                  isCollapsed ? "opacity-0 w-0" : "opacity-100 w-auto",
-                )}
-              >
-                {item.name}
-              </span>
-            </Link>
-          );
-        })}
-        {isAdmin && !isGuest && ( // Only show User Management for admin, not guests
+        {navItems.map((item) => (
           <Link
-            to="/user-management"
+            key={item.name}
+            to={item.href}
             className={cn(
               "flex items-center gap-3 rounded-lg px-3 py-2 text-sidebar-foreground transition-all hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
-              location.pathname === "/user-management" && "bg-sidebar-primary text-sidebar-primary-foreground hover:bg-sidebar-primary hover:text-sidebar-primary-foreground",
               isCollapsed ? "justify-center" : "",
             )}
           >
-            <Users className="h-5 w-5" />
+            <item.icon className="h-5 w-5" />
             <span
               className={cn(
-                "ml-3 transition-opacity duration-300", // Added ml-3 for spacing
+                "transition-opacity duration-300",
                 isCollapsed ? "opacity-0 w-0" : "opacity-100 w-auto",
               )}
             >
-              ইউজার ম্যানেজমেন্ট
+              {item.name}
             </span>
           </Link>
-        )}
+        ))}
       </nav>
       <div className="mt-auto pt-4 border-t border-sidebar-border">
         <Button
@@ -135,16 +116,15 @@ export function Sidebar({ className, isCollapsed = false }: SidebarProps) {
             "w-full justify-start text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
             isCollapsed ? "justify-center" : "",
           )}
-          onClick={signOut}
         >
-          <LogOut className="h-5 w-5" />
+          <Settings className="h-5 w-5" />
           <span
             className={cn(
               "ml-3 transition-opacity duration-300",
               isCollapsed ? "opacity-0 w-0" : "opacity-100 w-auto",
             )}
           >
-            লগআউট
+            Settings
           </span>
         </Button>
       </div>

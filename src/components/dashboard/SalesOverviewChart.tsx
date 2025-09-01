@@ -31,7 +31,7 @@ const data = [
 
 export function SalesOverviewChart() {
   return (
-    <Card className="col-span-4 bg-background/80 backdrop-blur-sm"> {/* Added bg-background/80 backdrop-blur-sm */}
+    <Card className="col-span-4">
       <CardHeader>
         <CardTitle>Sales Overview</CardTitle>
         <CardDescription>Monthly sales performance.</CardDescription>
