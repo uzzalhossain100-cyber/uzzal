@@ -157,6 +157,14 @@ const Index: React.FC = () => {
         allInOneTvUrl = "https://tv.garden/bd/NikPw9VKIQ0CfQ";
       } else if (subCategoryParam === "ভারত") {
         allInOneTvUrl = "https://tv.garden/in/A75lVEYwDx8Emp";
+      } else if (subCategoryParam === "যুক্তরাজ্য") {
+        allInOneTvUrl = "https://tv.garden/uk/g1kSsRGdu6pjqO";
+      } else if (subCategoryParam === "যুক্তরাষ্ট্র") {
+        allInOneTvUrl = "https://tv.garden/us/1vLEWY7mhnX4hE";
+      } else if (subCategoryParam === "কানাডা") {
+        allInOneTvUrl = "https://tv.garden/ca/uBUxokoZzvdGBC";
+      } else if (subCategoryParam === "অস্ট্রেলিয়া") {
+        allInOneTvUrl = "https://tv.garden/au/1U3UtAxYHSHl5p";
       }
       // Prepend "All In One TV" with the dynamic URL
       itemsToDisplay = [{ name: "All In One TV", url: allInOneTvUrl }, ...itemsToDisplay];
