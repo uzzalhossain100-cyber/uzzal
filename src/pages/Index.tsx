@@ -178,7 +178,6 @@ const Index: React.FC = () => {
           <ScrollArea className="h-[calc(100vh-180px)] w-full rounded-xl border-2 border-primary/20 bg-background/80 p-4 shadow-lg">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
               {currentCategory.items?.map((country, index) => {
-                const flagUrl = countryFlags[country.name];
                 const gradientClass = countryButtonGradients[index % countryButtonGradients.length]; // Use new vibrant gradients
                 return (
                   <Button
@@ -188,15 +187,12 @@ const Index: React.FC = () => {
                       "group h-32 flex flex-col items-center justify-center text-center p-4 rounded-lg shadow-md transition-all duration-200 relative overflow-hidden",
                       "text-white border-none hover:scale-105 transform", // Apply white text
                       "hover:shadow-lg", // Add hover shadow
-                      flagUrl ? "bg-cover bg-center" : `bg-gradient-to-br ${gradientClass}`, // Apply gradient if no flag
+                      `bg-gradient-to-br ${gradientClass}`, // Always apply gradient
                     )}
-                    style={{
-                      backgroundImage: flagUrl ? `url(${flagUrl})` : undefined,
-                    }}
                     onClick={() => handleItemClick(country)}
                   >
                     {/* Overlay for better text readability */}
-                    {flagUrl && <div className="absolute inset-0 bg-black opacity-30 group-hover:opacity-20 transition-opacity duration-200 rounded-lg"></div>}
+                    <div className="absolute inset-0 bg-black opacity-30 group-hover:opacity-20 transition-opacity duration-200 rounded-lg"></div>
                     <CountryIcon className="h-12 w-12 mb-2 text-white relative z-10" /> {/* Icon color white */}
                     <span className="font-extrabold text-xl tracking-wide relative z-10 text-shadow-sm">{country.name}</span> {/* Attractive text style */}
                   </Button>
