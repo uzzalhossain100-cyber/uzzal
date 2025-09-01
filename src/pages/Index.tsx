@@ -27,6 +27,25 @@ const categoryGradientColors = [
   "from-fuchsia-500 to-purple-600",
 ];
 
+// Define a new set of more vibrant, multi-color gradients for country selection buttons
+const countryButtonGradients = [
+  "from-purple-500 via-pink-500 to-red-500",
+  "from-blue-500 via-cyan-500 to-green-500",
+  "from-yellow-500 via-orange-500 to-red-500",
+  "from-teal-500 via-emerald-500 to-blue-500",
+  "from-indigo-500 via-violet-500 to-purple-500",
+  "from-pink-500 via-rose-500 to-orange-500",
+  "from-green-500 via-lime-500 to-yellow-500",
+  "from-red-500 via-orange-500 to-yellow-500",
+  "from-cyan-500 via-blue-500 to-indigo-500",
+  "from-fuchsia-500 via-purple-500 to-pink-500",
+  "from-lime-500 via-green-500 to-teal-500",
+  "from-orange-400 via-amber-500 to-yellow-500",
+  "from-sky-400 via-blue-400 to-indigo-400",
+  "from-rose-400 via-pink-400 to-purple-400",
+  "from-emerald-400 via-green-400 to-cyan-400",
+];
+
 // Define a set of slightly different gradient colors for sub-categories (items)
 const itemGradientColors = [
   "from-gray-700 to-gray-800", // Darker for contrast
@@ -160,7 +179,7 @@ const Index: React.FC = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
               {currentCategory.items?.map((country, index) => {
                 const flagUrl = countryFlags[country.name];
-                const gradientClass = itemGradientColors[index % itemGradientColors.length]; // Use item colors
+                const gradientClass = countryButtonGradients[index % countryButtonGradients.length]; // Use new vibrant gradients
                 return (
                   <Button
                     key={country.name}
