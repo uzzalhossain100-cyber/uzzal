@@ -23,6 +23,9 @@ const ViewPlatformPage: React.FC = () => {
     }
   };
 
+  // Calculate iframe height dynamically based on whether the sticker is present
+  const iframeHeight = decodedItemName === 'All In One TV' ? 'calc(100vh - 130px - 40px)' : 'calc(100vh - 130px)';
+
   return (
     <div className="flex flex-col h-full">
       <Card className="w-full flex flex-col flex-1 shadow-lg border-primary/20 dark:border-primary/50">
@@ -38,11 +41,18 @@ const ViewPlatformPage: React.FC = () => {
           </Button>
         </CardHeader>
         <CardContent className="flex-1 p-0">
+          {decodedItemName === 'All In One TV' && (
+            <div className="flex items-center justify-center py-2 bg-gray-900 text-white text-lg font-bold">
+              <span className="bg-green-500 px-2 py-1 rounded-md mr-1">Bright</span>
+              <span>TV</span>
+            </div>
+          )}
           {decodedUrl ? (
             <iframe
               src={decodedUrl}
               title={decodedItemName}
-              className="w-full h-[calc(100vh-130px)] border-0 rounded-b-lg"
+              className="w-full border-0 rounded-b-lg"
+              style={{ height: iframeHeight }} // Use dynamic height
               sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-modals allow-pointer-lock allow-presentation allow-same-origin"
               allow="autoplay; fullscreen; picture-in-picture"
             />
