@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { allInOneCategories, Category, CategoryItem } from '@/data/categories.ts';
-import { ArrowLeft, ExternalLink, Newspaper as NewspaperIcon, Globe, Tv, GraduationCap, BookOpen, Film } from 'lucide-react'; // Added Film icon
+import { ArrowLeft, ExternalLink, Newspaper as NewspaperIcon, Globe, Tv, GraduationCap, BookOpen, Film } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const Index: React.FC = () => {
@@ -152,8 +152,14 @@ const Index: React.FC = () => {
   if ((currentCategory.name === "খবর" || currentCategory.name === "লাইভ টিভি" || currentCategory.name === "শিক্ষা" || currentCategory.name === "বিনোদন") && subCategoryParam) {
     itemsToDisplay = currentSubCategoryItems;
     if (currentCategory.name === "লাইভ টিভি" && itemsToDisplay) {
-      // Prepend "All In One TV" for Live TV sub-items
-      itemsToDisplay = [{ name: "All In One TV", url: "https://tv.garden/" }, ...itemsToDisplay];
+      let allInOneTvUrl = "https://tv.garden/"; // Default URL
+      if (subCategoryParam === "বাংলাদেশ") {
+        allInOneTvUrl = "https://tv.garden/bd/NikPw9VKIQ0CfQ";
+      } else if (subCategoryParam === "ভারত") {
+        allInOneTvUrl = "https://tv.garden/in/A75lVEYwDx8Emp";
+      }
+      // Prepend "All In One TV" with the dynamic URL
+      itemsToDisplay = [{ name: "All In One TV", url: allInOneTvUrl }, ...itemsToDisplay];
     }
   } else {
     itemsToDisplay = currentCategory.items;
