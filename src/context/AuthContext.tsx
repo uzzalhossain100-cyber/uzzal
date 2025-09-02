@@ -416,24 +416,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.removeItem('guestUser');
     localStorage.removeItem('guestProfile');
 
-    if (profile?.is_guest || profile?.email === 'uzzal@admin.com') {
-      // For mock admin or guest, manually clear state
-      setUser(null);
-      setProfile(null);
-      setOnlineUsers([]);
-      showSuccess("লগআউট সফল!");
-    } else {
-      // For real Supabase users, call Supabase signOut
+    // Optimistically clear state for immediate UI update
+    setUser(null);
+    setProfile(null);
+    setOnlineUsers([]);
+    showSuccess("লগআউট সফল!"); // Show success immediately
+
+    // Only call Supabase signOut for real users (not mock admin or guest)
+    if (!(profile?.is_guest || profile?.email === 'uzzal@admin.com')) {
       const { error } = await supabase.auth.signOut();
       if (error) {
-        showError(error.message);
-      } else {
-        // The onAuthStateChange listener will handle setting user/profile to null
-        // But we can also set them here for immediate UI update
-        setUser(null);
-        setProfile(null);
-        setOnlineUsers([]);
-        showSuccess("লগআউট সফল!");
+        console.error("Error during Supabase signOut:", error.message);
+        showError("লগআউট ব্যর্থ হয়েছে: " + error.message);
       }
     }
   };
