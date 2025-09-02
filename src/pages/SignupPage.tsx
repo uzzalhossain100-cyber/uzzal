@@ -52,13 +52,13 @@ const SignupPage: React.FC = () => {
     <div className="flex items-center justify-center min-h-screen p-4">
       <Card className="w-full max-w-md bg-background/80 backdrop-blur-sm shadow-lg border-primary/20 dark:border-primary/50"> {/* Added bg-background/80 backdrop-blur-sm */}
         <CardHeader className="text-center">
-          <CardTitle className="text-3xl font-bold text-primary dark:text-primary-foreground">সাইন আপ</CardTitle>
+          <CardTitle className="text-3xl font-extrabold text-primary dark:text-primary-foreground">সাইন আপ</CardTitle>
           <CardDescription className="text-muted-foreground">একটি নতুন অ্যাকাউন্ট তৈরি করতে আপনার তথ্য লিখুন।</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="grid gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="username">ইউজারনেম</Label>
+              <Label htmlFor="username" className="font-bold">ইউজারনেম</Label>
               <Input
                 id="username"
                 type="text"
@@ -70,7 +70,7 @@ const SignupPage: React.FC = () => {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="email">ইমেল</Label>
+              <Label htmlFor="email" className="font-bold">ইমেল</Label>
               <Input
                 id="email"
                 type="email"
@@ -82,7 +82,7 @@ const SignupPage: React.FC = () => {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="mobileNumber">মোবাইল নম্বর</Label>
+              <Label htmlFor="mobileNumber" className="font-bold">মোবাইল নম্বর</Label>
               <Input
                 id="mobileNumber"
                 type="tel"
@@ -94,7 +94,7 @@ const SignupPage: React.FC = () => {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="password">পাসওয়ার্ড</Label>
+              <Label htmlFor="password" className="font-bold">পাসওয়ার্ড</Label>
               <Input
                 id="password"
                 type="password"
@@ -104,13 +104,13 @@ const SignupPage: React.FC = () => {
                 className="border-primary/30 focus-visible:ring-primary"
               />
             </div>
-            <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90" disabled={isLoading}>
+            <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-bold" disabled={isLoading}>
               {isLoading ? 'সাইন আপ হচ্ছে...' : 'সাইন আপ করুন'}
             </Button>
           </form>
           <div className="mt-4 text-center text-sm text-muted-foreground">
             ইতিমধ্যে একটি অ্যাকাউন্ট আছে?{" "}
-            <Link to="/login" className="underline text-primary hover:text-primary/90">
+            <Link to="/login" className="underline text-primary hover:text-primary/90 font-bold">
               লগইন করুন
             </Link>
           </div>

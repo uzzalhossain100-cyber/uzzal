@@ -157,7 +157,7 @@ const UserManagementPage: React.FC = () => {
     return (
       <div className="flex items-center justify-center min-h-[calc(100vh-100px)]">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        <span className="ml-2 text-lg text-muted-foreground">ডেটা লোড হচ্ছে...</span>
+        <span className="ml-2 text-lg text-muted-foreground font-bold">ডেটা লোড হচ্ছে...</span>
       </div>
     );
   }
@@ -179,23 +179,23 @@ const UserManagementPage: React.FC = () => {
         <CardContent className="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="flex flex-col items-center justify-center p-4 bg-accent/10 dark:bg-accent/20 rounded-lg border border-primary/10">
             <Clock className="h-8 w-8 text-primary mb-2" />
-            <p className="text-sm text-muted-foreground">আজকে</p>
-            <p className="text-2xl font-bold text-foreground">{visitCounts.today}</p>
+            <p className="text-sm font-bold text-muted-foreground">আজকে</p>
+            <p className="text-2xl font-extrabold text-foreground">{visitCounts.today}</p>
           </div>
           <div className="flex flex-col items-center justify-center p-4 bg-accent/10 dark:bg-accent/20 rounded-lg border border-primary/10">
             <CalendarDays className="h-8 w-8 text-primary mb-2" />
-            <p className="text-sm text-muted-foreground">এই মাসে</p>
-            <p className="text-2xl font-bold text-foreground">{visitCounts.thisMonth}</p>
+            <p className="text-sm font-bold text-muted-foreground">এই মাসে</p>
+            <p className="text-2xl font-extrabold text-foreground">{visitCounts.thisMonth}</p>
           </div>
           <div className="flex flex-col items-center justify-center p-4 bg-accent/10 dark:bg-accent/20 rounded-lg border border-primary/10">
             <Calendar className="h-8 w-8 text-primary mb-2" />
-            <p className="text-sm text-muted-foreground">এই বছরে</p>
-            <p className="text-2xl font-bold text-foreground">{visitCounts.thisYear}</p>
+            <p className="text-sm font-bold text-muted-foreground">এই বছরে</p>
+            <p className="text-2xl font-extrabold text-foreground">{visitCounts.thisYear}</p>
           </div>
           <div className="flex flex-col items-center justify-center p-4 bg-accent/10 dark:bg-accent/20 rounded-lg border border-primary/10">
             <Eye className="h-8 w-8 text-primary mb-2" />
-            <p className="text-sm text-muted-foreground">মোট ভিজিট</p>
-            <p className="text-2xl font-bold text-foreground">{visitCounts.total}</p>
+            <p className="text-sm font-bold text-muted-foreground">মোট ভিজিট</p>
+            <p className="text-2xl font-extrabold text-foreground">{visitCounts.total}</p>
           </div>
         </CardContent>
       </Card>
@@ -213,23 +213,22 @@ const UserManagementPage: React.FC = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-[50px]"></TableHead>
-                  <TableHead>ইউজারনেম</TableHead>
-                  <TableHead>ইমেল</TableHead>
-                  <TableHead>আইপি অ্যাড্রেস</TableHead>
-                  <TableHead>ভিজিটের সময়</TableHead>
-                  <TableHead>প্রকার</TableHead>
+                  <TableHead className="font-bold">ইউজারনেম</TableHead>
+                  <TableHead className="font-bold">ইমেল</TableHead>
+                  <TableHead className="font-bold">আইপি অ্যাড্রেস</TableHead>
+                  <TableHead className="font-bold">ভিজিটের সময়</TableHead>
+                  <TableHead className="font-bold">প্রকার</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {recentVisits.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center text-muted-foreground">কোনো সাম্প্রতিক ভিজিট পাওয়া যায়নি।</TableCell>
+                    <TableCell colSpan={5} className="text-center text-muted-foreground font-bold">কোনো সাম্প্রতিক ভিজিট পাওয়া যায়নি।</TableCell>
                   </TableRow>
                 ) : (
                   recentVisits.map((visit) => (
                     <TableRow key={visit.id}>
-                      <TableCell className="font-medium">{visit.username || 'Anonymous'}</TableCell>
+                      <TableCell className="font-semibold">{visit.username || 'Anonymous'}</TableCell>
                       <TableCell>{visit.email || 'N/A'}</TableCell>
                       <TableCell>{visit.ip_address || 'N/A'}</TableCell>
                       <TableCell>{format(new Date(visit.visited_at), 'yyyy-MM-dd HH:mm')}</TableCell>
@@ -260,17 +259,17 @@ const UserManagementPage: React.FC = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>ইউজারনেম</TableHead>
-                  <TableHead>ইমেল</TableHead>
-                  <TableHead className="hidden md:table-cell">মোবাইল নম্বর</TableHead>
-                  <TableHead>স্ট্যাটাস</TableHead>
-                  <TableHead className="text-right">অ্যাকশন</TableHead>
+                  <TableHead className="font-bold">ইউজারনেম</TableHead>
+                  <TableHead className="font-bold">ইমেল</TableHead>
+                  <TableHead className="hidden md:table-cell font-bold">মোবাইল নম্বর</TableHead>
+                  <TableHead className="font-bold">স্ট্যাটাস</TableHead>
+                  <TableHead className="text-right font-bold">অ্যাকশন</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {users.map((userProfile) => (
                   <TableRow key={userProfile.id}>
-                    <TableCell className="font-medium">{userProfile.username}</TableCell>
+                    <TableCell className="font-semibold">{userProfile.username}</TableCell>
                     <TableCell>{userProfile.email}</TableCell>
                     <TableCell className="hidden md:table-cell">{userProfile.mobile_number || 'N/A'}</TableCell>
                     <TableCell>
@@ -285,7 +284,7 @@ const UserManagementPage: React.FC = () => {
                           size="sm"
                           onClick={() => handleStatusChange(userProfile.id, userProfile.is_active)}
                           disabled={updatingUserId === userProfile.id}
-                          className="min-w-[90px]"
+                          className="min-w-[90px] font-bold"
                         >
                           {updatingUserId === userProfile.id ? (
                             <Loader2 className="h-4 w-4 animate-spin" />

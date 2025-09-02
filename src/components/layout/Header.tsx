@@ -103,7 +103,7 @@ export function Header({ onToggleSidebar, isSidebarCollapsed }: HeaderProps) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuLabel>
+          <DropdownMenuLabel className="font-extrabold">
             {isGuest ? `গেস্ট: ${profile?.username}` : (user?.email || "আমার অ্যাকাউন্ট")}
           </DropdownMenuLabel>
           <DropdownMenuSeparator />

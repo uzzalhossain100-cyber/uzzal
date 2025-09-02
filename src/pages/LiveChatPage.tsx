@@ -17,7 +17,7 @@ const LiveChatPage: React.FC = () => {
     return (
       <div className="flex items-center justify-center min-h-[calc(100vh-100px)]">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        <span className="ml-2 text-lg text-muted-foreground">চ্যাট লোড হচ্ছে...</span>
+        <span className="ml-2 text-lg text-muted-foreground font-bold">চ্যাট লোড হচ্ছে...</span>
       </div>
     );
   }

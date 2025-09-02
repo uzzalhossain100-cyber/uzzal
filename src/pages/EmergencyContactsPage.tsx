@@ -102,10 +102,10 @@ const EmergencyContactsPage: React.FC = () => {
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-[50px]"></TableHead>
-                  <TableHead>সেবা</TableHead>
-                  <TableHead>নম্বর</TableHead>
-                  <TableHead className="hidden md:table-cell">বিবরণ</TableHead>
-                  <TableHead className="text-right">কল করুন</TableHead>
+                  <TableHead className="font-bold">সেবা</TableHead>
+                  <TableHead className="font-bold">নম্বর</TableHead>
+                  <TableHead className="hidden md:table-cell font-bold">বিবরণ</TableHead>
+                  <TableHead className="text-right font-bold">কল করুন</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -116,15 +116,15 @@ const EmergencyContactsPage: React.FC = () => {
                       <TableCell>
                         <Icon className="h-5 w-5 text-primary" />
                       </TableCell>
-                      <TableCell className="font-medium">{contact.service}</TableCell>
-                      <TableCell>{contact.number}</TableCell>
+                      <TableCell className="font-semibold">{contact.service}</TableCell>
+                      <TableCell className="font-semibold">{contact.number}</TableCell>
                       <TableCell className="text-muted-foreground hidden md:table-cell">{contact.description}</TableCell>
                       <TableCell className="text-right">
                         <Button
                           variant="outline"
                           size="sm"
                           onClick={() => window.open(`tel:${contact.number}`)}
-                          className="bg-primary text-primary-foreground hover:bg-primary/90"
+                          className="bg-primary text-primary-foreground hover:bg-primary/90 font-bold"
                         >
                           <PhoneCall className="h-4 w-4 mr-2" /> কল
                         </Button>

@@ -90,7 +90,7 @@ const ActiveUsersPage: React.FC = () => {
     return (
       <div className="flex items-center justify-center min-h-[calc(100vh-100px)]">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        <span className="ml-2 text-lg text-muted-foreground">ইউজার ডেটা লোড হচ্ছে...</span>
+        <span className="ml-2 text-lg text-muted-foreground font-bold">ইউজার ডেটা লোড হচ্ছে...</span>
       </div>
     );
   }
@@ -120,7 +120,7 @@ const ActiveUsersPage: React.FC = () => {
           <ScrollArea className="h-[calc(100vh-200px)] w-full p-4">
             <div className="grid gap-4">
               {filteredUsers.length === 0 ? (
-                <div className="text-center text-muted-foreground p-4">কোনো ইউজার পাওয়া যায়নি।</div>
+                <div className="text-center text-muted-foreground p-4 font-bold">কোনো ইউজার পাওয়া যায়নি।</div>
               ) : (
                 filteredUsers.map((user) => (
                   <Card key={user.id} className="flex items-center justify-between p-4 shadow-sm border-primary/10 dark:border-primary/20 bg-background/60 backdrop-blur-sm"> {/* Added bg-background/60 backdrop-blur-sm */}
@@ -132,9 +132,9 @@ const ActiveUsersPage: React.FC = () => {
                         )}
                       />
                       <div>
-                        <p className="font-semibold text-foreground flex items-center">
+                        <p className="font-extrabold text-foreground flex items-center">
                           {user.username}
-                          {user.is_guest && <span className="ml-2 text-xs text-muted-foreground">(গেস্ট)</span>}
+                          {user.is_guest && <span className="ml-2 text-xs text-muted-foreground font-bold">(গেস্ট)</span>}
                         </p>
                         <p className="text-sm text-muted-foreground">{user.email}</p>
                       </div>
@@ -144,7 +144,7 @@ const ActiveUsersPage: React.FC = () => {
                         variant="outline"
                         size="sm"
                         onClick={() => handleChatClick(user)}
-                        className="bg-primary text-primary-foreground hover:bg-primary/90"
+                        className="bg-primary text-primary-foreground hover:bg-primary/90 font-bold"
                       >
                         <MessageSquareText className="h-4 w-4 mr-2" /> চ্যাট
                       </Button>

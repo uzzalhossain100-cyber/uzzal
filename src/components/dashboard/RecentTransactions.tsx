@@ -60,26 +60,26 @@ export function RecentTransactions() {
   return (
     <Card className="bg-background/80 backdrop-blur-sm"> {/* Added bg-background/80 backdrop-blur-sm */}
       <CardHeader>
-        <CardTitle>Recent Transactions</CardTitle>
+        <CardTitle className="font-extrabold">Recent Transactions</CardTitle>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>ID</TableHead>
-              <TableHead>Date</TableHead>
-              <TableHead>Description</TableHead>
-              <TableHead>Amount</TableHead>
-              <TableHead>Status</TableHead>
+              <TableHead className="font-bold">ID</TableHead>
+              <TableHead className="font-bold">Date</TableHead>
+              <TableHead className="font-bold">Description</TableHead>
+              <TableHead className="font-bold">Amount</TableHead>
+              <TableHead className="font-bold">Status</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {transactions.map((transaction) => (
               <TableRow key={transaction.id}>
-                <TableCell className="font-medium">{transaction.id}</TableCell>
+                <TableCell className="font-semibold">{transaction.id}</TableCell>
                 <TableCell>{transaction.date}</TableCell>
                 <TableCell>{transaction.description}</TableCell>
-                <TableCell>{transaction.amount}</TableCell>
+                <TableCell className="font-semibold">{transaction.amount}</TableCell>
                 <TableCell>
                   <Badge
                     variant={
@@ -89,6 +89,7 @@ export function RecentTransactions() {
                           ? "secondary"
                           : "destructive"
                     }
+                    className="font-bold"
                   >
                     {transaction.status}
                   </Badge>

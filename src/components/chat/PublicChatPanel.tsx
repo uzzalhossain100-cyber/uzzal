@@ -216,7 +216,7 @@ const PublicChatPanel: React.FC<PublicChatPanelProps> = ({ user, profile, isAdmi
     return (
       <div className="flex items-center justify-center h-full">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        <span className="ml-2 text-lg text-muted-foreground">চ্যাট লোড হচ্ছে...</span>
+        <span className="ml-2 text-lg text-muted-foreground font-bold">চ্যাট লোড হচ্ছে...</span>
       </div>
     );
   }
@@ -226,7 +226,7 @@ const PublicChatPanel: React.FC<PublicChatPanelProps> = ({ user, profile, isAdmi
       <ScrollArea className="flex-1 p-4" ref={scrollAreaRef}>
         <div className="space-y-6">
           {messages.length === 0 ? (
-            <div className="text-center text-muted-foreground p-4">কোনো মেসেজ নেই। একটি নতুন মেসেজ পোস্ট করুন!</div>
+            <div className="text-center text-muted-foreground p-4 font-bold">কোনো মেসেজ নেই। একটি নতুন মেসেজ পোস্ট করুন!</div>
           ) : (
             messages.map((msg) => (
               <div key={msg.id} className="flex flex-col gap-2 p-4 bg-background/60 backdrop-blur-sm rounded-lg shadow-sm border border-primary/10"> {/* Changed bg-accent/10 to bg-background/60 */}
@@ -237,7 +237,7 @@ const PublicChatPanel: React.FC<PublicChatPanelProps> = ({ user, profile, isAdmi
                       <AvatarFallback>{msg.username.charAt(0).toUpperCase()}</AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col">
-                      <span className="font-semibold text-foreground">{msg.username}</span>
+                      <span className="font-extrabold text-foreground">{msg.username}</span>
                       <span className="text-xs text-muted-foreground">{new Date(msg.created_at).toLocaleString()}</span>
                     </div>
                   </div>
@@ -250,20 +250,20 @@ const PublicChatPanel: React.FC<PublicChatPanelProps> = ({ user, profile, isAdmi
                       </DialogTrigger>
                       <DialogContent>
                         <DialogHeader>
-                          <DialogTitle>মেসেজ ডিলিট করুন</DialogTitle>
+                          <DialogTitle className="font-extrabold">মেসেজ ডিলিট করুন</DialogTitle>
                           <DialogDescription>
                             আপনি কি নিশ্চিত যে আপনি এই মেসেজটি ডিলিট করতে চান? এই অ্যাকশনটি পূর্বাবস্থায় ফেরানো যাবে না।
                           </DialogDescription>
                         </DialogHeader>
                         <DialogFooter>
-                          <Button variant="outline" onClick={() => {}}>বাতিল করুন</Button>
-                          <Button variant="destructive" onClick={() => handleDeleteMessage(msg.id)}>ডিলিট করুন</Button>
+                          <Button variant="outline" onClick={() => {}} className="font-bold">বাতিল করুন</Button>
+                          <Button variant="destructive" onClick={() => handleDeleteMessage(msg.id)} className="font-bold">ডিলিট করুন</Button>
                         </DialogFooter>
                       </DialogContent>
                     </Dialog>
                   )}
                 </div>
-                <p className="text-foreground text-base mt-2">{msg.username}: {msg.message_text}</p>
+                <p className="text-foreground text-base mt-2 font-semibold">{msg.username}: {msg.message_text}</p>
 
                 {/* Comments Section */}
                 {msg.comments && msg.comments.length > 0 && (
@@ -276,8 +276,8 @@ const PublicChatPanel: React.FC<PublicChatPanelProps> = ({ user, profile, isAdmi
                             <AvatarFallback>{comment.username.charAt(0).toUpperCase()}</AvatarFallback>
                           </Avatar>
                           <div className="flex flex-col">
-                            <span className="font-medium text-foreground">{comment.username}</span>
-                            <span className="text-xs">{comment.comment_text}</span>
+                            <span className="font-extrabold text-foreground">{comment.username}</span>
+                            <span className="text-xs font-semibold">{comment.comment_text}</span>
                             <span className="text-xs text-muted-foreground">{new Date(comment.created_at).toLocaleString()}</span>
                           </div>
                         </div>
@@ -290,14 +290,14 @@ const PublicChatPanel: React.FC<PublicChatPanelProps> = ({ user, profile, isAdmi
                             </DialogTrigger>
                             <DialogContent>
                               <DialogHeader>
-                                <DialogTitle>কমেন্ট ডিলিট করুন</DialogTitle>
+                                <DialogTitle className="font-extrabold">কমেন্ট ডিলিট করুন</DialogTitle>
                                 <DialogDescription>
                                   আপনি কি নিশ্চিত যে আপনি এই কমেন্টটি ডিলিট করতে চান? এই অ্যাকশনটি পূর্বাবস্থায় ফেরানো যাবে না।
                                 </DialogDescription>
                               </DialogHeader>
                               <DialogFooter>
-                                <Button variant="outline" onClick={() => {}}>বাতিল করুন</Button>
-                                <Button variant="destructive" onClick={() => handleDeleteComment(comment.id)}>ডিলিট করুন</Button>
+                                <Button variant="outline" onClick={() => {}} className="font-bold">বাতিল করুন</Button>
+                                <Button variant="destructive" onClick={() => handleDeleteComment(comment.id)} className="font-bold">ডিলিট করুন</Button>
                               </DialogFooter>
                             </DialogContent>
                           </Dialog>
@@ -316,7 +316,7 @@ const PublicChatPanel: React.FC<PublicChatPanelProps> = ({ user, profile, isAdmi
                     className="flex-1 border-primary/30 focus-visible:ring-primary"
                     disabled={postingComment[msg.id]}
                   />
-                  <Button type="submit" size="icon" disabled={postingComment[msg.id]}>
+                  <Button type="submit" size="icon" disabled={postingComment[msg.id]} className="font-bold">
                     {postingComment[msg.id] ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
                   </Button>
                 </form>
@@ -334,7 +334,7 @@ const PublicChatPanel: React.FC<PublicChatPanelProps> = ({ user, profile, isAdmi
             className="flex-1 border-primary/30 focus-visible:ring-primary"
             disabled={postingMessage}
           />
-          <Button type="submit" disabled={postingMessage}>
+          <Button type="submit" disabled={postingMessage} className="font-bold">
             {postingMessage ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Send className="h-4 w-4 mr-2" />}
             পোস্ট করুন
           </Button>

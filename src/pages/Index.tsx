@@ -132,8 +132,8 @@ const Index: React.FC = () => {
                     )}
                     onClick={() => handleCategoryClick(category)}
                   >
-                    {Icon && <Icon className="h-12 w-12 mb-2 text-white" />} {/* Icon color white */}
-                    <span className="font-extrabold text-xl tracking-wide">{category.name}</span> {/* Attractive text style */}
+                    {Icon && <Icon className="h-12 w-12 mb-2 text-white text-shadow-sm" />} {/* Icon color white */}
+                    <span className="font-extrabold text-xl tracking-wide text-shadow-sm">{category.name}</span> {/* Attractive text style */}
                   </Button>
                 );
               })}
@@ -193,7 +193,7 @@ const Index: React.FC = () => {
                   >
                     {/* Overlay for better text readability */}
                     <div className="absolute inset-0 bg-black opacity-30 group-hover:opacity-20 transition-opacity duration-200 rounded-lg"></div>
-                    <CountryIcon className="h-12 w-12 mb-2 text-white relative z-10" /> {/* Icon color white */}
+                    <CountryIcon className="h-12 w-12 mb-2 text-white relative z-10 text-shadow-sm" /> {/* Icon color white */}
                     <span className="font-extrabold text-xl tracking-wide relative z-10 text-shadow-sm">{country.name}</span> {/* Attractive text style */}
                   </Button>
                 );
@@ -269,7 +269,7 @@ const Index: React.FC = () => {
                 )}
                 onClick={() => handleItemClick(item)}
               >
-                <span className="font-extrabold text-lg flex items-center mb-1 text-white"> {/* Attractive text style */}
+                <span className="font-extrabold text-lg flex items-center mb-1 text-white text-shadow-sm"> {/* Attractive text style */}
                   {item.name}
                 </span>
                 {/* Removed the URL display */}

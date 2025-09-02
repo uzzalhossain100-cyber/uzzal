@@ -8,7 +8,7 @@ const ContactPage: React.FC = () => {
     <div className="flex items-center justify-center min-h-[calc(100vh-100px)] p-4 rounded-lg shadow-xl">
       <Card className="w-full max-w-md bg-background/80 backdrop-blur-sm shadow-lg border-primary/20 dark:border-primary/50"> {/* Added bg-background/80 backdrop-blur-sm */}
         <CardHeader className="text-center border-b pb-4">
-          <CardTitle className="text-3xl font-bold text-primary dark:text-primary-foreground">যোগাযোগ</CardTitle>
+          <CardTitle className="text-3xl font-extrabold text-primary dark:text-primary-foreground">যোগাযোগ</CardTitle>
           <CardDescription className="text-muted-foreground">আমাদের সাথে যোগাযোগ করুন</CardDescription>
         </CardHeader>
         <CardContent className="grid gap-6 p-6">
@@ -20,22 +20,22 @@ const ContactPage: React.FC = () => {
               className="h-64 w-48 object-cover rounded-lg shadow-md border-2 border-primary/30" // Increased height to h-64
             />
             <div className="text-center">
-              <p className="text-sm font-medium text-muted-foreground">এডমিন নাম</p>
-              <p className="text-xl font-semibold text-foreground">উজ্জ্বল হোসেন</p>
+              <p className="text-sm font-bold text-muted-foreground">এডমিন নাম</p>
+              <p className="text-xl font-extrabold text-foreground">উজ্জ্বল হোসেন</p>
             </div>
           </div>
           <div className="flex items-center gap-4 p-3 rounded-lg bg-accent/20 dark:bg-accent/30 border border-primary/10">
             <Phone className="h-7 w-7 text-primary" />
             <div>
-              <p className="text-sm font-medium text-muted-foreground">মোবাইল নম্বর</p>
-              <p className="text-xl font-semibold text-foreground">01713236980</p>
+              <p className="text-sm font-bold text-muted-foreground">মোবাইল নম্বর</p>
+              <p className="text-xl font-extrabold text-foreground">01713236980</p>
             </div>
           </div>
           <div className="flex items-center gap-4 p-3 rounded-lg bg-accent/20 dark:bg-accent/30 border border-primary/10">
             <Mail className="h-7 w-7 text-primary" />
             <div>
-              <p className="text-sm font-medium text-muted-foreground">ইমেল</p>
-              <p className="text-xl font-semibold text-foreground">uzzalhossain.100@gmail.com</p>
+              <p className="text-sm font-bold text-muted-foreground">ইমেল</p>
+              <p className="text-xl font-extrabold text-foreground">uzzalhossain.100@gmail.com</p>
             </div>
           </div>
         </CardContent>

@@ -78,7 +78,7 @@ const ActiveUsersPanel: React.FC = () => {
         <ScrollArea className="flex-1 w-full p-4">
           <div className="grid gap-3">
             {filteredOnlineUsers.length === 0 ? (
-              <div className="text-center text-muted-foreground p-4">কোনো সক্রিয় ইউজার পাওয়া যায়নি।</div>
+              <div className="text-center text-muted-foreground p-4 font-bold">কোনো সক্রিয় ইউজার পাওয়া যায়নি।</div>
             ) : (
               filteredOnlineUsers.map((user) => (
                 <div
@@ -93,9 +93,9 @@ const ActiveUsersPanel: React.FC = () => {
                   <div className="flex items-center gap-2">
                     <Circle className="h-3 w-3 fill-green-500 text-green-500" />
                     <div>
-                      <p className="font-semibold text-foreground flex items-center">
+                      <p className="font-extrabold text-foreground flex items-center">
                         {user.username}
-                        {user.is_guest && <span className="ml-2 text-xs text-muted-foreground">(গেস্ট)</span>}
+                        {user.is_guest && <span className="ml-2 text-xs text-muted-foreground font-bold">(গেস্ট)</span>}
                       </p>
                       <p className="text-xs text-muted-foreground">{user.email}</p>
                     </div>
@@ -105,7 +105,7 @@ const ActiveUsersPanel: React.FC = () => {
                       variant="ghost"
                       size="sm"
                       onClick={(e) => { e.stopPropagation(); handleStartPrivateChat(user); }}
-                      className="text-primary hover:bg-primary/10"
+                      className="text-primary hover:bg-primary/10 font-bold"
                     >
                       <MessageSquareText className="h-4 w-4" />
                     </Button>
@@ -117,10 +117,10 @@ const ActiveUsersPanel: React.FC = () => {
         </ScrollArea>
         {selectedUsers.length > 0 && (
           <div className="p-4 border-t flex flex-col gap-2">
-            <p className="text-sm text-muted-foreground">নির্বাচিত ইউজার ({selectedUsers.length}):</p>
+            <p className="text-sm text-muted-foreground font-bold">নির্বাচিত ইউজার ({selectedUsers.length}):</p>
             <div className="flex flex-wrap gap-2">
               {selectedUsers.map(user => (
-                <Badge key={user.id} variant="secondary" className="flex items-center gap-1">
+                <Badge key={user.id} variant="secondary" className="flex items-center gap-1 font-bold">
                   {user.username}
                   <Button
                     variant="ghost"
@@ -135,7 +135,7 @@ const ActiveUsersPanel: React.FC = () => {
             </div>
             <Button
               onClick={handleStartGroupChat}
-              className="w-full bg-primary text-primary-foreground hover:bg-primary/90 mt-2"
+              className="w-full bg-primary text-primary-foreground hover:bg-primary/90 mt-2 font-bold"
               disabled={selectedUsers.length < 2}
             >
               <Group className="h-4 w-4 mr-2" /> গ্রুপ চ্যাট শুরু করুন

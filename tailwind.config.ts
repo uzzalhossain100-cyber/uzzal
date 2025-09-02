@@ -90,7 +90,35 @@ export default {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
+      // Add text shadow utility
+      textShadow: {
+        sm: '0 1px 2px var(--tw-shadow-color)',
+        DEFAULT: '0 2px 4px var(--tw-shadow-color)',
+        lg: '0 8px 16px var(--tw-shadow-color)',
+      },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animate"),
+    function ({ addUtilities, theme }: any) {
+      const newUtilities = {
+        '.text-shadow-sm': {
+          textShadow: theme('textShadow.sm'),
+          '--tw-shadow-color': 'rgba(0, 0, 0, 0.4)', // Default shadow color
+        },
+        '.text-shadow': {
+          textShadow: theme('textShadow.DEFAULT'),
+          '--tw-shadow-color': 'rgba(0, 0, 0, 0.6)',
+        },
+        '.text-shadow-lg': {
+          textShadow: theme('textShadow.lg'),
+          '--tw-shadow-color': 'rgba(0, 0, 0, 0.8)',
+        },
+        '.text-shadow-none': {
+          textShadow: 'none',
+        },
+      };
+      addUtilities(newUtilities, ['responsive', 'hover']);
+    },
+  ],
 } satisfies Config;

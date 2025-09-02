@@ -67,7 +67,7 @@ export function Sidebar({ className, isCollapsed = false }: SidebarProps) {
       <div className="flex items-center justify-center h-16">
         <h1
           className={cn(
-            "text-2xl font-bold text-sidebar-primary transition-opacity duration-300",
+            "text-2xl font-extrabold text-sidebar-primary transition-opacity duration-300",
             isCollapsed ? "opacity-0 w-0" : "opacity-100 w-auto",
           )}
         >
@@ -75,7 +75,7 @@ export function Sidebar({ className, isCollapsed = false }: SidebarProps) {
         </h1>
         <h1
           className={cn(
-            "text-2xl font-bold text-sidebar-primary transition-opacity duration-300",
+            "text-2xl font-extrabold text-sidebar-primary transition-opacity duration-300",
             isCollapsed ? "opacity-100 w-auto" : "opacity-0 w-0",
           )}
         >
@@ -98,7 +98,7 @@ export function Sidebar({ className, isCollapsed = false }: SidebarProps) {
               <item.icon className="h-5 w-5" />
               <span
                 className={cn(
-                  "ml-3 transition-opacity duration-300", // Added ml-3 for spacing
+                  "ml-3 transition-opacity duration-300 font-bold", // Added ml-3 for spacing and font-bold
                   isCollapsed ? "opacity-0 w-0" : "opacity-100 w-auto",
                 )}
               >
@@ -119,7 +119,7 @@ export function Sidebar({ className, isCollapsed = false }: SidebarProps) {
             <Users className="h-5 w-5" />
             <span
               className={cn(
-                "ml-3 transition-opacity duration-300", // Added ml-3 for spacing
+                "ml-3 transition-opacity duration-300 font-bold", // Added ml-3 for spacing and font-bold
                 isCollapsed ? "opacity-0 w-0" : "opacity-100 w-auto",
               )}
             >
@@ -140,7 +140,7 @@ export function Sidebar({ className, isCollapsed = false }: SidebarProps) {
           <LogOut className="h-5 w-5" />
           <span
             className={cn(
-              "ml-3 transition-opacity duration-300",
+              "ml-3 transition-opacity duration-300 font-bold", // Added font-bold
               isCollapsed ? "opacity-0 w-0" : "opacity-100 w-auto",
             )}
           >

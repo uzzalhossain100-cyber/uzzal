@@ -33,7 +33,7 @@ export function SalesOverviewChart() {
   return (
     <Card className="col-span-4 bg-background/80 backdrop-blur-sm"> {/* Added bg-background/80 backdrop-blur-sm */}
       <CardHeader>
-        <CardTitle>Sales Overview</CardTitle>
+        <CardTitle className="font-extrabold">Sales Overview</CardTitle>
         <CardDescription>Monthly sales performance.</CardDescription>
       </CardHeader>
       <CardContent className="pl-2">

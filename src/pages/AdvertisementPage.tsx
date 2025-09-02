@@ -211,7 +211,7 @@ const AdvertisementPage: React.FC = () => {
     return (
       <div className="flex items-center justify-center min-h-[calc(100vh-100px)]">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        <span className="ml-2 text-lg text-muted-foreground">বিজ্ঞাপন লোড হচ্ছে...</span>
+        <span className="ml-2 text-lg text-muted-foreground font-bold">বিজ্ঞাপন লোড হচ্ছে...</span>
       </div>
     );
   }
@@ -234,7 +234,7 @@ const AdvertisementPage: React.FC = () => {
             {rows.map((row, rowIndex) => (
               <div key={rowIndex} className="mb-6 border p-4 rounded-lg bg-background/60 backdrop-blur-sm border-primary/10">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-foreground">সারি {rowIndex + 1}</h3>
+                  <h3 className="text-lg font-extrabold text-foreground">সারি {rowIndex + 1}</h3>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                   {Array.from({ length: ADS_PER_ROW }).map((_, colIndex) => {
@@ -264,7 +264,7 @@ const AdvertisementPage: React.FC = () => {
                             ) : (
                               <ImageIcon className="h-8 w-8 mb-2" />
                             )}
-                            <span className="text-sm text-center">
+                            <span className="text-sm text-center font-bold">
                               {isUploading ? "আপলোড হচ্ছে..." : "ছবি আপলোড করুন (JPG/PNG)"}
                             </span>
                             <input
@@ -284,7 +284,7 @@ const AdvertisementPage: React.FC = () => {
               </div>
             ))}
             <div className="flex justify-center mt-6">
-              <Button onClick={handleAddRow} className="bg-primary text-primary-foreground hover:bg-primary/90">
+              <Button onClick={handleAddRow} className="bg-primary text-primary-foreground hover:bg-primary/90 font-bold">
                 <Plus className="h-4 w-4 mr-2" /> নতুন সারি যোগ করুন
               </Button>
             </div>

@@ -36,13 +36,13 @@ const ViewPlatformPage: React.FC = () => {
             </Button>
             {decodedItemName}
           </CardTitle>
-          <Button variant="outline" size="sm" onClick={handleOpenInNewTab} className="bg-secondary text-secondary-foreground hover:bg-secondary/90">
+          <Button variant="outline" size="sm" onClick={handleOpenInNewTab} className="bg-secondary text-secondary-foreground hover:bg-secondary/90 font-bold">
             <ExternalLink className="mr-2 h-4 w-4" /> নতুন ট্যাবে খুলুন
           </Button>
         </CardHeader>
         <CardContent className="flex-1 p-0">
           {decodedItemName === 'All In One TV' && (
-            <div className="flex items-center justify-center py-2 bg-gray-900 text-white text-lg font-bold">
+            <div className="flex items-center justify-center py-2 bg-gray-900 text-white text-lg font-extrabold">
               <span className="bg-green-500 px-2 py-1 rounded-md mr-1">Bright</span>
               <span>TV</span>
             </div>
@@ -57,7 +57,7 @@ const ViewPlatformPage: React.FC = () => {
               allow="autoplay; fullscreen; picture-in-picture"
             />
           ) : (
-            <div className="flex items-center justify-center h-full text-muted-foreground text-lg p-4">
+            <div className="flex items-center justify-center h-full text-muted-foreground text-lg p-4 font-bold">
               কোনো URL নির্বাচন করা হয়নি।
             </div>
           )}

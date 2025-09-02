@@ -34,7 +34,7 @@ const LoginPage: React.FC = () => {
     <div className="flex items-center justify-center min-h-screen p-4">
       <Card className="w-full max-w-md bg-background/80 backdrop-blur-sm shadow-lg border-primary/20 dark:border-primary/50"> {/* Added bg-background/80 backdrop-blur-sm */}
         <CardHeader className="text-center">
-          <CardTitle className="text-3xl font-bold text-primary dark:text-primary-foreground">
+          <CardTitle className="text-3xl font-extrabold text-primary dark:text-primary-foreground">
             {showAdminLoginForm ? 'এডমিন লগইন' : 'লগইন'}
           </CardTitle>
           <CardDescription className="text-muted-foreground">
@@ -48,7 +48,7 @@ const LoginPage: React.FC = () => {
             <div className="grid gap-4">
               <Button
                 variant="default"
-                className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
+                className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-bold"
                 onClick={() => setIsGuestLoginDialogOpen(true)}
               >
                 সাধারণ ইউজার হিসেবে প্রবেশ করুন
@@ -57,7 +57,7 @@ const LoginPage: React.FC = () => {
                 অথবা{" "}
                 <Button
                   variant="link"
-                  className="p-0 h-auto text-primary hover:text-primary/90"
+                  className="p-0 h-auto text-primary hover:text-primary/90 font-bold"
                   onClick={() => setShowAdminLoginForm(true)}
                 >
                   এডমিন হিসাবে প্রবেশ করুন
@@ -65,7 +65,7 @@ const LoginPage: React.FC = () => {
               </div>
               <div className="mt-4 text-center text-sm text-muted-foreground">
                 অ্যাকাউন্ট নেই?{" "}
-                <Link to="/signup" className="underline text-primary hover:text-primary/90">
+                <Link to="/signup" className="underline text-primary hover:text-primary/90 font-bold">
                   সাইন আপ করুন
                 </Link>
               </div>
@@ -75,12 +75,12 @@ const LoginPage: React.FC = () => {
               <Button
                 variant="ghost"
                 onClick={() => setShowAdminLoginForm(false)}
-                className="p-0 h-auto justify-start text-primary dark:text-primary-foreground hover:bg-transparent hover:text-primary/80"
+                className="p-0 h-auto justify-start text-primary dark:text-primary-foreground hover:bg-transparent hover:text-primary/80 font-bold"
               >
                 <ArrowLeft className="h-5 w-5 mr-2" /> ফিরে যান
               </Button>
               <div className="grid gap-2">
-                <Label htmlFor="identifier">ইউজারনেম / ইমেল</Label>
+                <Label htmlFor="identifier" className="font-bold">ইউজারনেম / ইমেল</Label>
                 <Input
                   id="identifier"
                   type="text"
@@ -92,7 +92,7 @@ const LoginPage: React.FC = () => {
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="password">পাসওয়ার্ড</Label>
+                <Label htmlFor="password" className="font-bold">পাসওয়ার্ড</Label>
                 <Input
                   id="password"
                   type="password"
@@ -103,7 +103,7 @@ const LoginPage: React.FC = () => {
                   className="border-primary/30 focus-visible:ring-primary"
                 />
               </div>
-              <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90" disabled={isLoading}>
+              <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-bold" disabled={isLoading}>
                 {isLoading ? 'লগইন হচ্ছে...' : 'লগইন করুন'}
               </Button>
             </form>
