@@ -188,6 +188,17 @@ export const allInOneCategories: Category[] = [
           { name: "দৈনিক সুপ্রভাত বাংলাদেশ", url: "https://suprobhat.com/" },
           { name: "দৈনিক কক্সবাজার", url: "https://dainikcoxsbazar.com/" },
           { name: "দৈনিক চাঁদপুর কণ্ঠ", url: "https://chandpurkantho.com/" },
+          // Added 10 new newspapers below
+          { name: "বাংলানিউজ২৪.কম", url: "https://www.banglanews24.com/" },
+          { name: "বিডিনিউজ২৪.কম", url: "https://bangla.bdnews24.com/" },
+          { name: "ঢাকা টাইমস", url: "https://www.dhakatimes24.com/" },
+          { name: "রাইজিংবিডি.কম", url: "https://www.risingbd.com/" },
+          { name: "সারাবাংলা.নেট", url: "https://sarabangla.net/" },
+          { name: "বাংলানিউজ", url: "https://www.banglanews.com.bd/" },
+          { name: "জাগোনিউজ২৪.কম", url: "https://www.jagonews24.com/" },
+          { name: "নয়া দিগন্ত", url: "https://www.dailynayadiganta.com/" },
+          { name: "দেশ রূপান্তর", url: "https://www.deshrupantor.com/" },
+          { name: "শেয়ার বিজ", url: "https://www.sharebiz.net/" },
         ],
       },
       {
