@@ -85,7 +85,9 @@ const Index: React.FC = () => {
   };
 
   const handleItemClick = (item: CategoryItem) => {
-    if ((currentCategory?.name === "খবর" || currentCategory?.name === "লাইভ টিভি" || currentCategory?.name === "শিক্ষা" || currentCategory?.name === "বিনোদন") && item.subItems) {
+    if (item.internalRoute) { // Handle internal routes for sub-items first
+      navigate(item.internalRoute);
+    } else if ((currentCategory?.name === "খবর" || currentCategory?.name === "লাইভ টিভি" || currentCategory?.name === "শিক্ষা" || currentCategory?.name === "বিনোদন") && item.subItems) {
       // If it's a country within "খবর", "লাইভ টিভি", "শিক্ষা" or "বিনোদন" category
       setSearchParams({ category: currentCategory.name, subCategory: item.name });
     } else if (item.url) {

@@ -11,6 +11,7 @@ export interface CategoryItem {
   name: string;
   url?: string; // Optional, as a country item won't have a direct URL
   subItems?: CategoryItem[]; // For nested items like newspapers within a country
+  internalRoute?: string; // Added for internal navigation within sub-items
 }
 
 export interface Category {
@@ -67,7 +68,7 @@ export const allInOneCategories: Category[] = [
           { name: "TED Talks", url: "https://www.ted.com/talks" },
           { name: "Duolingo", url: "https://www.duolingo.com/" },
           { name: "Codecademy", url: "https://www.codecademy.com/" },
-          { name: "FreeCodeCamp", url: "https://www.freecodecamp.org/" },
+          { name: "FreeCodeCamp", url: "https://www.freecodecamp.com/" },
           { name: "W3Schools", url: "https://www.w3schools.com/" },
           { name: "MDN Web Docs", url: "https://developer.mozilla.org/en-US/" },
           { name: "Stack Overflow", url: "https://stackoverflow.com/" },
@@ -168,6 +169,7 @@ export const allInOneCategories: Category[] = [
       {
         name: "বাংলাদেশ",
         subItems: [
+          { name: "সব খবর", internalRoute: "/news/bangladesh/all" }, // New "All News" option
           { name: "প্রথম আলো", url: "https://www.prothomalo.com/" },
           { name: "যুগান্তর", url: "https://www.jugantor.com/" },
           { name: "কালের কণ্ঠ", url: "https://www.kalerkantho.com/" },
@@ -188,7 +190,6 @@ export const allInOneCategories: Category[] = [
           { name: "দৈনিক সুপ্রভাত বাংলাদেশ", url: "https://suprobhat.com/" },
           { name: "দৈনিক কক্সবাজার", url: "https://dainikcoxsbazar.com/" },
           { name: "দৈনিক চাঁদপুর কণ্ঠ", url: "https://chandpurkantho.com/" },
-          // Added 10 new newspapers below
           { name: "বাংলানিউজ২৪.কম", url: "https://www.banglanews24.com/" },
           { name: "বিডিনিউজ২৪.কম", url: "https://bangla.bdnews24.com/" },
           { name: "ঢাকা টাইমস", url: "https://www.dhakatimes24.com/" },
