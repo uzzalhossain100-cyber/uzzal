@@ -169,6 +169,7 @@ export const allInOneCategories: Category[] = [
       {
         name: "বাংলাদেশ",
         subItems: [
+          // Removed: { name: "সব খবর", internalRoute: "/news/bangladesh/all" },
           { name: "প্রথম আলো", url: "https://www.prothomalo.com/" },
           { name: "যুগান্তর", url: "https://www.jugantor.com/" },
           { name: "কালের কণ্ঠ", url: "https://www.kalerkantho.com/" },
