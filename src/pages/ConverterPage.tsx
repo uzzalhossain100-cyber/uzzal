@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -54,6 +54,21 @@ const ConverterPage: React.FC = () => {
   const [fromTimeUnit, setFromTimeUnit] = useState<string>('second');
   const [toTimeUnit, setToTimeUnit] = useState<string>('minute');
   const [convertedTime, setConvertedTime] = useState<string>('');
+
+  // Effect to handle navigation for external converters
+  useEffect(() => {
+    if (selectedConverter === 'currency') {
+      const encodedUrl = encodeURIComponent("https://www.xe.com/currencyconverter/");
+      const encodedItemName = encodeURIComponent("মুদ্রা রূপান্তর");
+      navigate(`/view/${encodedUrl}/${encodedItemName}`);
+      setSelectedConverter(null); // Reset to show grid when returning
+    } else if (selectedConverter === 'language') {
+      const encodedUrl = encodeURIComponent("https://translate.google.com/");
+      const encodedItemName = encodeURIComponent("ভাষা পরিবর্তন");
+      navigate(`/view/${encodedUrl}/${encodedItemName}`);
+      setSelectedConverter(null); // Reset to show grid when returning
+    }
+  }, [selectedConverter, navigate]);
 
   const handleBack = () => {
     if (selectedConverter) {
@@ -151,14 +166,6 @@ const ConverterPage: React.FC = () => {
     else if (toTimeUnit === 'day') result = seconds / 86400;
 
     setConvertedTime(result.toFixed(4));
-  };
-
-  const handleCurrencyConversion = () => {
-    window.open("https://www.xe.com/currencyconverter/", "_blank");
-  };
-
-  const handleLanguageConversion = () => {
-    window.open("https://translate.google.com/", "_blank");
   };
 
   const handleFileFormatConversion = () => {
@@ -392,112 +399,6 @@ const ConverterPage: React.FC = () => {
                   ফল: {convertedTime} {toTimeUnit === 'second' ? 'সেকেন্ড' : toTimeUnit === 'minute' ? 'মিনিট' : toTimeUnit === 'hour' ? 'ঘণ্টা' : 'দিন'}
                 </div>
               )}
-            </CardContent>
-          </Card>
-        );
-      case 'currency':
-        return (
-          <Card className="bg-background/60 backdrop-blur-sm border-primary/10">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-xl font-extrabold flex items-center"><DollarSign className="h-5 w-5 mr-2" /> মুদ্রা</CardTitle>
-              <CardDescription>এক দেশের মুদ্রা থেকে অন্য দেশের মুদ্রায় রূপান্তর</CardDescription>
-            </CardHeader>
-            <CardContent className="grid gap-4">
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
-                <div className="grid gap-2">
-                  <Label htmlFor="currency-value">পরিমাণ</Label>
-                  <Input
-                    id="currency-value"
-                    type="number"
-                    placeholder="পরিমাণ লিখুন"
-                    className="border-primary/30 focus-visible:ring-primary"
-                    disabled
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="from-currency">থেকে</Label>
-                  <Select disabled>
-                    <SelectTrigger id="from-currency" className="border-primary/30 focus-visible:ring-primary">
-                      <SelectValue placeholder="মুদ্রা নির্বাচন করুন" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="BDT">টাকা (BDT)</SelectItem>
-                      <SelectItem value="USD">ডলার (USD)</SelectItem>
-                      <SelectItem value="INR">রুপি (INR)</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="to-currency">তে</Label>
-                  <Select disabled>
-                    <SelectTrigger id="to-currency" className="border-primary/30 focus-visible:ring-primary">
-                      <SelectValue placeholder="মুদ্রা নির্বাচন করুন" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="BDT">টাকা (BDT)</SelectItem>
-                      <SelectItem value="USD">ডলার (USD)</SelectItem>
-                      <SelectItem value="INR">রুপি (INR)</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              <Button onClick={handleCurrencyConversion} className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-bold">রূপান্তর করুন</Button>
-              <p className="text-sm text-muted-foreground text-center font-bold">
-                দ্রষ্টব্য: এটি XE Currency Converter ওয়েবসাইটে আপনাকে নিয়ে যাবে।
-              </p>
-            </CardContent>
-          </Card>
-        );
-      case 'language':
-        return (
-          <Card className="bg-background/60 backdrop-blur-sm border-primary/10">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-xl font-extrabold flex items-center"><Languages className="h-5 w-5 mr-2" /> ভাষা পরিবর্তন</CardTitle>
-              <CardDescription>সকল দেশের ভাষা পরিবর্তন বা কনভার্ট করা যাবে</CardDescription>
-            </CardHeader>
-            <CardContent className="grid gap-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-end">
-                <div className="grid gap-2">
-                  <Label htmlFor="language-input">টেক্সট লিখুন</Label>
-                  <Input
-                    id="language-input"
-                    type="text"
-                    placeholder="আপনার টেক্সট লিখুন"
-                    className="border-primary/30 focus-visible:ring-primary"
-                    disabled
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="from-language">থেকে</Label>
-                  <Select disabled>
-                    <SelectTrigger id="from-language" className="border-primary/30 focus-visible:ring-primary">
-                      <SelectValue placeholder="ভাষা নির্বাচন করুন" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="bn">বাংলা</SelectItem>
-                      <SelectItem value="en">ইংরেজি</SelectItem>
-                      <SelectItem value="hi">হিন্দি</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="to-language">তে</Label>
-                  <Select disabled>
-                    <SelectTrigger id="to-language" className="border-primary/30 focus-visible:ring-primary">
-                      <SelectValue placeholder="ভাষা নির্বাচন করুন" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="bn">বাংলা</SelectItem>
-                      <SelectItem value="en">ইংরেজি</SelectItem>
-                      <SelectItem value="hi">হিন্দি</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              <Button onClick={handleLanguageConversion} className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-bold">রূপান্তর করুন</Button>
-              <p className="text-sm text-muted-foreground text-center font-bold">
-                দ্রষ্টব্য: এটি Google Translate ওয়েবসাইটে আপনাকে নিয়ে যাবে।
-              </p>
             </CardContent>
           </Card>
         );
