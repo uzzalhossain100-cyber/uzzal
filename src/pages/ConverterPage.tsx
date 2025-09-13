@@ -24,7 +24,7 @@ const converterTypes: ConverterType[] = [
   { id: 'time', name: 'সময়', icon: Clock, description: 'সেকেন্ড, মিনিট, ঘণ্টা, দিন' },
   { id: 'currency', name: 'মুদ্রা', icon: DollarSign, description: 'এক দেশের মুদ্রা থেকে অন্য দেশের মুদ্রায় রূপান্তর' },
   { id: 'language', name: 'ভাষা পরিবর্তন', icon: Languages, description: 'সকল দেশের ভাষা পরিবর্তন বা কনভার্ট করা যাবে' },
-  { id: 'unitConverter', name: 'ইউনিট কনভার্টার', icon: Calculator, description: 'বিভিন্ন ইউনিট রূপান্তর করুন' }, // New entry
+  { id: 'unitConverter', name: 'ইউনিট কনভার্টার', icon: Calculator, description: 'বিভিন্ন ইউনিট রূপান্তর করুন' },
   { id: 'fileFormat', name: 'ফাইল ফরম্যাট কনভার্টার', icon: FileText, description: 'MP4, AVI, MKV, JPEG, PNG, DOCX, PDF' },
 ];
 
@@ -68,9 +68,14 @@ const ConverterPage: React.FC = () => {
       const encodedItemName = encodeURIComponent("ভাষা পরিবর্তন");
       navigate(`/view/${encodedUrl}/${encodedItemName}`);
       setSelectedConverter(null); // Reset to show grid when returning
-    } else if (selectedConverter === 'unitConverter') { // New handler for Unit Converter
+    } else if (selectedConverter === 'unitConverter') {
       const encodedUrl = encodeURIComponent("https://www.unitconverters.net/");
       const encodedItemName = encodeURIComponent("ইউনিট কনভার্টার");
+      navigate(`/view/${encodedUrl}/${encodedItemName}`);
+      setSelectedConverter(null); // Reset to show grid when returning
+    } else if (selectedConverter === 'fileFormat') { // New handler for File Format Converter
+      const encodedUrl = encodeURIComponent("https://www.pdf2go.com/");
+      const encodedItemName = encodeURIComponent("ফাইল ফরম্যাট কনভার্টার");
       navigate(`/view/${encodedUrl}/${encodedItemName}`);
       setSelectedConverter(null); // Reset to show grid when returning
     }
@@ -172,10 +177,6 @@ const ConverterPage: React.FC = () => {
     else if (toTimeUnit === 'day') result = seconds / 86400;
 
     setConvertedTime(result.toFixed(4));
-  };
-
-  const handleFileFormatConversion = () => {
-    toast.info("ফাইল ফরম্যাট রূপান্তরের জন্য একটি ব্যাকএন্ড পরিষেবা প্রয়োজন। এই ফিচারটি বর্তমানে উপলব্ধ নয়।");
   };
 
   const renderConverter = () => {
@@ -405,66 +406,6 @@ const ConverterPage: React.FC = () => {
                   ফল: {convertedTime} {toTimeUnit === 'second' ? 'সেকেন্ড' : toTimeUnit === 'minute' ? 'মিনিট' : toTimeUnit === 'hour' ? 'ঘণ্টা' : 'দিন'}
                 </div>
               )}
-            </CardContent>
-          </Card>
-        );
-      case 'fileFormat':
-        return (
-          <Card className="bg-background/60 backdrop-blur-sm border-primary/10">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-xl font-extrabold flex items-center"><FileText className="h-5 w-5 mr-2" /> ফাইল ফরম্যাট কনভার্টার</CardTitle>
-              <CardDescription>MP4, AVI, MKV, JPEG, PNG, DOCX, PDF</CardDescription>
-            </CardHeader>
-            <CardContent className="grid gap-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-end">
-                <div className="grid gap-2">
-                  <Label htmlFor="file-upload">ফাইল আপলোড করুন</Label>
-                  <Input
-                    id="file-upload"
-                    type="file"
-                    className="border-primary/30 focus-visible:ring-primary"
-                    disabled
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="from-file-format">থেকে</Label>
-                  <Select disabled>
-                    <SelectTrigger id="from-file-format" className="border-primary/30 focus-visible:ring-primary">
-                      <SelectValue placeholder="ফরম্যাট নির্বাচন করুন" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="mp4">MP4</SelectItem>
-                      <SelectItem value="avi">AVI</SelectItem>
-                      <SelectItem value="mkv">MKV</SelectItem>
-                      <SelectItem value="jpeg">JPEG</SelectItem>
-                      <SelectItem value="png">PNG</SelectItem>
-                      <SelectItem value="docx">DOCX</SelectItem>
-                      <SelectItem value="pdf">PDF</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="to-file-format">তে</Label>
-                  <Select disabled>
-                    <SelectTrigger id="to-file-format" className="border-primary/30 focus-visible:ring-primary">
-                      <SelectValue placeholder="ফরম্যাট নির্বাচন করুন" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="mp4">MP4</SelectItem>
-                      <SelectItem value="avi">AVI</SelectItem>
-                      <SelectItem value="mkv">MKV</SelectItem>
-                      <SelectItem value="jpeg">JPEG</SelectItem>
-                      <SelectItem value="png">PNG</SelectItem>
-                      <SelectItem value="docx">DOCX</SelectItem>
-                      <SelectItem value="pdf">PDF</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              <Button onClick={handleFileFormatConversion} className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-bold" disabled>রূপান্তর করুন</Button>
-              <p className="text-sm text-muted-foreground text-center font-bold">
-                দ্রষ্টব্য: ফাইল ফরম্যাট রূপান্তরের জন্য একটি ব্যাকএন্ড পরিষেবা প্রয়োজন।
-              </p>
             </CardContent>
           </Card>
         );
