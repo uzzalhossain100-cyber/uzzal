@@ -18,7 +18,7 @@ import ViewPlatformPage from "./pages/ViewPlatformPage";
 import LiveChatPage from "./pages/LiveChatPage";
 import VisitorTracker from "./components/VisitorTracker"; // Import VisitorTracker
 import AdvertisementPage from "./pages/AdvertisementPage"; // Import AdvertisementPage
-// Removed: import AllNewsPage from "./pages/AllNewsPage"; // Import AllNewsPage
+import ConverterPage from "./pages/ConverterPage"; // Import ConverterPage
 
 const queryClient = new QueryClient();
 
@@ -42,8 +42,8 @@ const App = () => (
                 <Route path="/user-management" element={<UserManagementPage />} />
                 <Route path="/active-users" element={<ActiveUsersPage />} />
                 <Route path="/live-chat" element={<LiveChatPage />} />
-                <Route path="/advertisements" element={<AdvertisementPage />} /> {/* New Advertisement Route */}
-                {/* Removed: <Route path="/news/bangladesh/all" element={<AllNewsPage />} /> */}
+                <Route path="/advertisements" element={<AdvertisementPage />} />
+                <Route path="/converter" element={<ConverterPage />} /> {/* New Converter Route */}
                 <Route path="/view/:encodedUrl/:itemName" element={<ViewPlatformPage />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               </Route>

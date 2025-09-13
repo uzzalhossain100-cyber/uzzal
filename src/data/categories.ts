@@ -3,7 +3,8 @@ import {
   Building, MessageSquare, Settings, Utensils, Gamepad, Laptop, MessageCircle,
   Camera, Briefcase, Sparkles, GraduationCap, Landmark, Map, Syringe, Gavel,
   Phone, ChefHat, Dumbbell, Code, Rss, Palette, TrendingUp, MoreHorizontal,
-  LifeBuoy, Tv, Globe // Added Globe for country selection
+  LifeBuoy, Tv, Globe,
+  Calculator // Added for Converter category
 } from 'lucide-react';
 import React from 'react';
 
@@ -169,7 +170,6 @@ export const allInOneCategories: Category[] = [
       {
         name: "বাংলাদেশ",
         subItems: [
-          // Removed: { name: "সব খবর", internalRoute: "/news/bangladesh/all" },
           { name: "প্রথম আলো", url: "https://www.prothomalo.com/" },
           { name: "যুগান্তর", url: "https://www.jugantor.com/" },
           { name: "কালের কণ্ঠ", url: "https://www.kalerkantho.com/" },
@@ -941,5 +941,10 @@ export const allInOneCategories: Category[] = [
       { name: "লিনাক্স ফাউন্ডেশন", url: "https://www.linuxfoundation.org/" },
       { name: "অ্যাপাচি সফটওয়্যার ফাউন্ডেশন", url: "https://www.apache.org/" },
     ],
+  },
+  {
+    name: "কনভার্টার",
+    icon: Calculator,
+    internalRoute: "/converter",
   },
 ];
