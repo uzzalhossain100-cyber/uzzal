@@ -126,7 +126,7 @@ const ConverterPage: React.FC = () => {
   };
 
   const handleCurrencyConversion = () => {
-    toast.info("মুদ্রা রূপান্তরের জন্য একটি বাহ্যিক API প্রয়োজন। এই ফিচারটি বর্তমানে উপলব্ধ নয়।");
+    window.open("https://www.xe.com/currencyconverter/", "_blank");
   };
 
   const handleLanguageConversion = () => {
@@ -377,7 +377,7 @@ const ConverterPage: React.FC = () => {
                 </CardContent>
               </Card>
 
-              {/* Currency Converter (Placeholder) */}
+              {/* Currency Converter */}
               <Card className="bg-background/60 backdrop-blur-sm border-primary/10">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-xl font-extrabold flex items-center"><DollarSign className="h-5 w-5 mr-2" /> মুদ্রা</CardTitle>
@@ -422,9 +422,9 @@ const ConverterPage: React.FC = () => {
                       </Select>
                     </div>
                   </div>
-                  <Button onClick={handleCurrencyConversion} className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-bold" disabled>রূপান্তর করুন</Button>
+                  <Button onClick={handleCurrencyConversion} className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-bold">রূপান্তর করুন</Button>
                   <p className="text-sm text-muted-foreground text-center font-bold">
-                    দ্রষ্টব্য: রিয়েল-টাইম মুদ্রা রূপান্তরের জন্য একটি বাহ্যিক API প্রয়োজন।
+                    দ্রষ্টব্য: এটি XE Currency Converter ওয়েবসাইটে আপনাকে নিয়ে যাবে।
                   </p>
                 </CardContent>
               </Card>
@@ -444,12 +444,12 @@ const ConverterPage: React.FC = () => {
                         type="text"
                         placeholder="আপনার টেক্সট লিখুন"
                         className="border-primary/30 focus-visible:ring-primary"
-                        // Removed disabled attribute
+                        disabled
                       />
                     </div>
                     <div className="grid gap-2">
                       <Label htmlFor="from-language">থেকে</Label>
-                      <Select> {/* Removed disabled attribute */}
+                      <Select disabled>
                         <SelectTrigger id="from-language" className="border-primary/30 focus-visible:ring-primary">
                           <SelectValue placeholder="ভাষা নির্বাচন করুন" />
                         </SelectTrigger>
@@ -462,7 +462,7 @@ const ConverterPage: React.FC = () => {
                     </div>
                     <div className="grid gap-2">
                       <Label htmlFor="to-language">তে</Label>
-                      <Select> {/* Removed disabled attribute */}
+                      <Select disabled>
                         <SelectTrigger id="to-language" className="border-primary/30 focus-visible:ring-primary">
                           <SelectValue placeholder="ভাষা নির্বাচন করুন" />
                         </SelectTrigger>
