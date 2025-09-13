@@ -130,7 +130,7 @@ const ConverterPage: React.FC = () => {
   };
 
   const handleLanguageConversion = () => {
-    toast.info("ভাষা রূপান্তরের জন্য একটি বাহ্যিক API প্রয়োজন। এই ফিচারটি বর্তমানে উপলব্ধ নয়।");
+    window.open("https://translate.google.com/", "_blank");
   };
 
   const handleFileFormatConversion = () => {
@@ -429,7 +429,7 @@ const ConverterPage: React.FC = () => {
                 </CardContent>
               </Card>
 
-              {/* Language Converter (Placeholder) */}
+              {/* Language Converter */}
               <Card className="bg-background/60 backdrop-blur-sm border-primary/10">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-xl font-extrabold flex items-center"><Languages className="h-5 w-5 mr-2" /> ভাষা পরিবর্তন</CardTitle>
@@ -444,12 +444,12 @@ const ConverterPage: React.FC = () => {
                         type="text"
                         placeholder="আপনার টেক্সট লিখুন"
                         className="border-primary/30 focus-visible:ring-primary"
-                        disabled
+                        // Removed disabled attribute
                       />
                     </div>
                     <div className="grid gap-2">
                       <Label htmlFor="from-language">থেকে</Label>
-                      <Select disabled>
+                      <Select> {/* Removed disabled attribute */}
                         <SelectTrigger id="from-language" className="border-primary/30 focus-visible:ring-primary">
                           <SelectValue placeholder="ভাষা নির্বাচন করুন" />
                         </SelectTrigger>
@@ -462,7 +462,7 @@ const ConverterPage: React.FC = () => {
                     </div>
                     <div className="grid gap-2">
                       <Label htmlFor="to-language">তে</Label>
-                      <Select disabled>
+                      <Select> {/* Removed disabled attribute */}
                         <SelectTrigger id="to-language" className="border-primary/30 focus-visible:ring-primary">
                           <SelectValue placeholder="ভাষা নির্বাচন করুন" />
                         </SelectTrigger>
@@ -474,9 +474,9 @@ const ConverterPage: React.FC = () => {
                       </Select>
                     </div>
                   </div>
-                  <Button onClick={handleLanguageConversion} className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-bold" disabled>রূপান্তর করুন</Button>
+                  <Button onClick={handleLanguageConversion} className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-bold">রূপান্তর করুন</Button>
                   <p className="text-sm text-muted-foreground text-center font-bold">
-                    দ্রষ্টব্য: ভাষা রূপান্তরের জন্য একটি বাহ্যিক API প্রয়োজন।
+                    দ্রষ্টব্য: এটি Google Translate ওয়েবসাইটে আপনাকে নিয়ে যাবে।
                   </p>
                 </CardContent>
               </Card>
