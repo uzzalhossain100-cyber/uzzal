@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { ArrowLeft, Ruler, Weight, Thermometer, Clock, DollarSign, Languages, FileText } from 'lucide-react';
+import { ArrowLeft, Ruler, Weight, Thermometer, Clock, DollarSign, Languages, FileText, Calculator } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 
@@ -24,6 +24,7 @@ const converterTypes: ConverterType[] = [
   { id: 'time', name: 'সময়', icon: Clock, description: 'সেকেন্ড, মিনিট, ঘণ্টা, দিন' },
   { id: 'currency', name: 'মুদ্রা', icon: DollarSign, description: 'এক দেশের মুদ্রা থেকে অন্য দেশের মুদ্রায় রূপান্তর' },
   { id: 'language', name: 'ভাষা পরিবর্তন', icon: Languages, description: 'সকল দেশের ভাষা পরিবর্তন বা কনভার্ট করা যাবে' },
+  { id: 'unitConverter', name: 'ইউনিট কনভার্টার', icon: Calculator, description: 'বিভিন্ন ইউনিট রূপান্তর করুন' }, // New entry
   { id: 'fileFormat', name: 'ফাইল ফরম্যাট কনভার্টার', icon: FileText, description: 'MP4, AVI, MKV, JPEG, PNG, DOCX, PDF' },
 ];
 
@@ -65,6 +66,11 @@ const ConverterPage: React.FC = () => {
     } else if (selectedConverter === 'language') {
       const encodedUrl = encodeURIComponent("https://translate.google.com/");
       const encodedItemName = encodeURIComponent("ভাষা পরিবর্তন");
+      navigate(`/view/${encodedUrl}/${encodedItemName}`);
+      setSelectedConverter(null); // Reset to show grid when returning
+    } else if (selectedConverter === 'unitConverter') { // New handler for Unit Converter
+      const encodedUrl = encodeURIComponent("https://www.unitconverters.net/");
+      const encodedItemName = encodeURIComponent("ইউনিট কনভার্টার");
       navigate(`/view/${encodedUrl}/${encodedItemName}`);
       setSelectedConverter(null); // Reset to show grid when returning
     }
@@ -492,6 +498,7 @@ const ConverterPage: React.FC = () => {
                     "from-pink-500 to-red-600",
                     "from-indigo-500 to-violet-600",
                     "from-cyan-500 to-blue-600",
+                    "from-rose-500 to-fuchsia-600", // Added more gradients for variety
                   ];
                   const gradientClass = gradientColors[index % gradientColors.length];
 
