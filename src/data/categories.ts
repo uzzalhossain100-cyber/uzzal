@@ -403,7 +403,7 @@ export const allInOneCategories: Category[] = [
           { name: "এমটিভি ইন্ডিয়া", url: "https://www.voot.com/channels/mtv-india/451848" },
           { name: "জুম", url: "https://www.timesnownews.com/zoom" },
           { name: "স্টার স্পোর্টস ১ হিন্দি", url: "https://www.hotstar.com/in/sports/cricket/star-sports-1-hindi/1260000004" },
-          { name: "সনি সিক্স", url: "https://www.sonyliv.com/channels/sony-six/1260000005" },
+          { name: "সনি সিক্স", url: "https://www.sonyliv.com/channels/sony-six-1260000005" },
           // Bengali Channels
           { name: "স্টার জলসা", url: "https://www.hotstar.com/in/channels/star-jalsha/1260000006" },
           { name: "জি বাংলা", url: "https://www.zee5.com/channels/zee-bangla/0-9-zeebangla" },
@@ -946,10 +946,5 @@ export const allInOneCategories: Category[] = [
     name: "কনভার্টার",
     icon: Calculator,
     internalRoute: "/converter",
-  },
-  {
-    name: "এআই সহকারী", // New AI category
-    icon: Sparkles,
-    internalRoute: "/ai",
   },
 ];
