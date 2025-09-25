@@ -8,7 +8,8 @@ import {
   Users,
   MessageSquareText,
   MessageCircleMore,
-  Image as ImageIcon // Added for Advertisement page
+  Image as ImageIcon,
+  Sparkles, // Added for AI page
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
@@ -54,6 +55,11 @@ export function Sidebar({ className, isCollapsed = false }: SidebarProps) {
       icon: ImageIcon,
       href: "/advertisements",
     }] : []),
+    {
+      name: "এআই", // New AI link
+      icon: Sparkles,
+      href: "/ai",
+    },
   ];
 
   return (
