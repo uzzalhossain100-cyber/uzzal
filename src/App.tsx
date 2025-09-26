@@ -16,10 +16,11 @@ import ActiveUsersPage from "./pages/ActiveUsersPage";
 import MainLayout from "./components/layout/MainLayout";
 import ViewPlatformPage from "./pages/ViewPlatformPage";
 import LiveChatPage from "./pages/LiveChatPage";
-import VisitorTracker from "./components/VisitorTracker"; // Import VisitorTracker
-import AdvertisementPage from "./pages/AdvertisementPage"; // Import AdvertisementPage
-import ConverterPage from "./pages/ConverterPage"; // Import ConverterPage
-import AIPage from "./pages/AIPage"; // Import AIPage
+import VisitorTracker from "./components/VisitorTracker";
+import AdvertisementPage from "./pages/AdvertisementPage";
+import ConverterPage from "./pages/ConverterPage";
+import AIPage from "./pages/AIPage";
+import QuizPage from "./pages/QuizPage"; // Import QuizPage
 
 const queryClient = new QueryClient();
 
@@ -30,7 +31,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AuthProvider>
-          <VisitorTracker /> {/* Place VisitorTracker here to track all visits */}
+          <VisitorTracker />
           <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
@@ -45,7 +46,8 @@ const App = () => (
                 <Route path="/live-chat" element={<LiveChatPage />} />
                 <Route path="/advertisements" element={<AdvertisementPage />} />
                 <Route path="/converter" element={<ConverterPage />} />
-                <Route path="/ai" element={<AIPage />} /> {/* New AI Page Route */}
+                <Route path="/ai" element={<AIPage />} />
+                <Route path="/quiz" element={<QuizPage />} /> {/* New Quiz Page Route */}
                 <Route path="/view/:encodedUrl/:itemName" element={<ViewPlatformPage />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               </Route>

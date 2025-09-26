@@ -4,7 +4,8 @@ import {
   Camera, Briefcase, Sparkles, GraduationCap, Landmark, Map, Syringe, Gavel,
   Phone, ChefHat, Dumbbell, Code, Rss, Palette, TrendingUp, MoreHorizontal,
   LifeBuoy, Tv, Globe,
-  Calculator // Added for Converter category
+  Calculator, // Added for Converter category
+  Brain // Added for Quiz category
 } from 'lucide-react';
 import React from 'react';
 
@@ -946,5 +947,12 @@ export const allInOneCategories: Category[] = [
     name: "কনভার্টার",
     icon: Calculator,
     internalRoute: "/converter",
+  },
+  {
+    name: "গেম", // New category for games
+    icon: Gamepad,
+    items: [
+      { name: "কুইজ", icon: Brain, internalRoute: "/quiz" }, // Link to the new QuizPage
+    ],
   },
 ];

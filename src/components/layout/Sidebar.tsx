@@ -9,7 +9,8 @@ import {
   MessageSquareText,
   MessageCircleMore,
   Image as ImageIcon,
-  Sparkles, // Added for AI page
+  Sparkles,
+  Brain, // Added for Quiz page
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
@@ -22,7 +23,7 @@ export function Sidebar({ className, isCollapsed = false }: SidebarProps) {
   const { signOut, profile } = useAuth();
   const location = useLocation();
 
-  const isAdmin = profile?.email === 'uzzal@admin.com'; // Corrected admin email check
+  const isAdmin = profile?.email === 'uzzal@admin.com';
   const isGuest = profile?.is_guest;
 
   // Define navItems conditionally based on user type
@@ -60,12 +61,17 @@ export function Sidebar({ className, isCollapsed = false }: SidebarProps) {
       icon: Sparkles,
       href: "/ai",
     },
+    {
+      name: "কুইজ", // New Quiz link
+      icon: Brain,
+      href: "/quiz",
+    },
   ];
 
   return (
     <div
       className={cn(
-        "flex h-full flex-col space-y-4 border-r bg-sidebar/80 backdrop-blur-sm p-4 transition-all duration-300 shadow-md", // Changed bg-sidebar to bg-sidebar/80 backdrop-blur-sm
+        "flex h-full flex-col space-y-4 border-r bg-sidebar/80 backdrop-blur-sm p-4 transition-all duration-300 shadow-md",
         isCollapsed ? "w-16 items-center" : "w-64",
         className,
       )}
@@ -104,7 +110,7 @@ export function Sidebar({ className, isCollapsed = false }: SidebarProps) {
               <item.icon className="h-5 w-5" />
               <span
                 className={cn(
-                  "ml-3 transition-opacity duration-300 font-bold", // Added ml-3 for spacing and font-bold
+                  "ml-3 transition-opacity duration-300 font-bold",
                   isCollapsed ? "opacity-0 w-0" : "opacity-100 w-auto",
                 )}
               >
@@ -113,7 +119,7 @@ export function Sidebar({ className, isCollapsed = false }: SidebarProps) {
             </Link>
           );
         })}
-        {isAdmin && !isGuest && ( // Only show User Management for admin, not guests
+        {isAdmin && !isGuest && (
           <Link
             to="/user-management"
             className={cn(
@@ -125,7 +131,7 @@ export function Sidebar({ className, isCollapsed = false }: SidebarProps) {
             <Users className="h-5 w-5" />
             <span
               className={cn(
-                "ml-3 transition-opacity duration-300 font-bold", // Added ml-3 for spacing and font-bold
+                "ml-3 transition-opacity duration-300 font-bold",
                 isCollapsed ? "opacity-0 w-0" : "opacity-100 w-auto",
               )}
             >
@@ -146,7 +152,7 @@ export function Sidebar({ className, isCollapsed = false }: SidebarProps) {
           <LogOut className="h-5 w-5" />
           <span
             className={cn(
-              "ml-3 transition-opacity duration-300 font-bold", // Added font-bold
+              "ml-3 transition-opacity duration-300 font-bold",
               isCollapsed ? "opacity-0 w-0" : "opacity-100 w-auto",
             )}
           >
