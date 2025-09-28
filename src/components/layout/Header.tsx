@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Menu, Bell, Search, LogOut, User as UserIcon, Home, MessageSquareText, MessageCircleMore, Image as ImageIcon, Sparkles, Brain, Users } from "lucide-react";
+import { Menu, Bell, Search, LogOut, User as UserIcon, Home, MessageSquareText, MessageCircleMore, Image as ImageIcon, Sparkles, Brain, Users, Mail } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
