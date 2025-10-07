@@ -41,6 +41,10 @@ const QuizPage: React.FC = () => {
     { id: 'english', name: 'ইংরেজি', icon: Languages },
   ];
 
+  const getSubjectName = (id: keyof SubjectQuestions) => {
+    return subjects.find(s => s.id === id)?.name || '';
+  };
+
   const handleBack = () => {
     if (showScreen === 'result' || showScreen === 'quiz') {
       setShowScreen('subjectSelection');
@@ -48,7 +52,7 @@ const QuizPage: React.FC = () => {
     } else if (showScreen === 'subjectSelection') {
       setShowScreen('ageSelection');
       setSelectedAgeGroup(null);
-      setSelectedSubject(null);
+      setSelectedSubject(null); // Reset subject when going back to age selection
     } else {
       navigate(-1); // Go back to previous page (Index)
     }
@@ -153,6 +157,13 @@ const QuizPage: React.FC = () => {
 
   const currentQuestion = selectedQuestions[currentQuestionIndex];
 
+  let pageTitle = "সাধারণ জ্ঞান পরীক্ষা";
+  if (showScreen === 'subjectSelection' && selectedAgeGroup) {
+    pageTitle = `বিষয় নির্বাচন করুন (${selectedAgeGroup} বছর)`;
+  } else if ((showScreen === 'quiz' || showScreen === 'result') && selectedSubject) {
+    pageTitle = `${getSubjectName(selectedSubject)} পরীক্ষা (${selectedAgeGroup} বছর)`;
+  }
+
   return (
     <div className="flex items-center justify-center min-h-[calc(100vh-100px)] p-4">
       <Card className="w-full max-w-2xl bg-background/80 backdrop-blur-sm shadow-lg border-primary/20 dark:border-primary/50">
@@ -161,7 +172,7 @@ const QuizPage: React.FC = () => {
             <Button variant="ghost" onClick={handleBack} className="p-0 h-auto mr-2 text-primary dark:text-primary-foreground hover:bg-transparent hover:text-primary/80 absolute left-4 top-4">
               <ArrowLeft className="h-6 w-6" />
             </Button>
-            <Brain className="h-7 w-7 mr-2" /> সাধারণ জ্ঞান পরীক্ষা
+            <Brain className="h-7 w-7 mr-2" /> {pageTitle}
           </CardTitle>
           <CardDescription className="text-muted-foreground">আপনার জ্ঞান পরীক্ষা করুন!</CardDescription>
         </CardHeader>
