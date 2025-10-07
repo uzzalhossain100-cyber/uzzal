@@ -4,9 +4,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Brain, Trophy, Clock, CheckCircle, XCircle } from 'lucide-react';
+import { ArrowLeft, Brain, Trophy, Clock, CheckCircle, XCircle, BookOpen, Globe, Calculator, History, Laptop, Languages } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { allQuizQuestions, Question } from '@/data/quizQuestions';
+import { allQuizQuestions, Question, SubjectQuestions } from '@/data/quizQuestions';
 
 const MAX_QUESTIONS = 10;
 const QUESTION_SCORE = 10;
@@ -14,6 +14,9 @@ const QUESTION_SCORE = 10;
 const QuizPage: React.FC = () => {
   const navigate = useNavigate();
 
+  const [showScreen, setShowScreen] = useState<'ageSelection' | 'subjectSelection' | 'quiz' | 'result'>('ageSelection');
+  const [selectedAgeGroup, setSelectedAgeGroup] = useState<keyof typeof allQuizQuestions | null>(null);
+  const [selectedSubject, setSelectedSubject] = useState<keyof SubjectQuestions | null>(null);
   const [selectedQuestions, setSelectedQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
@@ -21,7 +24,6 @@ const QuizPage: React.FC = () => {
   const [wrongAnswersCount, setWrongAnswersCount] = useState(0);
   const [timeElapsed, setTimeElapsed] = useState(0);
   const [isQuizActive, setIsQuizActive] = useState(false);
-  const [showScreen, setShowScreen] = useState<'start' | 'quiz' | 'result'>('start');
   const [shuffledOptions, setShuffledOptions] = useState<string[]>([]);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [correctAnswer, setCorrectAnswer] = useState<string | null>(null);
@@ -29,14 +31,48 @@ const QuizPage: React.FC = () => {
   const timerIntervalRef = useRef<number | null>(null);
   const gameStartedTimeRef = useRef<number>(0);
 
+  const ageGroups = Object.keys(allQuizQuestions) as (keyof typeof allQuizQuestions)[];
+  const subjects: { id: keyof SubjectQuestions; name: string; icon: React.ElementType }[] = [
+    { id: 'generalKnowledge', name: 'সাধারণ জ্ঞান', icon: Globe },
+    { id: 'islamicKnowledge', name: 'ইসলামিক জ্ঞান', icon: BookOpen },
+    { id: 'mathematicalKnowledge', name: 'গাণিতিক জ্ঞান', icon: Calculator },
+    { id: 'history', name: 'ইতিহাস', icon: History },
+    { id: 'technology', name: 'প্রযুক্তি', icon: Laptop },
+    { id: 'english', name: 'ইংরেজি', icon: Languages },
+  ];
+
   const handleBack = () => {
-    navigate(-1);
+    if (showScreen === 'result' || showScreen === 'quiz') {
+      setShowScreen('subjectSelection');
+      resetQuizState();
+    } else if (showScreen === 'subjectSelection') {
+      setShowScreen('ageSelection');
+      setSelectedAgeGroup(null);
+      setSelectedSubject(null);
+    } else {
+      navigate(-1); // Go back to previous page (Index)
+    }
   };
 
-  const selectRandomQuestions = () => {
-    const totalQuestions = allQuizQuestions.length;
+  const resetQuizState = () => {
+    setCurrentQuestionIndex(0);
+    setScore(0);
+    setCorrectAnswersCount(0);
+    setWrongAnswersCount(0);
+    setTimeElapsed(0);
+    setSelectedOption(null);
+    setCorrectAnswer(null);
+    setIsQuizActive(false);
+    if (timerIntervalRef.current) {
+      clearInterval(timerIntervalRef.current);
+    }
+  };
+
+  const selectRandomQuestions = (ageGroup: keyof typeof allQuizQuestions, subject: keyof SubjectQuestions) => {
+    const questionsForSubject = allQuizQuestions[ageGroup][subject];
+    const totalQuestions = questionsForSubject.length;
     const qCount = Math.min(MAX_QUESTIONS, totalQuestions);
-    const shuffled = [...allQuizQuestions].sort(() => 0.5 - Math.random());
+    const shuffled = [...questionsForSubject].sort(() => 0.5 - Math.random());
     setSelectedQuestions(shuffled.slice(0, qCount));
   };
 
@@ -84,21 +120,12 @@ const QuizPage: React.FC = () => {
   };
 
   const startGame = () => {
-    setShowScreen('quiz');
-    setCurrentQuestionIndex(0);
-    setScore(0);
-    setCorrectAnswersCount(0);
-    setWrongAnswersCount(0);
-    setTimeElapsed(0);
-    setSelectedOption(null);
-    setCorrectAnswer(null);
-
-    if (timerIntervalRef.current) {
-      clearInterval(timerIntervalRef.current);
+    if (selectedAgeGroup && selectedSubject) {
+      resetQuizState(); // Reset all states before starting a new game
+      selectRandomQuestions(selectedAgeGroup, selectedSubject);
+      setShowScreen('quiz');
+      startTimer();
     }
-
-    selectRandomQuestions();
-    startTimer();
   };
 
   const endQuiz = () => {
@@ -140,15 +167,44 @@ const QuizPage: React.FC = () => {
         </CardHeader>
 
         <CardContent className="p-6">
-          {showScreen === 'start' && (
-            <div id="start-screen" className="text-center">
-              <p className="text-lg text-foreground mb-6">আপনি মোট <span className="font-bold text-primary">{MAX_QUESTIONS}টি</span> প্রশ্নের উত্তর দেবেন। প্রতি সঠিক উত্তরে <span className="font-bold text-green-600">{QUESTION_SCORE} নম্বর</span> পাবেন।</p>
-              <Button
-                onClick={startGame}
-                className="start-button bg-green-600 hover:bg-green-700 text-white font-bold text-lg px-8 py-4 rounded-lg transition-colors"
-              >
-                কুইজ শুরু করুন
-              </Button>
+          {showScreen === 'ageSelection' && (
+            <div id="age-selection-screen" className="text-center">
+              <p className="text-lg text-foreground mb-6 font-bold">আপনার বয়স গ্রুপ নির্বাচন করুন:</p>
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                {ageGroups.map((ageGroup) => (
+                  <Button
+                    key={ageGroup}
+                    onClick={() => {
+                      setSelectedAgeGroup(ageGroup);
+                      setShowScreen('subjectSelection');
+                    }}
+                    className="h-24 flex flex-col items-center justify-center text-center p-2 rounded-lg shadow-md transition-all duration-200 bg-primary text-primary-foreground hover:bg-primary/90 font-bold text-lg"
+                  >
+                    {ageGroup} বছর
+                  </Button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {showScreen === 'subjectSelection' && selectedAgeGroup && (
+            <div id="subject-selection-screen" className="text-center">
+              <p className="text-lg text-foreground mb-6 font-bold">বিষয় নির্বাচন করুন ({selectedAgeGroup} বছর):</p>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                {subjects.map((subject) => (
+                  <Button
+                    key={subject.id}
+                    onClick={() => {
+                      setSelectedSubject(subject.id);
+                      startGame(); // Start game immediately after subject selection
+                    }}
+                    className="h-24 flex flex-col items-center justify-center text-center p-2 rounded-lg shadow-md transition-all duration-200 bg-secondary text-secondary-foreground hover:bg-secondary/90 font-bold text-lg"
+                  >
+                    <subject.icon className="h-8 w-8 mb-2" />
+                    {subject.name}
+                  </Button>
+                ))}
+              </div>
             </div>
           )}
 
@@ -202,7 +258,7 @@ const QuizPage: React.FC = () => {
               </p>
               <p className="text-base text-foreground mb-6">মোট সময়: <span id="time-taken" className="text-orange-600 font-bold">{timeElapsed} সেকেন্ড</span></p>
               <Button
-                onClick={() => startGame()} // Restart the game
+                onClick={() => setShowScreen('ageSelection')} // Go back to age selection to restart
                 className="start-button bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-lg px-8 py-4 rounded-lg transition-colors"
               >
                 আবার শুরু করুন
