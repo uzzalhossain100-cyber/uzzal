@@ -123,13 +123,13 @@ const QuizPage: React.FC = () => {
     }, 1000);
   };
 
-  const startGame = () => {
-    if (selectedAgeGroup && selectedSubject) {
-      resetQuizState(); // Reset all states before starting a new game
-      selectRandomQuestions(selectedAgeGroup, selectedSubject);
-      setShowScreen('quiz');
-      startTimer();
-    }
+  const startGame = (ageGroup: keyof typeof allQuizQuestions, subjectId: keyof SubjectQuestions) => {
+    setSelectedAgeGroup(ageGroup); // Ensure age group is set
+    setSelectedSubject(subjectId); // Ensure subject is set
+    resetQuizState(); // Reset all states before starting a new game
+    selectRandomQuestions(ageGroup, subjectId);
+    setShowScreen('quiz');
+    startTimer();
   };
 
   const endQuiz = () => {
@@ -160,7 +160,7 @@ const QuizPage: React.FC = () => {
   let pageTitle = "সাধারণ জ্ঞান পরীক্ষা";
   if (showScreen === 'subjectSelection' && selectedAgeGroup) {
     pageTitle = `বিষয় নির্বাচন করুন (${selectedAgeGroup} বছর)`;
-  } else if ((showScreen === 'quiz' || showScreen === 'result') && selectedSubject) {
+  } else if ((showScreen === 'quiz' || showScreen === 'result') && selectedSubject && selectedAgeGroup) {
     pageTitle = `${getSubjectName(selectedSubject)} পরীক্ষা (${selectedAgeGroup} বছর)`;
   }
 
@@ -206,8 +206,7 @@ const QuizPage: React.FC = () => {
                   <Button
                     key={subject.id}
                     onClick={() => {
-                      setSelectedSubject(subject.id);
-                      startGame(); // Start game immediately after subject selection
+                      startGame(selectedAgeGroup, subject.id); // Pass ageGroup and subject.id directly
                     }}
                     className="h-24 flex flex-col items-center justify-center text-center p-2 rounded-lg shadow-md transition-all duration-200 bg-secondary text-secondary-foreground hover:bg-secondary/90 font-bold text-lg"
                   >
