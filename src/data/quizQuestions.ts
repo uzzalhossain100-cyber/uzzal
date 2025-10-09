@@ -709,3 +709,16 @@ const oldAllQuizQuestions: OldAgeGroupQuestions = {
     english: mergeQuestions(['26-30', '31-35', '36-40', '40+'], 'english'),
   },
 };
+
+export const allQuizQuestions: AgeGroupQuestions = {
+  '5-10': oldAllQuizQuestions['5-10'],
+  '11-25': {
+    generalKnowledge: mergeQuestions(['11-15', '16-20', '21-25'], 'generalKnowledge'),
+    islamicKnowledge: mergeQuestions(['11-15', '16-20', '21-25'], 'islamicKnowledge'),
+    mathematicalKnowledge: mergeQuestions(['11-15', '16-20', '21-25'], 'mathematicalKnowledge'),
+    history: mergeQuestions(['11-15', '16-20', '21-25'], 'history'),
+    technology: oldAllQuizQuestions['11-25'].technology, // Use the newly added technology questions
+    english: oldAllQuizQuestions['11-25'].english, // Use the newly added english questions
+  },
+  '26+': oldAllQuizQuestions['26+'],
+};
