@@ -15,6 +15,24 @@ export interface SubjectQuestions {
 
 export interface AgeGroupQuestions {
   '5-10': SubjectQuestions;
+  '11-25': SubjectQuestions;
+  '26+': SubjectQuestions;
+}
+
+// Helper function to merge questions from multiple age groups for a specific subject
+const mergeQuestions = (ageGroups: (keyof OldAgeGroupQuestions)[], subject: keyof SubjectQuestions): Question[] => {
+  let merged: Question[] = [];
+  ageGroups.forEach(ageGroup => {
+    if (oldAllQuizQuestions[ageGroup] && oldAllQuizQuestions[ageGroup][subject]) {
+      merged = merged.concat(oldAllQuizQuestions[ageGroup][subject]);
+    }
+  });
+  return merged;
+};
+
+// Define the old structure temporarily to access existing questions
+interface OldAgeGroupQuestions {
+  '5-10': SubjectQuestions;
   '11-15': SubjectQuestions;
   '16-20': SubjectQuestions;
   '21-25': SubjectQuestions;
@@ -24,7 +42,7 @@ export interface AgeGroupQuestions {
   '40+': SubjectQuestions;
 }
 
-export const allQuizQuestions: AgeGroupQuestions = {
+const oldAllQuizQuestions: OldAgeGroupQuestions = {
   '5-10': {
     generalKnowledge: [
       // বাংলাদেশ বিষয়াবলী (20 questions)
@@ -1022,5 +1040,26 @@ export const allQuizQuestions: AgeGroupQuestions = {
       {q: "What is the meaning of 'ubiquitous'?", a: "Present everywhere", o: ["Rare", "Unique", "Invisible"]},
       {q: "Fill in the blank: 'He is interested ___ learning new languages.'", a: "in", o: ["on", "at", "for"]},
     ],
+  },
+};
+
+
+export const allQuizQuestions: AgeGroupQuestions = {
+  '5-10': oldAllQuizQuestions['5-10'],
+  '11-25': {
+    generalKnowledge: mergeQuestions(['11-15', '16-20', '21-25'], 'generalKnowledge'),
+    islamicKnowledge: mergeQuestions(['11-15', '16-20', '21-25'], 'islamicKnowledge'),
+    mathematicalKnowledge: mergeQuestions(['11-15', '16-20', '21-25'], 'mathematicalKnowledge'),
+    history: mergeQuestions(['11-15', '16-20', '21-25'], 'history'),
+    technology: mergeQuestions(['11-15', '16-20', '21-25'], 'technology'),
+    english: mergeQuestions(['11-15', '16-20', '21-25'], 'english'),
+  },
+  '26+': {
+    generalKnowledge: mergeQuestions(['26-30', '31-35', '36-40', '40+'], 'generalKnowledge'),
+    islamicKnowledge: mergeQuestions(['26-30', '31-35', '36-40', '40+'], 'islamicKnowledge'),
+    mathematicalKnowledge: mergeQuestions(['26-30', '31-35', '36-40', '40+'], 'mathematicalKnowledge'),
+    history: mergeQuestions(['26-30', '31-35', '36-40', '40+'], 'history'),
+    technology: mergeQuestions(['26-30', '31-35', '36-40', '40+'], 'technology'),
+    english: mergeQuestions(['26-30', '31-35', '36-40', '40+'], 'english'),
   },
 };

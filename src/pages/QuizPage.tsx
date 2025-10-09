@@ -181,7 +181,7 @@ const QuizPage: React.FC = () => {
           {showScreen === 'ageSelection' && (
             <div id="age-selection-screen" className="text-center">
               <p className="text-lg text-foreground mb-6 font-bold">আপনার বয়স গ্রুপ নির্বাচন করুন:</p>
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {ageGroups.map((ageGroup) => (
                   <Button
                     key={ageGroup}
