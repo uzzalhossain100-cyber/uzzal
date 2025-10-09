@@ -19,17 +19,6 @@ export interface AgeGroupQuestions {
   '26+': SubjectQuestions;
 }
 
-// Helper function to merge questions from multiple age groups for a specific subject
-const mergeQuestions = (ageGroups: (keyof OldAgeGroupQuestions)[], subject: keyof SubjectQuestions): Question[] => {
-  let merged: Question[] = [];
-  ageGroups.forEach(ageGroup => {
-    if (oldAllQuizQuestions[ageGroup] && oldAllQuizQuestions[ageGroup][subject]) {
-      merged = merged.concat(oldAllQuizQuestions[ageGroup][subject]);
-    }
-  });
-  return merged;
-};
-
 // Define the old structure temporarily to access existing questions
 interface OldAgeGroupQuestions {
   '5-10': SubjectQuestions;
@@ -231,7 +220,7 @@ const oldAllQuizQuestions: OldAgeGroupQuestions = {
       {q: "সালাতে সিজদায় গিয়ে কী বলতে হয়?", a: "সুবহানা রাব্বিয়াল আ'লা", o: ["আল্লাহু আকবার", "আল-হামদুলিল্লাহ", "সুবহানা রাব্বিয়াল আযীম"]},
       {q: "হযরত জিবরাঈল (আ.) কী কাজ করতেন?", a: "আল্লাহর ওহী নবী-রাসূলদের কাছে পৌঁছানো", o: ["মেঘ নিয়ন্ত্রণ", "বৃষ্টি বর্ষণ", "রুজি বিতরণ"]},
       {q: "মুহাম্মদ (সা.)-এর কয়জন মেয়ে ছিলেন?", a: "৪ জন", o: ["২ জন", "৩ জন", "৫ জন"]},
-      {q: "কোন সাহাবীকে 'আস-সিদ্দিক' (সত্যবাদী) উপাধি দেওয়া হয়েছিল?", a: "হযরত আবু বকর (রা.)", o: ["হযরত উমর (রা.)", "হযরত আলী (রা.)", "হযরত উসমান (রা.)"]},
+      {q: "কোন সাহাবীকে 'আস-সিদ্দিক' (সত্যবাদী) উপাধি দেওয়া হয়েছিল?", a: "হ হযরত আবু বকর (রা.)", o: ["হযরত উমর (রা.)", "হযরত আলী (রা.)", "হযরত উসমান (রা.)"]},
       {q: "ইসলামের দ্বিতীয় খলিফা কে ছিলেন?", a: "হযরত উমর (রা.)", o: ["হযরত আবু বকর (রা.)", "হ হযরত উসমান (রা.)", "হযরত আলী (রা.)"]},
       {q: "'ইনশাআল্লাহ' অর্থ কী?", a: "যদি আল্লাহ চান", o: ["আলহামদুলillah", "আল্লাহ সর্বশ্রেষ্ঠ", "মাশাআল্লাহ"]},
       {q: "কোন সূরাকে কুরআনের মা বলা হয়?", a: "সূরা ফাতিহা", o: ["সূরা বাকারা", "সূরা ইয়াসিন", "সূরা ইখলাস"]},
@@ -700,14 +689,17 @@ const oldAllQuizQuestions: OldAgeGroupQuestions = {
       {q: "কোন্ লেখক 'Detective fiction' (গোয়েন্দা গল্প)-এর জন্য বিখ্যাত, যিনি Sherlock Holmes চরিত্রটি তৈরি করেন?", a: "Arthur Conan Doyle", o: ["Agatha Christie", "Edgar Allan Poe", "Raymond Chandler"]},
     ],
   },
-  '26+': {
-    generalKnowledge: mergeQuestions(['26-30', '31-35', '36-40', '40+'], 'generalKnowledge'),
-    islamicKnowledge: mergeQuestions(['26-30', '31-35', '36-40', '40+'], 'islamicKnowledge'),
-    mathematicalKnowledge: mergeQuestions(['26-30', '31-35', '36-40', '40+'], 'mathematicalKnowledge'),
-    history: mergeQuestions(['26-30', '31-35', '36-40', '40+'], 'history'),
-    technology: mergeQuestions(['26-30', '31-35', '36-40', '40+'], 'technology'),
-    english: mergeQuestions(['26-30', '31-35', '36-40', '40+'], 'english'),
-  },
+};
+
+// Helper function to merge questions from multiple age groups for a specific subject
+const mergeQuestions = (ageGroups: (keyof OldAgeGroupQuestions)[], subject: keyof SubjectQuestions): Question[] => {
+  let merged: Question[] = [];
+  ageGroups.forEach(ageGroup => {
+    if (oldAllQuizQuestions[ageGroup] && oldAllQuizQuestions[ageGroup][subject]) {
+      merged = merged.concat(oldAllQuizQuestions[ageGroup][subject]);
+    }
+  });
+  return merged;
 };
 
 export const allQuizQuestions: AgeGroupQuestions = {
@@ -717,8 +709,8 @@ export const allQuizQuestions: AgeGroupQuestions = {
     islamicKnowledge: mergeQuestions(['11-15', '16-20', '21-25'], 'islamicKnowledge'),
     mathematicalKnowledge: mergeQuestions(['11-15', '16-20', '21-25'], 'mathematicalKnowledge'),
     history: mergeQuestions(['11-15', '16-20', '21-25'], 'history'),
-    technology: oldAllQuizQuestions['11-25'].technology, // Use the newly added technology questions
-    english: oldAllQuizQuestions['11-25'].english, // Use the newly added english questions
+    technology: mergeQuestions(['11-15', '16-20', '21-25'], 'technology'), // Merging technology questions for 11-25
+    english: mergeQuestions(['11-15', '16-20', '21-25'], 'english'), // Merging English questions for 11-25
   },
   '26+': oldAllQuizQuestions['26+'],
 };
