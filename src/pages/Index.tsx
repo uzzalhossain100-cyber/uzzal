@@ -129,7 +129,10 @@ const Index: React.FC = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
               {/* Use a shallow copy here to prevent any potential mutation issues */}
               {[...allInOneCategories]
-                .filter(category => category.name.startsWith("category.")) // Filter to ensure only actual categories are displayed
+                .filter(category => {
+                  console.log("Category name being considered:", category.name); // Diagnostic log
+                  return category.name.startsWith("category.");
+                })
                 .map((category, index) => {
                 const Icon = category.icon;
                 const gradientClass = categoryGradientColors[index % categoryGradientColors.length];
