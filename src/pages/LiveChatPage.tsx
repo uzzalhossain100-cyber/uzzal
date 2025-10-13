@@ -7,9 +7,11 @@ import ActiveUsersPanel from '@/components/chat/ActiveUsersPanel';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 import { Navigate } from 'react-router-dom';
 import { showError } from '@/utils/toast';
+import { useTranslation } from '@/lib/translations'; // Import useTranslation
 
 const LiveChatPage: React.FC = () => {
   const { user, profile, loading: authLoading } = useAuth();
+  const { t } = useTranslation(); // Initialize useTranslation
 
   const isAdmin = profile?.email === 'uzzal@admin.com';
 
@@ -17,19 +19,19 @@ const LiveChatPage: React.FC = () => {
     return (
       <div className="flex items-center justify-center min-h-[calc(100vh-100px)]">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        <span className="ml-2 text-lg text-muted-foreground font-bold">চ্যাট লোড হচ্ছে...</span>
+        <span className="ml-2 text-lg text-muted-foreground font-bold">{t("common.chat_loading")}</span>
       </div>
     );
   }
 
   // Redirect if not logged in or not admin
   if (!user || !profile) {
-    showError("চ্যাট ব্যবহার করার জন্য আপনাকে লগইন করতে হবে।");
+    showError(t("common.login_to_use_chat"));
     return <Navigate to="/login" replace />;
   }
 
   if (!isAdmin) {
-    showError("আপনার এই পেজটি অ্যাক্সেস করার অনুমতি নেই।");
+    showError(t("common.no_permission_access_page"));
     return <Navigate to="/" replace />; // Redirect non-admin users to home
   }
 
@@ -38,7 +40,7 @@ const LiveChatPage: React.FC = () => {
       <Card className="w-full flex flex-col flex-1 bg-background/80 backdrop-blur-sm shadow-lg border-primary/20 dark:border-primary/50"> {/* Added bg-background/80 backdrop-blur-sm */}
         <CardHeader className="flex flex-row items-center justify-between pb-4 border-b">
           <CardTitle className="text-3xl font-extrabold text-primary dark:text-primary-foreground flex items-center">
-            <MessageCircleMore className="h-7 w-7 mr-2" /> লাইভ চ্যাট
+            <MessageCircleMore className="h-7 w-7 mr-2" /> {t("common.live_chat_page_title")}
           </CardTitle>
         </CardHeader>
         <ResizablePanelGroup

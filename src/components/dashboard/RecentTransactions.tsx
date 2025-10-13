@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useTranslation } from '@/lib/translations'; // Import useTranslation
 
 interface Transaction {
   id: string;
@@ -57,20 +58,22 @@ const transactions: Transaction[] = [
 ];
 
 export function RecentTransactions() {
+  const { t } = useTranslation(); // Initialize useTranslation
+
   return (
     <Card className="bg-background/80 backdrop-blur-sm"> {/* Added bg-background/80 backdrop-blur-sm */}
       <CardHeader>
-        <CardTitle className="font-extrabold">Recent Transactions</CardTitle>
+        <CardTitle className="font-extrabold">{t("dashboard.recent_transactions")}</CardTitle> {/* Translate title */}
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="font-bold">ID</TableHead>
-              <TableHead className="font-bold">Date</TableHead>
-              <TableHead className="font-bold">Description</TableHead>
-              <TableHead className="font-bold">Amount</TableHead>
-              <TableHead className="font-bold">Status</TableHead>
+              <TableHead className="font-bold">{t("dashboard.transaction_id")}</TableHead> {/* Translate header */}
+              <TableHead className="font-bold">{t("dashboard.transaction_date")}</TableHead> {/* Translate header */}
+              <TableHead className="font-bold">{t("dashboard.transaction_description")}</TableHead> {/* Translate header */}
+              <TableHead className="font-bold">{t("dashboard.transaction_amount")}</TableHead> {/* Translate header */}
+              <TableHead className="font-bold">{t("dashboard.transaction_status")}</TableHead> {/* Translate header */}
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -91,7 +94,7 @@ export function RecentTransactions() {
                     }
                     className="font-bold"
                   >
-                    {transaction.status}
+                    {t(`dashboard.status_${transaction.status.toLowerCase()}`)} {/* Translate status */}
                   </Badge>
                 </TableCell>
               </TableRow>

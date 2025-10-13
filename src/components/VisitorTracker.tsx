@@ -1,9 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { useTranslation } from '@/lib/translations'; // Import useTranslation
 
 const VisitorTracker: React.FC = () => {
   const { user, profile, loading, recordVisit } = useAuth();
   const hasTrackedVisit = useRef(false);
+  const { t } = useTranslation(); // Initialize useTranslation
 
   useEffect(() => {
     const trackVisit = async () => {
@@ -17,7 +19,7 @@ const VisitorTracker: React.FC = () => {
         const data = await response.json();
         ipAddress = data.ip;
       } catch (error) {
-        console.error("Failed to fetch IP address:", error);
+        console.error(t("common.failed_to_fetch_ip_address"), error); // Translated error message
       }
 
       if (user || profile) {
@@ -40,7 +42,7 @@ const VisitorTracker: React.FC = () => {
     };
 
     trackVisit();
-  }, [user, profile, loading, recordVisit]); // Re-run if user/profile/loading changes
+  }, [user, profile, loading, recordVisit, t]); // Re-run if user/profile/loading changes or translation changes
 
   return null; // This component does not render anything
 };

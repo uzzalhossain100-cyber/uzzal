@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect, useRef } from 'r
 import { supabase } from '@/lib/supabaseClient';
 import { User } from '@supabase/supabase-js';
 import { showSuccess, showError } from '@/utils/toast';
+import { useTranslation } from '@/lib/translations'; // Import useTranslation
 
 interface Profile {
   id: string;
@@ -46,6 +47,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [onlineUsers, setOnlineUsers] = useState<Profile[]>([]);
   const presenceChannelRef = useRef<any>(null); // Ref for Supabase Realtime channel
   const authListenerRef = useRef<any>(null); // Ref to store the auth listener subscription
+  const { t } = useTranslation(); // Initialize useTranslation
 
   // Function to update online users based on presence state
   const updateOnlineUsers = async (presenceState: PresenceState) => {
@@ -209,7 +211,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             await supabase.auth.signOut();
             setUser(null);
             setProfile(null);
-            showError("আপনার অ্যাকাউন্ট নিষ্ক্রিয় করা হয়েছে।");
+            showError(t("common.account_deactivated"));
             clearMockAdminSession();
             clearGuestSession();
           } else {
@@ -278,12 +280,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         presenceChannelRef.current = null;
       }
     };
-  }, []);
+  }, [t]); // Added t to dependency array
 
   const signIn = async (identifier: string, password: string) => {
     if (identifier === 'Uzzal' && password === '200186') {
       setMockAdminSession();
-      showSuccess("এডমিন লগইন সফল!");
+      showSuccess(t("common.admin_login_success"));
       return { success: true };
     }
 
@@ -297,8 +299,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .single();
 
       if (profileError || !profileData) {
-        showError("ভুল ইউজারনেম বা পাসওয়ার্ড।");
-        return { success: false, error: "ভুল ইউজারনেম বা পাসওয়ার্ড।" };
+        showError(t("common.wrong_username_password"));
+        return { success: false, error: t("common.wrong_username_password") };
       }
       emailToSignIn = profileData.email;
     }
@@ -316,19 +318,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       .single();
 
     if (profileError || !profileData) {
-      showError("প্রোফাইল ডেটা লোড করতে ব্যর্থ।");
+      showError(t("common.failed_to_load_profile"));
       await supabase.auth.signOut();
       clearMockAdminSession();
       clearGuestSession();
-      return { success: false, error: "প্রোফাইল ডেটা লোড করতে ব্যর্থ।" };
+      return { success: false, error: t("common.failed_to_load_profile") };
     }
 
     if (!profileData.is_active) {
-      showError("আপনার অ্যাকাউন্ট নিষ্ক্রিয় করা হয়েছে।");
+      showError(t("common.account_deactivated"));
       await supabase.auth.signOut();
       clearMockAdminSession();
       clearGuestSession();
-      return { success: false, error: "আপনার অ্যাকাউন্ট নিষ্ক্রিয় করা হয়েছে।" };
+      return { success: false, error: t("common.account_deactivated") };
     }
 
     setUser(data.user);
@@ -336,7 +338,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.removeItem('isMockAdminLoggedIn');
     localStorage.removeItem('guestUser');
     localStorage.removeItem('guestProfile');
-    showSuccess("লগইন সফল!");
+    showSuccess(t("common.login_successful"));
     return { success: true };
   };
 
@@ -348,13 +350,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     if (checkError) {
       console.error("Error checking existing profiles:", checkError);
-      showError("সাইন আপ চেক করতে সমস্যা হয়েছে।");
-      return { success: false, error: "Error checking existing profiles." };
+      showError(t("common.signup_failed_check_error"));
+      return { success: false, error: t("common.signup_failed_check_error") };
     }
 
     if (existingProfiles && existingProfiles.length > 0) {
-      showError("আপনার নামে একটি একাউন্ট আছে।");
-      return { success: false, error: "An account already exists with your details." };
+      showError(t("common.account_exists"));
+      return { success: false, error: t("common.account_exists") };
     }
 
     const { data: authData, error: authError } = await supabase.auth.signUp({ email, password });
@@ -379,7 +381,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return { success: false, error: profileError.message };
       }
     }
-    showSuccess("সাইন আপ সফল হয়েছে!");
+    showSuccess(t("common.signup_successful"));
     return { success: true };
   };
 
@@ -388,7 +390,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     clearMockAdminSession();
 
     setGuestSession(username); // Pass only username
-    showSuccess("সাধারণ ইউজার হিসেবে লগইন সফল!");
+    showSuccess(t("common.guest_login_successful"));
     return { success: true };
   };
 
@@ -420,14 +422,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(null);
     setProfile(null);
     setOnlineUsers([]);
-    showSuccess("লগআউট সফল!"); // Show success immediately
+    showSuccess(t("common.logout_successful")); // Show success immediately
 
     // Only call Supabase signOut for real users (not mock admin or guest)
     if (!(profile?.is_guest || profile?.email === 'uzzal@admin.com')) {
       const { error } = await supabase.auth.signOut();
       if (error) {
         console.error("Error during Supabase signOut:", error.message);
-        showError("লগআউট ব্যর্থ হয়েছে: " + error.message);
+        showError(t("common.logout_failed") + error.message);
       }
     }
   };
@@ -446,8 +448,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const updateUserProfileStatus = async (userId: string, isActive: boolean): Promise<{ success: boolean; error?: string }> => {
     if (profile?.email !== 'uzzal@admin.com') {
-      showError("এই অ্যাকশন করার অনুমতি আপনার নেই।");
-      return { success: false, error: "অনুমতি নেই।" };
+      showError(t("common.permission_denied"));
+      return { success: false, error: t("common.permission_denied") };
     }
     const { error } = await supabase
       .from('profiles')
@@ -458,7 +460,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       showError(error.message);
       return { success: false, error: error.message };
     }
-    showSuccess(`ইউজার ${isActive ? 'সক্রিয়' : 'নিষ্ক্রিয়'} করা হয়েছে।`);
+    showSuccess(t("common.user_status_updated", { status: isActive ? t("common.active") : t("common.inactive") }));
     return { success: true };
   };
 

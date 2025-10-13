@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuth } from '@/context/AuthContext';
 import { showError } from '@/utils/toast';
+import { useTranslation } from '@/lib/translations'; // Import useTranslation
 
 const SignupPage: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -15,6 +16,7 @@ const SignupPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { signUp } = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation(); // Initialize useTranslation
 
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -22,7 +24,7 @@ const SignupPage: React.FC = () => {
     if (/^[a-zA-Z0-9_-]*$/.test(value)) {
       setUsername(value);
     } else {
-      showError("ইউজারনেম শুধুমাত্র ইংরেজি অক্ষর, সংখ্যা, আন্ডারস্কোর এবং হাইফেন দিয়ে গঠিত হতে পারে।");
+      showError(t("common.username_validation_error"));
     }
   };
 
@@ -32,7 +34,7 @@ const SignupPage: React.FC = () => {
     if (/^\d*$/.test(value)) {
       setMobileNumber(value);
     } else {
-      showError("মোবাইল নম্বর শুধুমাত্র সংখ্যা দিয়ে গঠিত হতে পারে।");
+      showError(t("common.mobile_number_validation_error"));
     }
   };
 
@@ -43,7 +45,7 @@ const SignupPage: React.FC = () => {
     if (success) {
       navigate('/login'); // Redirect to login after successful signup
     } else {
-      showError(error || "Signup failed.");
+      showError(error || t("common.signup_failed"));
     }
     setIsLoading(false);
   };
@@ -52,17 +54,17 @@ const SignupPage: React.FC = () => {
     <div className="flex items-center justify-center min-h-screen p-4">
       <Card className="w-full max-w-md bg-background/80 backdrop-blur-sm shadow-lg border-primary/20 dark:border-primary/50"> {/* Added bg-background/80 backdrop-blur-sm */}
         <CardHeader className="text-center">
-          <CardTitle className="text-3xl font-extrabold text-primary dark:text-primary-foreground">সাইন আপ</CardTitle>
-          <CardDescription className="text-muted-foreground">একটি নতুন অ্যাকাউন্ট তৈরি করতে আপনার তথ্য লিখুন।</CardDescription>
+          <CardTitle className="text-3xl font-extrabold text-primary dark:text-primary-foreground">{t("common.signup")}</CardTitle>
+          <CardDescription className="text-muted-foreground">{t("common.signup_desc")}</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="grid gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="username" className="font-bold">ইউজারনেম</Label>
+              <Label htmlFor="username" className="font-bold">{t("common.username")}</Label>
               <Input
                 id="username"
                 type="text"
-                placeholder="আপনার ইউজারনেম (শুধুমাত্র ইংরেজি)"
+                placeholder={t("common.enter_username_placeholder")}
                 required
                 value={username}
                 onChange={handleUsernameChange}
@@ -70,11 +72,11 @@ const SignupPage: React.FC = () => {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="email" className="font-bold">ইমেল</Label>
+              <Label htmlFor="email" className="font-bold">{t("common.email")}</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="m@example.com"
+                placeholder={t("common.enter_email_placeholder")}
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -82,11 +84,11 @@ const SignupPage: React.FC = () => {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="mobileNumber" className="font-bold">মোবাইল নম্বর</Label>
+              <Label htmlFor="mobileNumber" className="font-bold">{t("common.mobile_number")}</Label>
               <Input
                 id="mobileNumber"
                 type="tel"
-                placeholder="01XXXXXXXXX (শুধুমাত্র সংখ্যা)"
+                placeholder={t("common.enter_mobile_placeholder")}
                 required
                 value={mobileNumber}
                 onChange={handleMobileNumberChange}
@@ -94,10 +96,11 @@ const SignupPage: React.FC = () => {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="password" className="font-bold">পাসওয়ার্ড</Label>
+              <Label htmlFor="password" className="font-bold">{t("common.password")}</Label>
               <Input
                 id="password"
                 type="password"
+                placeholder={t("common.enter_password_placeholder")}
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -105,13 +108,13 @@ const SignupPage: React.FC = () => {
               />
             </div>
             <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-bold" disabled={isLoading}>
-              {isLoading ? 'সাইন আপ হচ্ছে...' : 'সাইন আপ করুন'}
+              {isLoading ? t("common.signup_in_progress") : t("common.signup")}
             </Button>
           </form>
           <div className="mt-4 text-center text-sm text-muted-foreground">
-            ইতিমধ্যে একটি অ্যাকাউন্ট আছে?{" "}
+            {t("common.already_have_account")}{" "}
             <Link to="/login" className="underline text-primary hover:text-primary/90 font-bold">
-              লগইন করুন
+              {t("common.login")}
             </Link>
           </div>
         </CardContent>

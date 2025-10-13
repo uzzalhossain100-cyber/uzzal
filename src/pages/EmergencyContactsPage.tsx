@@ -6,6 +6,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { ArrowLeft, PhoneCall, Siren, Ambulance, Hospital, MessageSquareText } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useTranslation } from '@/lib/translations'; // Import useTranslation
 
 interface EmergencyContact {
   service: string;
@@ -79,6 +80,7 @@ const emergencyContacts: EmergencyContact[] = [
 
 const EmergencyContactsPage: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation(); // Initialize useTranslation
 
   const handleBack = () => {
     navigate(-1); // Go back to the previous page (Index page showing categories)
@@ -92,9 +94,9 @@ const EmergencyContactsPage: React.FC = () => {
             <Button variant="ghost" onClick={handleBack} className="p-0 h-auto mr-2 text-primary dark:text-primary-foreground hover:bg-transparent hover:text-primary/80">
               <ArrowLeft className="h-6 w-6" />
             </Button>
-            জরুরি যোগাযোগ
+            {t("common.emergency_contacts_page_title")}
           </CardTitle>
-          <CardDescription className="text-muted-foreground hidden sm:block">বাংলাদেশের জরুরি প্রয়োজনে যোগাযোগের নম্বরসমূহ</CardDescription>
+          <CardDescription className="text-muted-foreground hidden sm:block">{t("common.emergency_contacts_desc")}</CardDescription>
         </CardHeader>
         <CardContent className="flex-1 p-0">
           <ScrollArea className="h-[calc(100vh-130px)] w-full p-4">
@@ -102,10 +104,10 @@ const EmergencyContactsPage: React.FC = () => {
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-[50px]"></TableHead>
-                  <TableHead className="font-bold">সেবা</TableHead>
-                  <TableHead className="font-bold">নম্বর</TableHead>
-                  <TableHead className="hidden md:table-cell font-bold">বিবরণ</TableHead>
-                  <TableHead className="text-right font-bold">কল করুন</TableHead>
+                  <TableHead className="font-bold">{t("common.service")}</TableHead>
+                  <TableHead className="font-bold">{t("common.number")}</TableHead>
+                  <TableHead className="hidden md:table-cell font-bold">{t("common.description")}</TableHead>
+                  <TableHead className="text-right font-bold">{t("common.call")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -126,7 +128,7 @@ const EmergencyContactsPage: React.FC = () => {
                           onClick={() => window.open(`tel:${contact.number}`)}
                           className="bg-primary text-primary-foreground hover:bg-primary/90 font-bold"
                         >
-                          <PhoneCall className="h-4 w-4 mr-2" /> কল
+                          <PhoneCall className="h-4 w-4 mr-2" /> {t("common.call_button")}
                         </Button>
                       </TableCell>
                     </TableRow>

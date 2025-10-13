@@ -8,6 +8,7 @@ import { useAuth } from '@/context/AuthContext';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge'; // Import Badge component
+import { useTranslation } from '@/lib/translations'; // Import useTranslation
 
 interface Profile {
   id: string;
@@ -24,6 +25,7 @@ const ActiveUsersPanel: React.FC = () => {
   const { profile: currentUserProfile, onlineUsers } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedUsers, setSelectedUsers] = useState<Profile[]>([]);
+  const { t } = useTranslation(); // Initialize useTranslation
 
   const filteredOnlineUsers = onlineUsers.filter(user =>
     user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -39,17 +41,17 @@ const ActiveUsersPanel: React.FC = () => {
   };
 
   const handleStartPrivateChat = (user: Profile) => {
-    toast.info(`'${user.username}' এর সাথে প্রাইভেট চ্যাট শুরু করার চেষ্টা হচ্ছে। (এই ফিচারটি এখনো ডেভেলপ করা হয়নি)`);
+    toast.info(t("common.start_private_chat", { username: user.username }));
     // Future: navigate to private chat with this user
   };
 
   const handleStartGroupChat = () => {
     if (selectedUsers.length < 2) {
-      toast.error("গ্রুপ চ্যাট শুরু করতে কমপক্ষে দুইজন ইউজার নির্বাচন করুন।");
+      toast.error(t("common.select_at_least_two_users"));
       return;
     }
     const userNames = selectedUsers.map(u => u.username).join(', ');
-    toast.info(`${userNames} এর সাথে গ্রুপ চ্যাট শুরু করার চেষ্টা হচ্ছে। (এই ফিচারটি এখনো ডেভেলপ করা হয়নি)`);
+    toast.info(t("common.start_group_chat", { userNames }));
     // Future: navigate to group chat with selected users
     setSelectedUsers([]); // Clear selection after attempting to start chat
   };
@@ -58,9 +60,9 @@ const ActiveUsersPanel: React.FC = () => {
     <Card className="w-full flex flex-col h-full bg-background/80 backdrop-blur-sm shadow-lg border-primary/20 dark:border-primary/50"> {/* Added bg-background/80 backdrop-blur-sm */}
       <CardHeader className="pb-4 border-b">
         <CardTitle className="text-xl font-extrabold text-primary dark:text-primary-foreground flex items-center">
-          <Users className="h-5 w-5 mr-2" /> সক্রিয় ইউজার
+          <Users className="h-5 w-5 mr-2" /> {t("common.active_users_page_title")}
         </CardTitle>
-        <CardDescription className="text-muted-foreground">অনলাইন ইউজারদের তালিকা</CardDescription>
+        <CardDescription className="text-muted-foreground">{t("common.online_users_list")}</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 p-0 flex flex-col">
         <div className="p-4 border-b">
@@ -68,7 +70,7 @@ const ActiveUsersPanel: React.FC = () => {
             <SearchIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               type="text"
-              placeholder="ইউজারনেম বা ইমেল দিয়ে সার্চ করুন..."
+              placeholder={t("common.search_users_placeholder")}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full rounded-lg bg-background pl-8 border-primary/30 focus-visible:ring-primary"
@@ -78,7 +80,7 @@ const ActiveUsersPanel: React.FC = () => {
         <ScrollArea className="flex-1 w-full p-4">
           <div className="grid gap-3">
             {filteredOnlineUsers.length === 0 ? (
-              <div className="text-center text-muted-foreground p-4 font-bold">কোনো সক্রিয় ইউজার পাওয়া যায়নি।</div>
+              <div className="text-center text-muted-foreground p-4 font-bold">{t("common.no_active_users_message")}</div>
             ) : (
               filteredOnlineUsers.map((user) => (
                 <div
@@ -95,7 +97,7 @@ const ActiveUsersPanel: React.FC = () => {
                     <div>
                       <p className="font-extrabold text-foreground flex items-center">
                         {user.username}
-                        {user.is_guest && <span className="ml-2 text-xs text-muted-foreground font-bold">(গেস্ট)</span>}
+                        {user.is_guest && <span className="ml-2 text-xs text-muted-foreground font-bold">{t("common.guest_label")}</span>}
                       </p>
                       <p className="text-xs text-muted-foreground">{user.email}</p>
                     </div>
@@ -117,7 +119,7 @@ const ActiveUsersPanel: React.FC = () => {
         </ScrollArea>
         {selectedUsers.length > 0 && (
           <div className="p-4 border-t flex flex-col gap-2">
-            <p className="text-sm text-muted-foreground font-bold">নির্বাচিত ইউজার ({selectedUsers.length}):</p>
+            <p className="text-sm text-muted-foreground font-bold">{t("common.selected_users_count", { count: selectedUsers.length })}</p>
             <div className="flex flex-wrap gap-2">
               {selectedUsers.map(user => (
                 <Badge key={user.id} variant="secondary" className="flex items-center gap-1 font-bold">
@@ -138,7 +140,7 @@ const ActiveUsersPanel: React.FC = () => {
               className="w-full bg-primary text-primary-foreground hover:bg-primary/90 mt-2 font-bold"
               disabled={selectedUsers.length < 2}
             >
-              <Group className="h-4 w-4 mr-2" /> গ্রুপ চ্যাট শুরু করুন
+              <Group className="h-4 w-4 mr-2" /> {t("common.start_group_chat_btn")}
             </Button>
           </div>
         )}

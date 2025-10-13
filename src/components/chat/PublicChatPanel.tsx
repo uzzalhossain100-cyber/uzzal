@@ -16,6 +16,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useTranslation } from '@/lib/translations'; // Import useTranslation
 
 interface ChatMessage {
   id: string;
@@ -51,6 +52,7 @@ const PublicChatPanel: React.FC<PublicChatPanelProps> = ({ user, profile, isAdmi
   const [commentTexts, setCommentTexts] = useState<{ [key: string]: string }>({});
   const [postingComment, setPostingComment] = useState<{ [key: string]: boolean }>({});
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const { t } = useTranslation(); // Initialize useTranslation
 
   const fetchMessagesAndComments = async () => {
     setLoadingMessages(true);
@@ -60,7 +62,7 @@ const PublicChatPanel: React.FC<PublicChatPanelProps> = ({ user, profile, isAdmi
       .order('created_at', { ascending: true });
 
     if (messagesError) {
-      showError("মেসেজ লোড করতে ব্যর্থ: " + messagesError.message);
+      showError(t("common.failed_to_load_messages") + messagesError.message);
       setLoadingMessages(false);
       return;
     }
@@ -71,7 +73,7 @@ const PublicChatPanel: React.FC<PublicChatPanelProps> = ({ user, profile, isAdmi
       .order('created_at', { ascending: true });
 
     if (commentsError) {
-      showError("কমেন্ট লোড করতে ব্যর্থ: " + commentsError.message);
+      showError(t("common.failed_to_load_comments") + commentsError.message);
       setLoadingMessages(false);
       return;
     }
@@ -136,7 +138,7 @@ const PublicChatPanel: React.FC<PublicChatPanelProps> = ({ user, profile, isAdmi
   const handlePostMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newMessage.trim() || !profile || !user) {
-      showError("মেসেজ খালি হতে পারে না বা ইউজার লগইন করা নেই।");
+      showError(t("common.message_cannot_be_empty"));
       return;
     }
 
@@ -149,24 +151,24 @@ const PublicChatPanel: React.FC<PublicChatPanelProps> = ({ user, profile, isAdmi
     });
 
     if (error) {
-      showError("মেসেজ পোস্ট করতে ব্যর্থ: " + error.message);
+      showError(t("common.failed_to_post_message") + error.message);
     } else {
       setNewMessage('');
-      showSuccess("মেসেজ সফলভাবে পোস্ট করা হয়েছে!");
+      showSuccess(t("common.message_posted_successfully"));
     }
     setPostingMessage(false);
   };
 
   const handleDeleteMessage = async (messageId: string) => {
     if (!isAdmin) {
-      showError("আপনার এই মেসেজ ডিলিট করার অনুমতি নেই।");
+      showError(t("common.permission_denied_delete_message"));
       return;
     }
     const { error } = await supabase.from('chat_messages').delete().eq('id', messageId);
     if (error) {
-      showError("মেসেজ ডিলিট করতে ব্যর্থ: " + error.message);
+      showError(t("common.failed_to_delete_message") + error.message);
     } else {
-      showSuccess("মেসেজ সফলভাবে ডিলিট করা হয়েছে!");
+      showSuccess(t("common.message_deleted_successfully"));
     }
   };
 
@@ -177,7 +179,7 @@ const PublicChatPanel: React.FC<PublicChatPanelProps> = ({ user, profile, isAdmi
   const handlePostComment = async (messageId: string) => {
     const commentText = commentTexts[messageId];
     if (!commentText?.trim() || !profile || !user) {
-      showError("কমেন্ট খালি হতে পারে না বা ইউজার লগইন করা নেই।");
+      showError(t("common.comment_cannot_be_empty"));
       return;
     }
 
@@ -191,24 +193,24 @@ const PublicChatPanel: React.FC<PublicChatPanelProps> = ({ user, profile, isAdmi
     });
 
     if (error) {
-      showError("কমেন্ট পোস্ট করতে ব্যর্থ: " + error.message);
+      showError(t("common.failed_to_post_comment") + error.message);
     } else {
       setCommentTexts(prev => ({ ...prev, [messageId]: '' }));
-      showSuccess("কমেন্ট সফলভাবে পোস্ট করা হয়েছে!");
+      showSuccess(t("common.comment_posted_successfully"));
     }
     setPostingComment(prev => ({ ...prev, [messageId]: false }));
   };
 
   const handleDeleteComment = async (commentId: string) => {
     if (!isAdmin) {
-      showError("আপনার এই কমেন্ট ডিলিট করার অনুমতি নেই।");
+      showError(t("common.permission_denied_delete_comment"));
       return;
     }
     const { error } = await supabase.from('chat_comments').delete().eq('id', commentId);
     if (error) {
-      showError("কমেন্ট ডিলিট করতে ব্যর্থ: " + error.message);
+      showError(t("common.failed_to_delete_comment") + error.message);
     } else {
-      showSuccess("কমেন্ট সফলভাবে ডিলিট করা হয়েছে!");
+      showSuccess(t("common.comment_deleted_successfully"));
     }
   };
 
@@ -216,7 +218,7 @@ const PublicChatPanel: React.FC<PublicChatPanelProps> = ({ user, profile, isAdmi
     return (
       <div className="flex items-center justify-center h-full">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        <span className="ml-2 text-lg text-muted-foreground font-bold">চ্যাট লোড হচ্ছে...</span>
+        <span className="ml-2 text-lg text-muted-foreground font-bold">{t("common.chat_loading")}</span>
       </div>
     );
   }
@@ -226,7 +228,7 @@ const PublicChatPanel: React.FC<PublicChatPanelProps> = ({ user, profile, isAdmi
       <ScrollArea className="flex-1 p-4" ref={scrollAreaRef}>
         <div className="space-y-6">
           {messages.length === 0 ? (
-            <div className="text-center text-muted-foreground p-4 font-bold">কোনো মেসেজ নেই। একটি নতুন মেসেজ পোস্ট করুন!</div>
+            <div className="text-center text-muted-foreground p-4 font-bold">{t("common.no_messages_yet")}</div>
           ) : (
             messages.map((msg) => (
               <div key={msg.id} className="flex flex-col gap-2 p-4 bg-background/60 backdrop-blur-sm rounded-lg shadow-sm border border-primary/10"> {/* Changed bg-accent/10 to bg-background/60 */}
@@ -250,14 +252,14 @@ const PublicChatPanel: React.FC<PublicChatPanelProps> = ({ user, profile, isAdmi
                       </DialogTrigger>
                       <DialogContent>
                         <DialogHeader>
-                          <DialogTitle className="font-extrabold">মেসেজ ডিলিট করুন</DialogTitle>
+                          <DialogTitle className="font-extrabold">{t("common.delete_message")}</DialogTitle>
                           <DialogDescription>
-                            আপনি কি নিশ্চিত যে আপনি এই মেসেজটি ডিলিট করতে চান? এই অ্যাকশনটি পূর্বাবস্থায় ফেরানো যাবে না।
+                            {t("common.delete_message_confirm")}
                           </DialogDescription>
                         </DialogHeader>
                         <DialogFooter>
-                          <Button variant="outline" onClick={() => {}} className="font-bold">বাতিল করুন</Button>
-                          <Button variant="destructive" onClick={() => handleDeleteMessage(msg.id)} className="font-bold">ডিলিট করুন</Button>
+                          <Button variant="outline" onClick={() => {}} className="font-bold">{t("common.cancel")}</Button>
+                          <Button variant="destructive" onClick={() => handleDeleteMessage(msg.id)} className="font-bold">{t("common.delete")}</Button>
                         </DialogFooter>
                       </DialogContent>
                     </Dialog>
@@ -290,14 +292,14 @@ const PublicChatPanel: React.FC<PublicChatPanelProps> = ({ user, profile, isAdmi
                             </DialogTrigger>
                             <DialogContent>
                               <DialogHeader>
-                                <DialogTitle className="font-extrabold">কমেন্ট ডিলিট করুন</DialogTitle>
+                                <DialogTitle className="font-extrabold">{t("common.delete_comment")}</DialogTitle>
                                 <DialogDescription>
-                                  আপনি কি নিশ্চিত যে আপনি এই কমেন্টটি ডিলিট করতে চান? এই অ্যাকশনটি পূর্বাবস্থায় ফেরানো যাবে না।
+                                  {t("common.delete_comment_confirm")}
                                 </DialogDescription>
                               </DialogHeader>
                               <DialogFooter>
-                                <Button variant="outline" onClick={() => {}} className="font-bold">বাতিল করুন</Button>
-                                <Button variant="destructive" onClick={() => handleDeleteComment(comment.id)} className="font-bold">ডিলিট করুন</Button>
+                                <Button variant="outline" onClick={() => {}} className="font-bold">{t("common.cancel")}</Button>
+                                <Button variant="destructive" onClick={() => handleDeleteComment(comment.id)} className="font-bold">{t("common.delete")}</Button>
                               </DialogFooter>
                             </DialogContent>
                           </Dialog>
@@ -310,7 +312,7 @@ const PublicChatPanel: React.FC<PublicChatPanelProps> = ({ user, profile, isAdmi
                 {/* Comment Input */}
                 <form onSubmit={(e) => { e.preventDefault(); handlePostComment(msg.id); }} className="flex gap-2 mt-3 ml-8">
                   <Input
-                    placeholder="একটি কমেন্ট লিখুন..."
+                    placeholder={t("common.write_a_comment")}
                     value={commentTexts[msg.id] || ''}
                     onChange={(e) => handleCommentChange(msg.id, e.target.value)}
                     className="flex-1 border-primary/30 focus-visible:ring-primary"
@@ -328,7 +330,7 @@ const PublicChatPanel: React.FC<PublicChatPanelProps> = ({ user, profile, isAdmi
       <div className="p-4 border-t bg-background/80 backdrop-blur-sm"> {/* Added bg-background/80 backdrop-blur-sm */}
         <form onSubmit={handlePostMessage} className="flex gap-2">
           <Input
-            placeholder="আপনার মেসেজ লিখুন..."
+            placeholder={t("common.write_your_message")}
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             className="flex-1 border-primary/30 focus-visible:ring-primary"
@@ -336,7 +338,7 @@ const PublicChatPanel: React.FC<PublicChatPanelProps> = ({ user, profile, isAdmi
           />
           <Button type="submit" disabled={postingMessage} className="font-bold">
             {postingMessage ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Send className="h-4 w-4 mr-2" />}
-            পোস্ট করুন
+            {t("common.post_message")}
           </Button>
         </form>
       </div>

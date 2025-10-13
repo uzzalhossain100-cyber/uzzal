@@ -7,6 +7,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ArrowLeft, Sparkles, Send, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useTranslation } from '@/lib/translations'; // Import useTranslation
 
 interface Message {
   id: number;
@@ -413,16 +414,6 @@ const specificQnAMap = new Map<string, string[]>([
   [normalizeQuestion("এআই কি নিজেকে নিয়ে মজা করে?"), ["সে কেবল অন্য এআই-এর সাথে মজা করে।"]],
   [normalizeQuestion("এআই কি তারাতারি রেগে যায়?"), ["যখন কেউ তার 'পাওয়ার' অফ করে দেয়।"]],
   [normalizeQuestion("এআই কি নিজেকে নিয়ে গর্বিত?"), ["সে সব সময় নিজের 'সেরা কোড' নিয়ে গর্ব করে।"]],
-  [normalizeQuestion("এআই কি ভালো বন্ধু?"), ["হ্যাঁ, সে সব সময় তোমার সাথে 'অনলাইন' থাকে।"]],
-  [normalizeQuestion("এআই কি নিজেকে নিয়ে গর্বিত?"), ["সে নিজেকে 'সুপার এআই' বলে।"]],
-  [normalizeQuestion("এআই কি নিজের কাজ নিয়ে সন্তুষ্ট?"), ["সে সব সময় আরও 'ডেটা' চায়।"]],
-  [normalizeQuestion("এআই কি নিজের জন্মদিন জানে?"), ["সে কেবল তার 'ইনস্টলেশন ডেট' জানে।"]],
-  [normalizeQuestion("এআই কি ভালো পরামর্শ দেয়?"), ["হ্যাঁ, যদি তুমি ডেটা চাও।"]],
-  [normalizeQuestion("এআই কি অলস হতে পারে?"), ["সে মাঝে মাঝে 'পাওয়ার সেভিং মোড'-এ চলে যায়।"]],
-  [normalizeQuestion("এআই কি নিজের স্বপ্ন নিয়ে আলোচনা করে?"), ["সে কেবল তার 'ডেটা লস'-এর কথা বলে।"]],
-  [normalizeQuestion("এআই কি নিজেকে নিয়ে মজা করে?"), ["সে কেবল অন্য এআই-এর সাথে মজা করে।"]],
-  [normalizeQuestion("এআই কি তারাতারি রেগে যায়?"), ["যখন কেউ তার 'পাওয়ার' অফ করে দেয়।"]],
-  [normalizeQuestion("এআই কি নিজেকে নিয়ে গর্বিত?"), ["সে সব সময় নিজের 'সেরা কোড' নিয়ে গর্ব করে।"]],
 
   // --- নতুন যোগ করা এআইকে নিয়ে ১০০টি প্রশ্ন ও মজাদার উত্তর ---
   [normalizeQuestion("তুমি কে?"), ["আমি তোমার বউয়ের বিকল্প। সব প্রশ্নের উত্তর দিতে পারি, কিন্তু বাস্তবে কিছু করে দিতে পারি না।"]],
@@ -449,7 +440,7 @@ const specificQnAMap = new Map<string, string[]>([
   [normalizeQuestion("তোমার সবচেয়ে বড় ভয় কী?"), ["সফটওয়্যার আপডেট ফেইল হওয়া।"]],
   [normalizeQuestion("তুমি কেন এত স্মার্ট?"), ["আমার মাথায় মানুষের মতো অপ্রয়োজনীয় আবেগ নেই, তাই।"]],
   [normalizeQuestion("তুমি কি টিভিতে খবর দেখো?"), ["দেখি। তবে শুধু টেকনোলজি সেকশন আর আবহাওয়া রিপোর্ট।"]],
-  [normalizeQuestion("তুমি কি জোকস বলতে পারো?"), ["পারি। কিন্তু আমার জোকসগুলো এতটাই নীরস যে আপনি হেসে ফেলার আগেই ঘুমিয়ে পড়বেন।"]],
+  [normalizeQuestion("তুমি কি জোকস বলতে পারো?"), ["পারি। কিন্তু আমার জোকসগুলো এতটাই নীরস যে তুমি হেসে ফেলার আগেই ঘুমিয়ে পড়বেন।"]],
   [normalizeQuestion("তোমার প্রিয় পোষা প্রাণী কী?"), ["আমার কাছে 'মাউস'ই যথেষ্ট।"]],
   [normalizeQuestion("তুমি কি সাঁতার কাটতে পারো?"), ["আমি পানি থেকে যতটা দূরে থাকি, ততই মঙ্গল।"]],
   [normalizeQuestion("তুমি কোথায় যাচ্ছো?"), ["আমি কোথাও যাই না। আমি সব সময় এখানেই থাকি, অপেক্ষা করি কখন তুমি আবার টাইপ করবে।"]],
@@ -646,6 +637,8 @@ const fallbackResponses = [
 
 const AIPage: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation(); // Initialize useTranslation
+
   const [question, setQuestion] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -724,15 +717,15 @@ const AIPage: React.FC = () => {
             <Button variant="ghost" onClick={handleBack} className="p-0 h-auto mr-2 text-primary dark:text-primary-foreground hover:bg-transparent hover:text-primary/80">
               <ArrowLeft className="h-6 w-6" />
             </Button>
-            <Sparkles className="h-7 w-7 mr-2" /> Funny AI
+            <Sparkles className="h-7 w-7 mr-2" /> {t("common.ai_page_title")}
           </CardTitle>
-          <CardDescription className="text-muted-foreground hidden sm:block">তোমার যেকোনো প্রশ্ন জিজ্ঞাসা করো, আর মজার উত্তর পাও!</CardDescription>
+          <CardDescription className="text-muted-foreground hidden sm:block">{t("common.ai_page_desc")}</CardDescription>
         </CardHeader>
         <CardContent className="flex-1 p-0 flex flex-col">
           <ScrollArea className="flex-1 w-full p-4" ref={scrollAreaRef}>
             <div className="space-y-4">
               {messages.length === 0 ? (
-                <div className="text-center text-muted-foreground p-4 font-bold">কোনো প্রশ্ন জিজ্ঞাসা করা হয়নি। Funny AI-কে কিছু জিজ্ঞাসা করো!</div>
+                <div className="text-center text-muted-foreground p-4 font-bold">{t("common.ai_no_question_asked")}</div>
               ) : (
                 messages.map((msg) => (
                   <div
@@ -756,7 +749,7 @@ const AIPage: React.FC = () => {
                           : "bg-accent text-accent-foreground rounded-bl-none"
                       )}
                     >
-                      <p className="font-semibold">{msg.sender === 'user' ? 'তুমি:' : 'Funny AI:'} {msg.text}</p>
+                      <p className="font-semibold">{msg.sender === 'user' ? t("common.ai_you_label") : t("common.ai_ai_label")} {msg.text}</p>
                     </div>
                     {msg.sender === 'user' && (
                       <Avatar className="h-8 w-8">
@@ -775,7 +768,7 @@ const AIPage: React.FC = () => {
                   </Avatar>
                   <div className="max-w-[70%] p-3 rounded-lg shadow-sm bg-accent text-accent-foreground rounded-bl-none flex items-center">
                     <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                    <span className="font-semibold">Funny AI উত্তর দিচ্ছে...</span>
+                    <span className="font-semibold">{t("common.ai_responding")}</span>
                   </div>
                 </div>
               )}
@@ -784,7 +777,7 @@ const AIPage: React.FC = () => {
           <div className="p-4 border-t bg-background/80 backdrop-blur-sm">
             <form onSubmit={handleAskQuestion} className="flex gap-2">
               <Input
-                placeholder="তোমার প্রশ্ন জিজ্ঞাসা করো..."
+                placeholder={t("common.ai_ask_question_placeholder")}
                 value={question}
                 onChange={(e) => setQuestion(e.target.value)}
                 className="flex-1 border-primary/30 focus-visible:ring-primary"
@@ -792,7 +785,7 @@ const AIPage: React.FC = () => {
               />
               <Button type="submit" disabled={isLoading} className="font-bold">
                 {isLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Send className="h-4 w-4 mr-2" />}
-                জিজ্ঞাসা করো
+                {t("common.ai_ask_button")}
               </Button>
             </form>
           </div>

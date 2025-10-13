@@ -1,6 +1,7 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { useTranslation } from '@/lib/translations'; // Import useTranslation
 
 interface DashboardCardProps {
   title: string;
@@ -19,10 +20,12 @@ export function DashboardCard({
   icon: Icon,
   className,
 }: DashboardCardProps) {
+  const { t } = useTranslation(); // Initialize useTranslation
+
   return (
     <Card className={cn("flex-1 bg-background/80 backdrop-blur-sm", className)}> {/* Added bg-background/80 backdrop-blur-sm */}
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-extrabold">{title}</CardTitle>
+        <CardTitle className="text-sm font-extrabold">{t(title)}</CardTitle> {/* Translate title */}
         {Icon && <Icon className="h-4 w-4 text-muted-foreground" />}
       </CardHeader>
       <CardContent>

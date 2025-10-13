@@ -7,6 +7,8 @@ import { Users, Circle, MessageSquareText, Search as SearchIcon, Loader2, User a
 import { useAuth } from '@/context/AuthContext';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
+import { Badge } from '@/components/ui/badge'; // Import Badge component
+import { useTranslation } from '@/lib/translations'; // Import useTranslation
 
 interface Profile {
   id: string;
@@ -25,6 +27,7 @@ const ActiveUsersPage: React.FC = () => {
   const [filteredUsers, setFilteredUsers] = useState<Profile[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const { t } = useTranslation(); // Initialize useTranslation
 
   useEffect(() => {
     const fetchAllUsers = async () => {
@@ -81,7 +84,7 @@ const ActiveUsersPage: React.FC = () => {
   }, [allUsers, onlineUsers, searchQuery, currentUserProfile]);
 
   const handleChatClick = (user: Profile) => {
-    toast.info(`'${user.username}' এর সাথে চ্যাট শুরু করার চেষ্টা হচ্ছে। (এই ফিচারটি এখনো ডেভেলপ করা হয়নি)`);
+    toast.info(t("common.start_private_chat", { username: user.username }));
     // Here you would navigate to a chat page or open a chat modal
     // Example: navigate(`/chat/${user.id}`);
   };
@@ -90,7 +93,7 @@ const ActiveUsersPage: React.FC = () => {
     return (
       <div className="flex items-center justify-center min-h-[calc(100vh-100px)]">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        <span className="ml-2 text-lg text-muted-foreground font-bold">ইউজার ডেটা লোড হচ্ছে...</span>
+        <span className="ml-2 text-lg text-muted-foreground font-bold">{t("common.user_data_loading")}</span>
       </div>
     );
   }
@@ -100,9 +103,9 @@ const ActiveUsersPage: React.FC = () => {
       <Card className="w-full flex flex-col flex-1 bg-background/80 backdrop-blur-sm shadow-lg border-primary/20 dark:border-primary/50"> {/* Added bg-background/80 backdrop-blur-sm */}
         <CardHeader className="flex flex-row items-center justify-between pb-4 border-b">
           <CardTitle className="text-3xl font-extrabold text-primary dark:text-primary-foreground flex items-center">
-            <Users className="h-7 w-7 mr-2" /> সক্রিয় ইউজার
+            <Users className="h-7 w-7 mr-2" /> {t("common.active_users_page_title")}
           </CardTitle>
-          <CardDescription className="text-muted-foreground hidden sm:block">অনলাইন এবং নিবন্ধিত ইউজারদের তালিকা</CardDescription>
+          <CardDescription className="text-muted-foreground hidden sm:block">{t("common.active_users_desc")}</CardDescription>
         </CardHeader>
         <CardContent className="flex-1 p-0">
           <div className="p-4 border-b">
@@ -110,7 +113,7 @@ const ActiveUsersPage: React.FC = () => {
               <SearchIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
                 type="text"
-                placeholder="ইউজারনেম বা ইমেল দিয়ে সার্চ করুন..."
+                placeholder={t("common.search_users_placeholder")}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full rounded-lg bg-background pl-8 border-primary/30 focus-visible:ring-primary"
@@ -120,7 +123,7 @@ const ActiveUsersPage: React.FC = () => {
           <ScrollArea className="h-[calc(100vh-200px)] w-full p-4">
             <div className="grid gap-4">
               {filteredUsers.length === 0 ? (
-                <div className="text-center text-muted-foreground p-4 font-bold">কোনো ইউজার পাওয়া যায়নি।</div>
+                <div className="text-center text-muted-foreground p-4 font-bold">{t("common.no_users_found")}</div>
               ) : (
                 filteredUsers.map((user) => (
                   <Card key={user.id} className="flex items-center justify-between p-4 shadow-sm border-primary/10 dark:border-primary/20 bg-background/60 backdrop-blur-sm"> {/* Added bg-background/60 backdrop-blur-sm */}
@@ -134,7 +137,7 @@ const ActiveUsersPage: React.FC = () => {
                       <div>
                         <p className="font-extrabold text-foreground flex items-center">
                           {user.username}
-                          {user.is_guest && <span className="ml-2 text-xs text-muted-foreground font-bold">(গেস্ট)</span>}
+                          {user.is_guest && <span className="ml-2 text-xs text-muted-foreground font-bold">{t("common.guest_label")}</span>}
                         </p>
                         <p className="text-sm text-muted-foreground">{user.email}</p>
                       </div>
@@ -146,7 +149,7 @@ const ActiveUsersPage: React.FC = () => {
                         onClick={() => handleChatClick(user)}
                         className="bg-primary text-primary-foreground hover:bg-primary/90 font-bold"
                       >
-                        <MessageSquareText className="h-4 w-4 mr-2" /> চ্যাট
+                        <MessageSquareText className="h-4 w-4 mr-2" /> {t("common.chat_button")}
                       </Button>
                     )}
                   </Card>

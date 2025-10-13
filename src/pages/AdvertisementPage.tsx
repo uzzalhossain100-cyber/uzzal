@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { showError, showSuccess } from '@/utils/toast';
 import { supabase } from '@/lib/supabaseClient';
 import { v4 as uuidv4 } from 'uuid'; // For unique file names
+import { useTranslation } from '@/lib/translations'; // Import useTranslation
 
 interface Advertisement {
   id: string;
@@ -27,19 +28,20 @@ const AdvertisementPage: React.FC = () => {
   const [loadingAds, setLoadingAds] = useState(true);
   const [uploading, setUploading] = useState<{ [key: string]: boolean }>({}); // Track upload state per slot
   const fileInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
+  const { t } = useTranslation(); // Initialize useTranslation
 
   const isAdmin = profile?.email === 'uzzal@admin.com';
 
   useEffect(() => {
     if (!authLoading) {
       if (!isAdmin) {
-        showError("আপনার এই পেজটি অ্যাক্সেস করার অনুমতি নেই।");
+        showError(t("common.no_permission_access_page"));
         navigate('/');
         return;
       }
       fetchAdvertisements();
     }
-  }, [authLoading, isAdmin, navigate]);
+  }, [authLoading, isAdmin, navigate, t]);
 
   const fetchAdvertisements = async () => {
     setLoadingAds(true);
@@ -50,7 +52,7 @@ const AdvertisementPage: React.FC = () => {
       .order('col_index', { ascending: true });
 
     if (error) {
-      showError("বিজ্ঞাপন লোড করতে ব্যর্থ: " + error.message);
+      showError(t("common.failed_to_load_ads") + error.message);
     } else {
       setAdvertisements(data || []);
       console.log("Fetched Advertisements:", data); // Debugging: Log fetched data
@@ -63,12 +65,12 @@ const AdvertisementPage: React.FC = () => {
     if (!file) return;
 
     if (!file.type.startsWith('image/jpeg') && !file.type.startsWith('image/png')) {
-      showError("শুধুমাত্র JPG বা PNG ছবি আপলোড করা যাবে।");
+      showError(t("common.only_jpg_png"));
       return;
     }
 
     if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
-      showError(`ফাইলের আকার ${MAX_FILE_SIZE_MB}MB এর বেশি হতে পারবে না।`);
+      showError(t("common.file_size_limit", { size: MAX_FILE_SIZE_MB }));
       return;
     }
 
@@ -87,7 +89,7 @@ const AdvertisementPage: React.FC = () => {
       });
 
     if (uploadError) {
-      showError("ছবি আপলোড করতে ব্যর্থ: " + uploadError.message);
+      showError(t("common.failed_to_upload_image") + uploadError.message);
       setUploading(prev => ({ ...prev, [slotKey]: false }));
       return;
     }
@@ -116,9 +118,9 @@ const AdvertisementPage: React.FC = () => {
         .eq('id', existingAd.id);
 
       if (updateError) {
-        showError("বিজ্ঞাপন আপডেট করতে ব্যর্থ: " + updateError.message);
+        showError(t("common.failed_to_update_ad") + updateError.message);
       } else {
-        showSuccess("বিজ্ঞাপন সফলভাবে আপডেট করা হয়েছে!");
+        showSuccess(t("common.ad_updated_successfully"));
         await fetchAdvertisements(); // Await to ensure state is updated before next render
       }
     } else {
@@ -130,9 +132,9 @@ const AdvertisementPage: React.FC = () => {
       });
 
       if (insertError) {
-        showError("বিজ্ঞাপন যোগ করতে ব্যর্থ: " + insertError.message);
+        showError(t("common.failed_to_add_ad") + insertError.message);
       } else {
-        showSuccess("বিজ্ঞাপন সফলভাবে যোগ করা হয়েছে!");
+        showSuccess(t("common.ad_added_successfully"));
         await fetchAdvertisements(); // Await to ensure state is updated before next render
       }
     }
@@ -144,12 +146,12 @@ const AdvertisementPage: React.FC = () => {
   };
 
   const handleRemoveImage = async (adId: string, imageUrl: string) => {
-    const confirmDelete = window.confirm("আপনি কি নিশ্চিত যে এই বিজ্ঞাপনটি ডিলিট করতে চান?");
+    const confirmDelete = window.confirm(t("common.confirm_delete_ad"));
     if (!confirmDelete) return;
 
     const filePath = imageUrl.split('advertisement-images/')[1];
     if (!filePath) {
-      showError("ফাইলের পাথ খুঁজে পাওয়া যায়নি।");
+      showError(t("common.file_path_not_found"));
       return;
     }
 
@@ -159,7 +161,7 @@ const AdvertisementPage: React.FC = () => {
       .remove([filePath]);
 
     if (storageError) {
-      showError("ছবি স্টোরেজ থেকে ডিলিট করতে ব্যর্থ: " + storageError.message);
+      showError(t("common.failed_to_delete_image_storage") + storageError.message);
       return;
     }
 
@@ -170,9 +172,9 @@ const AdvertisementPage: React.FC = () => {
       .eq('id', adId);
 
     if (dbError) {
-      showError("বিজ্ঞাপন ডিলিট করতে ব্যর্থ: " + dbError.message);
+      showError(t("common.failed_to_delete_ad") + dbError.message);
     } else {
-      showSuccess("বিজ্ঞাপন সফলভাবে ডিলিট করা হয়েছে!");
+      showSuccess(t("common.ad_deleted_successfully"));
       fetchAdvertisements();
     }
   };
@@ -211,7 +213,7 @@ const AdvertisementPage: React.FC = () => {
     return (
       <div className="flex items-center justify-center min-h-[calc(100vh-100px)]">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        <span className="ml-2 text-lg text-muted-foreground font-bold">বিজ্ঞাপন লোড হচ্ছে...</span>
+        <span className="ml-2 text-lg text-muted-foreground font-bold">{t("common.loading_ads")}</span>
       </div>
     );
   }
@@ -225,16 +227,16 @@ const AdvertisementPage: React.FC = () => {
       <Card className="w-full flex flex-col flex-1 bg-background/80 backdrop-blur-sm shadow-lg border-primary/20 dark:border-primary/50">
         <CardHeader className="flex flex-row items-center justify-between pb-4 border-b">
           <CardTitle className="text-3xl font-extrabold text-primary dark:text-primary-foreground flex items-center">
-            <ImageIcon className="h-7 w-7 mr-2" /> বিজ্ঞাপন ম্যানেজমেন্ট
+            <ImageIcon className="h-7 w-7 mr-2" /> {t("common.advertisement_management")}
           </CardTitle>
-          <CardDescription className="text-muted-foreground hidden sm:block">বিজ্ঞাপন ছবি যোগ, আপডেট বা ডিলিট করুন</CardDescription>
+          <CardDescription className="text-muted-foreground hidden sm:block">{t("common.advertisement_management_desc")}</CardDescription>
         </CardHeader>
         <CardContent className="flex-1 p-0">
           <ScrollArea className="h-[calc(100vh-130px)] w-full p-4">
             {rows.map((row, rowIndex) => (
               <div key={rowIndex} className="mb-6 border p-4 rounded-lg bg-background/60 backdrop-blur-sm border-primary/10">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-extrabold text-foreground">সারি {rowIndex + 1}</h3>
+                  <h3 className="text-lg font-extrabold text-foreground">{t("common.row")} {rowIndex + 1}</h3>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                   {Array.from({ length: ADS_PER_ROW }).map((_, colIndex) => {
@@ -265,7 +267,7 @@ const AdvertisementPage: React.FC = () => {
                               <ImageIcon className="h-8 w-8 mb-2" />
                             )}
                             <span className="text-sm text-center font-bold">
-                              {isUploading ? "আপলোড হচ্ছে..." : "ছবি আপলোড করুন (JPG/PNG)"}
+                              {isUploading ? t("common.uploading_image") : t("common.upload_image_prompt")}
                             </span>
                             <input
                               type="file"
@@ -285,7 +287,7 @@ const AdvertisementPage: React.FC = () => {
             ))}
             <div className="flex justify-center mt-6">
               <Button onClick={handleAddRow} className="bg-primary text-primary-foreground hover:bg-primary/90 font-bold">
-                <Plus className="h-4 w-4 mr-2" /> নতুন সারি যোগ করুন
+                <Plus className="h-4 w-4 mr-2" /> {t("common.new_row_button")}
               </Button>
             </div>
           </ScrollArea>

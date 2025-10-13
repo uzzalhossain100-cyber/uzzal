@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { showError } from '@/utils/toast';
 import { supabase } from '@/lib/supabaseClient';
 import { format, startOfDay, endOfDay, startOfMonth, endOfMonth, startOfYear, endOfYear } from 'date-fns'; // Added date-fns functions
+import { useTranslation } from '@/lib/translations'; // Import useTranslation
 
 interface Profile {
   id: string;
@@ -47,18 +48,19 @@ const UserManagementPage: React.FC = () => {
   const [loadingVisits, setLoadingVisits] = useState(true);
   const [updatingUserId, setUpdatingUserId] = useState<string | null>(null);
   const navigate = useNavigate();
+  const { t } = useTranslation(); // Initialize useTranslation
 
   useEffect(() => {
     if (!authLoading) {
       if (currentUserProfile?.email !== 'uzzal@admin.com') { // Corrected admin email check
-        showError("এই পেজটি শুধুমাত্র এডমিনদের জন্য।");
+        showError(t("common.quiz_admin_only"));
         navigate('/'); // Redirect non-admin users
         return;
       }
       fetchUsers();
       fetchVisitsData();
     }
-  }, [currentUserProfile, authLoading, navigate]);
+  }, [currentUserProfile, authLoading, navigate, t]);
 
   const fetchUsers = async () => {
     setLoadingUsers(true);
@@ -91,7 +93,7 @@ const UserManagementPage: React.FC = () => {
 
     if (visitsError) {
       console.error("Error fetching visits:", visitsError.message);
-      showError("ভিজিট ডেটা লোড করতে ব্যর্থ।");
+      showError(t("common.failed_to_load_visits"));
       setLoadingVisits(false); // Ensure loading state is reset even on error
       return;
     } else {
@@ -132,7 +134,7 @@ const UserManagementPage: React.FC = () => {
 
     if (todayError || monthError || yearError || totalError) {
       console.error("Error fetching visit counts:", todayError?.message || monthError?.message || yearError?.message || totalError?.message);
-      showError("ভিজিট কাউন্ট লোড করতে ব্যর্থ।");
+      showError(t("common.failed_to_load_visit_counts"));
     } else {
       setVisitCounts({
         today: todayCount || 0,
@@ -157,7 +159,7 @@ const UserManagementPage: React.FC = () => {
     return (
       <div className="flex items-center justify-center min-h-[calc(100vh-100px)]">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        <span className="ml-2 text-lg text-muted-foreground font-bold">ডেটা লোড হচ্ছে...</span>
+        <span className="ml-2 text-lg text-muted-foreground font-bold">{t("common.data_loading")}</span>
       </div>
     );
   }
@@ -172,29 +174,29 @@ const UserManagementPage: React.FC = () => {
       <Card className="w-full bg-background/80 backdrop-blur-sm shadow-lg border-primary/20 dark:border-primary/50"> {/* Added bg-background/80 backdrop-blur-sm */}
         <CardHeader className="pb-4 border-b">
           <CardTitle className="text-2xl font-extrabold text-primary dark:text-primary-foreground flex items-center">
-            <Eye className="h-6 w-6 mr-2" /> ভিজিটর পরিসংখ্যান
+            <Eye className="h-6 w-6 mr-2" /> {t("common.visitor_statistics")}
           </CardTitle>
-          <CardDescription className="text-muted-foreground">সাইটে মোট ভিজিট এবং সময়ভিত্তিক পরিসংখ্যান</CardDescription>
+          <CardDescription className="text-muted-foreground">{t("common.visitor_statistics_desc")}</CardDescription>
         </CardHeader>
         <CardContent className="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="flex flex-col items-center justify-center p-4 bg-accent/10 dark:bg-accent/20 rounded-lg border border-primary/10">
             <Clock className="h-8 w-8 text-primary mb-2" />
-            <p className="text-sm font-bold text-muted-foreground">আজকে</p>
+            <p className="text-sm font-bold text-muted-foreground">{t("common.today")}</p>
             <p className="text-2xl font-extrabold text-foreground">{visitCounts.today}</p>
           </div>
           <div className="flex flex-col items-center justify-center p-4 bg-accent/10 dark:bg-accent/20 rounded-lg border border-primary/10">
             <CalendarDays className="h-8 w-8 text-primary mb-2" />
-            <p className="text-sm font-bold text-muted-foreground">এই মাসে</p>
+            <p className="text-sm font-bold text-muted-foreground">{t("common.this_month")}</p>
             <p className="text-2xl font-extrabold text-foreground">{visitCounts.thisMonth}</p>
           </div>
           <div className="flex flex-col items-center justify-center p-4 bg-accent/10 dark:bg-accent/20 rounded-lg border border-primary/10">
             <Calendar className="h-8 w-8 text-primary mb-2" />
-            <p className="text-sm font-bold text-muted-foreground">এই বছরে</p>
+            <p className="text-sm font-bold text-muted-foreground">{t("common.this_year")}</p>
             <p className="text-2xl font-extrabold text-foreground">{visitCounts.thisYear}</p>
           </div>
           <div className="flex flex-col items-center justify-center p-4 bg-accent/10 dark:bg-accent/20 rounded-lg border border-primary/10">
             <Eye className="h-8 w-8 text-primary mb-2" />
-            <p className="text-sm font-bold text-muted-foreground">মোট ভিজিট</p>
+            <p className="text-sm font-bold text-muted-foreground">{t("common.total_visits")}</p>
             <p className="text-2xl font-extrabold text-foreground">{visitCounts.total}</p>
           </div>
         </CardContent>
@@ -204,26 +206,26 @@ const UserManagementPage: React.FC = () => {
       <Card className="w-full flex flex-col flex-1 bg-background/80 backdrop-blur-sm shadow-lg border-primary/20 dark:border-primary/50"> {/* Added bg-background/80 backdrop-blur-sm */}
         <CardHeader className="flex flex-row items-center justify-between pb-4 border-b">
           <CardTitle className="text-2xl font-extrabold text-primary dark:text-primary-foreground flex items-center">
-            <User className="h-6 w-6 mr-2" /> সাম্প্রতিক ভিজিটর
+            <User className="h-6 w-6 mr-2" /> {t("common.recent_visitors")}
           </CardTitle>
-          <CardDescription className="text-muted-foreground hidden sm:block">সাইটে শেষ ভিজিট করা ইউজারদের তালিকা</CardDescription>
+          <CardDescription className="text-muted-foreground hidden sm:block">{t("common.recent_visitors_desc")}</CardDescription>
         </CardHeader>
         <CardContent className="flex-1 p-0">
           <ScrollArea className="h-[300px] w-full p-4">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="font-bold">ইউজারনেম</TableHead>
-                  <TableHead className="font-bold">ইমেল</TableHead>
-                  <TableHead className="font-bold">আইপি অ্যাড্রেস</TableHead>
-                  <TableHead className="font-bold">ভিজিটের সময়</TableHead>
-                  <TableHead className="font-bold">প্রকার</TableHead>
+                  <TableHead className="font-bold">{t("common.username_col")}</TableHead>
+                  <TableHead className="font-bold">{t("common.email_col")}</TableHead>
+                  <TableHead className="font-bold">{t("common.ip_address_col")}</TableHead>
+                  <TableHead className="font-bold">{t("common.visit_time_col")}</TableHead>
+                  <TableHead className="font-bold">{t("common.type_col")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {recentVisits.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center text-muted-foreground font-bold">কোনো সাম্প্রতিক ভিজিট পাওয়া যায়নি।</TableCell>
+                    <TableCell colSpan={5} className="text-center text-muted-foreground font-bold">{t("common.no_recent_visits")}</TableCell>
                   </TableRow>
                 ) : (
                   recentVisits.map((visit) => (
@@ -234,7 +236,7 @@ const UserManagementPage: React.FC = () => {
                       <TableCell>{format(new Date(visit.visited_at), 'yyyy-MM-dd HH:mm')}</TableCell>
                       <TableCell>
                         <Badge variant={visit.is_guest_visit ? "secondary" : (visit.user_id ? "default" : "outline")}>
-                          {visit.is_guest_visit ? "গেস্ট" : (visit.user_id ? "নিবন্ধিত" : "অজ্ঞাত")}
+                          {visit.is_guest_visit ? t("common.guest") : (visit.user_id ? t("common.registered") : t("common.unknown"))}
                         </Badge>
                       </TableCell>
                     </TableRow>
@@ -250,20 +252,20 @@ const UserManagementPage: React.FC = () => {
       <Card className="w-full flex flex-col flex-1 bg-background/80 backdrop-blur-sm shadow-lg border-primary/20 dark:border-primary/50"> {/* Added bg-background/80 backdrop-blur-sm */}
         <CardHeader className="flex flex-row items-center justify-between pb-4 border-b">
           <CardTitle className="text-3xl font-extrabold text-primary dark:text-primary-foreground flex items-center">
-            <User className="h-7 w-7 mr-2" /> ইউজার ম্যানেজমেন্ট
+            <User className="h-7 w-7 mr-2" /> {t("common.user_management")}
           </CardTitle>
-          <CardDescription className="text-muted-foreground hidden sm:block">সকল নিবন্ধিত ইউজারদের তালিকা এবং স্ট্যাটাস</CardDescription>
+          <CardDescription className="text-muted-foreground hidden sm:block">{t("common.user_management_desc")}</CardDescription>
         </CardHeader>
         <CardContent className="flex-1 p-0">
           <ScrollArea className="h-[calc(100vh-130px-500px)] w-full p-4"> {/* Adjusted height */}
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="font-bold">ইউজারনেম</TableHead>
-                  <TableHead className="font-bold">ইমেল</TableHead>
-                  <TableHead className="hidden md:table-cell font-bold">মোবাইল নম্বর</TableHead>
-                  <TableHead className="font-bold">স্ট্যাটাস</TableHead>
-                  <TableHead className="text-right font-bold">অ্যাকশন</TableHead>
+                  <TableHead className="font-bold">{t("common.username_col")}</TableHead>
+                  <TableHead className="font-bold">{t("common.email_col")}</TableHead>
+                  <TableHead className="hidden md:table-cell font-bold">{t("common.mobile_number_col")}</TableHead>
+                  <TableHead className="font-bold">{t("common.status_col")}</TableHead>
+                  <TableHead className="text-right font-bold">{t("common.action_col")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -274,7 +276,7 @@ const UserManagementPage: React.FC = () => {
                     <TableCell className="hidden md:table-cell">{userProfile.mobile_number || 'N/A'}</TableCell>
                     <TableCell>
                       <Badge variant={userProfile.is_active ? "default" : "destructive"}>
-                        {userProfile.is_active ? "সক্রিয়" : "নিষ্ক্রিয়"}
+                        {userProfile.is_active ? t("common.active") : t("common.inactive")}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">
@@ -290,11 +292,11 @@ const UserManagementPage: React.FC = () => {
                             <Loader2 className="h-4 w-4 animate-spin" />
                           ) : userProfile.is_active ? (
                             <>
-                              <Ban className="h-4 w-4 mr-2" /> ব্লক
+                              <Ban className="h-4 w-4 mr-2" /> {t("common.block")}
                             </>
                           ) : (
                             <>
-                              <CheckCircle className="h-4 w-4 mr-2" /> অ্যাক্সেস
+                              <CheckCircle className="h-4 w-4 mr-2" /> {t("common.access")}
                             </>
                           )}
                         </Button>

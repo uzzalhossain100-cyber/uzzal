@@ -13,6 +13,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { useTranslation } from '@/lib/translations'; // Import useTranslation
 
 const data = [
   { name: "Jan", total: Math.floor(Math.random() * 5000) + 1000 },
@@ -30,11 +31,13 @@ const data = [
 ];
 
 export function SalesOverviewChart() {
+  const { t } = useTranslation(); // Initialize useTranslation
+
   return (
     <Card className="col-span-4 bg-background/80 backdrop-blur-sm"> {/* Added bg-background/80 backdrop-blur-sm */}
       <CardHeader>
-        <CardTitle className="font-extrabold">Sales Overview</CardTitle>
-        <CardDescription>Monthly sales performance.</CardDescription>
+        <CardTitle className="font-extrabold">{t("dashboard.sales_overview")}</CardTitle> {/* Translate title */}
+        <CardDescription>{t("dashboard.sales_overview_desc")}</CardDescription> {/* Translate description */}
       </CardHeader>
       <CardContent className="pl-2">
         <ResponsiveContainer width="100%" height={350}>

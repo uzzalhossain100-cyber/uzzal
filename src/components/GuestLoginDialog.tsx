@@ -13,6 +13,7 @@ import { User } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { showError } from '@/utils/toast';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from '@/lib/translations'; // Import useTranslation
 
 interface GuestLoginDialogProps {
   onOpenChange: (open: boolean) => void;
@@ -24,20 +25,21 @@ const GuestLoginDialog: React.FC<GuestLoginDialogProps> = ({ onOpenChange, isOpe
   const [isLoading, setIsLoading] = useState(false);
   const { guestSignIn } = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation(); // Initialize useTranslation
 
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     if (/^[a-zA-Z0-9_-]*$/.test(value)) {
       setUsername(value);
     } else {
-      showError("ইউজারনেম শুধুমাত্র ইংরেজি অক্ষর, সংখ্যা, আন্ডারস্কোর এবং হাইফেন দিয়ে গঠিত হতে পারে।");
+      showError(t("common.username_validation_error"));
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!username.trim()) {
-      showError("ইউজারনেম প্রয়োজন।");
+      showError(t("common.username_required"));
       return;
     }
     setIsLoading(true);
@@ -46,7 +48,7 @@ const GuestLoginDialog: React.FC<GuestLoginDialogProps> = ({ onOpenChange, isOpe
       onOpenChange(false);
       navigate('/');
     } else {
-      showError(error || "সাধারণ ইউজার হিসেবে লগইন ব্যর্থ হয়েছে।");
+      showError(error || t("common.guest_login_failed"));
     }
     setIsLoading(false);
   };
@@ -55,20 +57,20 @@ const GuestLoginDialog: React.FC<GuestLoginDialogProps> = ({ onOpenChange, isOpe
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle className="text-primary">সাধারণ ইউজার হিসেবে প্রবেশ করুন</DialogTitle>
+          <DialogTitle className="text-primary">{t("common.guest_login_title")}</DialogTitle>
           <DialogDescription>
-            আপনার ইউজারনেম দিয়ে সাইটে প্রবেশ করুন।
-          </DialogDescription> {/* Fixed closing tag here */}
+            {t("common.guest_login_dialog_desc")}
+          </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label htmlFor="guest-username">ইউজারনেম</Label>
+            <Label htmlFor="guest-username">{t("common.username")}</Label>
             <div className="relative">
               <User className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
                 id="guest-username"
                 type="text"
-                placeholder="আপনার ইউজারনেম (শুধুমাত্র ইংরেজি)"
+                placeholder={t("common.enter_username_placeholder")}
                 value={username}
                 onChange={handleUsernameChange}
                 className="pl-8 border-primary/30 focus-visible:ring-primary"
@@ -77,7 +79,7 @@ const GuestLoginDialog: React.FC<GuestLoginDialogProps> = ({ onOpenChange, isOpe
             </div>
           </div>
           <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90" disabled={isLoading}>
-            {isLoading ? 'প্রবেশ করা হচ্ছে...' : 'প্রবেশ করুন'}
+            {isLoading ? t("common.logging_in") : t("common.login")}
           </Button>
         </form>
       </DialogContent>
