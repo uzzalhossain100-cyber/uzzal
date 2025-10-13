@@ -171,6 +171,7 @@ export const allInOneCategories: Category[] = [
       {
         name: "country.bangladesh",
         subItems: [
+          { name: "item.amar_desh", url: "https://www.dailyamardesh.com/" }, // Added 'আমার দেশ' here
           { name: "item.prothom_alo", url: "https://www.prothomalo.com/" },
           { name: "item.jugantor", url: "https://www.jugantor.com/" },
           { name: "item.kaler_kantho", url: "https://www.kalerkantho.com/" },
