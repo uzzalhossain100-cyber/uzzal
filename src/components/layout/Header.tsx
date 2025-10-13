@@ -40,8 +40,8 @@ export function Header() {
   const [searchParams, setSearchParams] = useSearchParams();
   const searchInputRef = useRef<HTMLInputElement>(null);
   const searchResultsRef = useRef<HTMLDivElement>(null);
-  const { t } = useTranslation(); // Initialize useTranslation
-  const { currentLanguage, switchLanguage } = useLanguage(); // Initialize useLanguage
+  const { t, currentLanguage } = useTranslation(); // Initialize useTranslation
+  const { switchLanguage } = useLanguage(); // Initialize useLanguage
 
   const isAdmin = profile?.email === 'uzzal@admin.com';
   const isGuest = profile?.is_guest;
@@ -90,7 +90,7 @@ export function Header() {
       icon: Users,
       href: "/user-management",
     }] : []),
-  ], [t, isGuest, isAdmin]); // Add t to dependencies to re-evaluate on language change
+  ], [t, isGuest, isAdmin, currentLanguage]); // Add currentLanguage to dependencies
 
   const allSearchableItems = useMemo(() => {
     const items: SearchableItem[] = [];
@@ -149,7 +149,7 @@ export function Header() {
       });
     });
     return items;
-  }, [filteredNavItems, allInOneCategories, t]);
+  }, [filteredNavItems, allInOneCategories, t, currentLanguage]); // Add currentLanguage to dependencies
 
   const performSearch = (query: string) => {
     const lowerCaseQuery = query.toLowerCase();
