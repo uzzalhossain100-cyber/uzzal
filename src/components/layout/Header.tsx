@@ -363,7 +363,7 @@ export function Header() {
             </Avatar>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
+        <DropdownMenuContent align="end" key={currentLanguage}> {/* Added key={currentLanguage} here */}
           <DropdownMenuLabel className="font-extrabold">
             {isGuest ? `${t("common.guest")}: ${profile?.username}` : (user?.email || t("common.my_account"))}
           </DropdownMenuLabel>
