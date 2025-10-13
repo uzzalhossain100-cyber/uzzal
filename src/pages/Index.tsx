@@ -117,6 +117,7 @@ const Index: React.FC = () => {
 
   // State 1: Displaying Top-Level Categories
   if (!currentCategory) {
+    console.log("Index.tsx: Rendering Top-Level Categories screen.");
     return (
       <Card className="w-full flex flex-col h-full bg-background/80 backdrop-blur-sm shadow-xl border-primary/20"> {/* Added bg-background/80 backdrop-blur-sm */}
         <CardHeader className="pb-4 border-b">
@@ -127,13 +128,14 @@ const Index: React.FC = () => {
         <CardContent className="flex-1 overflow-hidden p-6">
           <ScrollArea className="h-[calc(100vh-180px)] w-full rounded-xl border-2 border-primary/20 bg-background/80 p-4 shadow-lg">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-              {/* Use a shallow copy here to prevent any potential mutation issues */}
+              {console.log("Index.tsx: Raw allInOneCategories before filter:", allInOneCategories)}
               {[...allInOneCategories]
                 .filter(category => {
-                  console.log("Category name being considered:", category.name); // Diagnostic log
+                  console.log("Index.tsx: Category name being considered by filter:", category.name);
                   return category.name.startsWith("category.");
                 })
                 .map((category, index) => {
+                  console.log("Index.tsx: Category passed filter and being mapped:", category.name);
                 const Icon = category.icon;
                 const gradientClass = categoryGradientColors[index % categoryGradientColors.length];
                 return (
@@ -161,6 +163,7 @@ const Index: React.FC = () => {
 
   // State 2: Displaying Countries for "খবর", "লাইভ টিভি", "শিক্ষা" or "বিনোদন"
   if ((currentCategory.name === "category.news" || currentCategory.name === "category.live_tv" || currentCategory.name === "category.education" || currentCategory.name === "category.entertainment") && !subCategoryParam) {
+    console.log("Index.tsx: Rendering Country Selection screen for category:", currentCategory.name);
     // Determine icon based on category
     let CountryIcon: React.ElementType;
     let titleSuffix: string;
@@ -224,6 +227,7 @@ const Index: React.FC = () => {
   let itemsToDisplay: CategoryItem[] | undefined = [];
 
   if ((currentCategory.name === "category.news" || currentCategory.name === "category.live_tv" || currentCategory.name === "category.education" || currentCategory.name === "category.entertainment") && subCategoryParam) {
+    console.log("Index.tsx: Rendering Sub-Category Items for:", subCategoryParam);
     itemsToDisplay = currentSubCategoryItems;
     if (currentCategory.name === "category.live_tv" && itemsToDisplay) {
       let allInOneTvUrl = "https://tv.garden/"; // Default URL
@@ -244,6 +248,7 @@ const Index: React.FC = () => {
       itemsToDisplay = [{ name: "item.all_in_one_tv", url: allInOneTvUrl }, ...itemsToDisplay];
     }
   } else {
+    console.log("Index.tsx: Rendering Direct Category Items for:", currentCategory.name);
     itemsToDisplay = currentCategory.items;
   }
 
