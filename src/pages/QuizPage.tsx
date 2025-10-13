@@ -7,12 +7,14 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft, Brain, Trophy, Clock, CheckCircle, XCircle, BookOpen, Globe, Calculator, History, Laptop, Languages } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { allQuizQuestions, Question, SubjectQuestions } from '@/data/quizQuestions';
+import { useTranslation } from '@/lib/translations'; // Import useTranslation
 
 const MAX_QUESTIONS = 10;
 const QUESTION_SCORE = 10;
 
 const QuizPage: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation(); // Initialize useTranslation
 
   const [showScreen, setShowScreen] = useState<'ageSelection' | 'subjectSelection' | 'quiz' | 'result'>('ageSelection');
   const [selectedAgeGroup, setSelectedAgeGroup] = useState<keyof typeof allQuizQuestions | null>(null);
@@ -33,12 +35,12 @@ const QuizPage: React.FC = () => {
 
   const ageGroups = Object.keys(allQuizQuestions) as (keyof typeof allQuizQuestions)[];
   const subjects: { id: keyof SubjectQuestions; name: string; icon: React.ElementType }[] = [
-    { id: 'generalKnowledge', name: 'সাধারণ জ্ঞান', icon: Globe },
-    { id: 'islamicKnowledge', name: 'ইসলামিক জ্ঞান', icon: BookOpen },
-    { id: 'mathematicalKnowledge', name: 'গাণিতিক জ্ঞান', icon: Calculator },
-    { id: 'history', name: 'ইতিহাস', icon: History },
-    { id: 'technology', name: 'প্রযুক্তি', icon: Laptop },
-    { id: 'english', name: 'ইংরেজি', icon: Languages },
+    { id: 'generalKnowledge', name: t("common.quiz_general_knowledge"), icon: Globe },
+    { id: 'islamicKnowledge', name: t("common.quiz_islamic_knowledge"), icon: BookOpen },
+    { id: 'mathematicalKnowledge', name: t("common.quiz_mathematical_knowledge"), icon: Calculator },
+    { id: 'history', name: t("common.quiz_history"), icon: History },
+    { id: 'technology', name: t("common.quiz_technology"), icon: Laptop },
+    { id: 'english', name: t("common.quiz_english"), icon: Languages },
   ];
 
   const getSubjectName = (id: keyof SubjectQuestions) => {
@@ -157,11 +159,11 @@ const QuizPage: React.FC = () => {
 
   const currentQuestion = selectedQuestions[currentQuestionIndex];
 
-  let pageTitle = "সাধারণ জ্ঞান পরীক্ষা";
+  let pageTitle = t("common.quiz_page_title");
   if (showScreen === 'subjectSelection' && selectedAgeGroup) {
-    pageTitle = `বিষয় নির্বাচন করুন (${selectedAgeGroup} বছর)`;
+    pageTitle = `${t("common.select_subject")} (${selectedAgeGroup} ${t("common.quiz_years")})`;
   } else if ((showScreen === 'quiz' || showScreen === 'result') && selectedSubject && selectedAgeGroup) {
-    pageTitle = `${getSubjectName(selectedSubject)} পরীক্ষা (${selectedAgeGroup} বছর)`;
+    pageTitle = `${getSubjectName(selectedSubject)} ${t("common.quiz_page_title")} (${selectedAgeGroup} ${t("common.quiz_years")})`;
   }
 
   return (
@@ -174,13 +176,13 @@ const QuizPage: React.FC = () => {
             </Button>
             <Brain className="h-7 w-7 mr-2" /> {pageTitle}
           </CardTitle>
-          <CardDescription className="text-muted-foreground">আপনার জ্ঞান পরীক্ষা করুন!</CardDescription>
+          <CardDescription className="text-muted-foreground">{t("common.quiz_page_desc")}</CardDescription>
         </CardHeader>
 
         <CardContent className="p-6">
           {showScreen === 'ageSelection' && (
             <div id="age-selection-screen" className="text-center">
-              <p className="text-lg text-foreground mb-6 font-bold">আপনার বয়স গ্রুপ নির্বাচন করুন:</p>
+              <p className="text-lg text-foreground mb-6 font-bold">{t("common.select_age_group")}</p>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {ageGroups.map((ageGroup) => (
                   <Button
@@ -191,7 +193,7 @@ const QuizPage: React.FC = () => {
                     }}
                     className="h-24 flex flex-col items-center justify-center text-center p-2 rounded-lg shadow-md transition-all duration-200 bg-primary text-primary-foreground hover:bg-primary/90 font-bold text-lg"
                   >
-                    {ageGroup} বছর
+                    {ageGroup} {t("common.quiz_years")}
                   </Button>
                 ))}
               </div>
@@ -200,7 +202,7 @@ const QuizPage: React.FC = () => {
 
           {showScreen === 'subjectSelection' && selectedAgeGroup && (
             <div id="subject-selection-screen" className="text-center">
-              <p className="text-lg text-foreground mb-6 font-bold">বিষয় নির্বাচন করুন ({selectedAgeGroup} বছর):</p>
+              <p className="text-lg text-foreground mb-6 font-bold">{t("common.select_subject")} ({selectedAgeGroup} {t("common.quiz_years")}):</p>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                 {subjects.map((subject) => (
                   <Button
@@ -221,9 +223,9 @@ const QuizPage: React.FC = () => {
           {showScreen === 'quiz' && currentQuestion && (
             <div id="quiz-area">
               <div className="flex justify-between mb-6 text-lg text-foreground font-semibold">
-                <p>প্রশ্ন নং: <span className="font-bold text-primary">{currentQuestionIndex + 1}</span> / {MAX_QUESTIONS}</p>
-                <p>সময়: <span className="font-bold text-destructive">{timeElapsed}s</span></p>
-                <p>স্কোর: <span className="font-bold text-green-600">{score}</span></p>
+                <p>{t("common.quiz_question_no_short")} <span className="font-bold text-primary">{currentQuestionIndex + 1}</span> / {MAX_QUESTIONS}</p>
+                <p>{t("common.quiz_time_short")} <span className="font-bold text-destructive">{timeElapsed}s</span></p>
+                <p>{t("common.quiz_score_short")} <span className="font-bold text-green-600">{score}</span></p>
               </div>
 
               <div className="mb-8 p-4 bg-green-50 dark:bg-green-900/20 border-l-4 border-green-500 rounded-lg shadow-sm">
@@ -257,21 +259,21 @@ const QuizPage: React.FC = () => {
           {showScreen === 'result' && (
             <div id="result-screen" className="text-center p-6 bg-orange-50 dark:bg-orange-900/20 border-2 border-orange-500 rounded-lg shadow-md">
               <h2 className="text-3xl font-extrabold text-orange-700 dark:text-orange-200 mb-4 flex items-center justify-center">
-                <Trophy className="h-8 w-8 mr-2" /> 🎉 কুইজ শেষ! 🎉
+                <Trophy className="h-8 w-8 mr-2" /> {t("common.quiz_ended_title")}
               </h2>
-              <p className="text-lg text-foreground mb-2">মোট নম্বর (১০০ এর মধ্যে): <span id="final-score" className="text-green-600 font-extrabold text-2xl">{score}</span></p>
+              <p className="text-lg text-foreground mb-2">{t("common.quiz_total_score_label")} <span id="final-score" className="text-green-600 font-extrabold text-2xl">{score}</span></p>
               <p className="text-base text-foreground flex items-center justify-center mb-1">
-                <CheckCircle className="h-5 w-5 text-green-500 mr-2" /> সঠিক উত্তর: <span id="correct-count" className="font-bold ml-1">{correctAnswersCount}</span>
+                <CheckCircle className="h-5 w-5 text-green-500 mr-2" /> {t("common.quiz_correct_answers_label")} <span id="correct-count" className="font-bold ml-1">{correctAnswersCount}</span>
               </p>
               <p className="text-base text-foreground flex items-center justify-center mb-4">
-                <XCircle className="h-5 w-5 text-red-500 mr-2" /> ভুল উত্তর: <span id="wrong-count" className="font-bold ml-1">{wrongAnswersCount}</span>
+                <XCircle className="h-5 w-5 text-red-500 mr-2" /> {t("common.quiz_wrong_answers_label")} <span id="wrong-count" className="font-bold ml-1">{wrongAnswersCount}</span>
               </p>
-              <p className="text-base text-foreground mb-6">মোট সময়: <span id="time-taken" className="text-orange-600 font-bold">{timeElapsed} সেকেন্ড</span></p>
+              <p className="text-base text-foreground mb-6">{t("common.quiz_total_time_label")} <span id="time-taken" className="text-orange-600 font-bold">{timeElapsed} {t("common.quiz_seconds")}</span></p>
               <Button
                 onClick={() => setShowScreen('ageSelection')} // Go back to age selection to restart
                 className="start-button bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-lg px-8 py-4 rounded-lg transition-colors"
               >
-                আবার শুরু করুন
+                {t("common.quiz_restart_button")}
               </Button>
             </div>
           )}

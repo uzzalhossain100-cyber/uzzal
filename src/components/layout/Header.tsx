@@ -21,6 +21,8 @@ import {
 import { useAuth } from "@/context/AuthContext";
 import { cn } from "@/lib/utils";
 import { allInOneCategories } from '@/data/categories';
+import { useLanguage } from "@/context/LanguageContext"; // Import useLanguage
+import { useTranslation } from "@/lib/translations"; // Import useTranslation
 
 interface SearchableItem {
   name: string;
@@ -38,6 +40,8 @@ export function Header() {
   const [searchParams, setSearchParams] = useSearchParams();
   const searchInputRef = useRef<HTMLInputElement>(null);
   const searchResultsRef = useRef<HTMLDivElement>(null);
+  const { t } = useTranslation(); // Initialize useTranslation
+  const { currentLanguage, switchLanguage } = useLanguage(); // Initialize useLanguage
 
   const isAdmin = profile?.email === 'uzzal@admin.com';
   const isGuest = profile?.is_guest;
@@ -47,42 +51,42 @@ export function Header() {
 
   const filteredNavItems = [
     {
-      name: "হোম",
+      name: t("common.home"),
       icon: Home,
       href: "/",
     },
     ...(!isGuest ? [{
-      name: "সক্রিয় ইউজার",
+      name: t("common.active_users"),
       icon: MessageSquareText,
       href: "/active-users",
     }] : []),
     ...(isAdmin ? [{
-      name: "লাইভ চ্যাট",
+      name: t("common.live_chat"),
       icon: MessageCircleMore,
       href: "/live-chat",
     }] : []),
     {
-      name: "যোগাযোগ",
+      name: t("common.contact"),
       icon: Mail,
       href: "/contact",
     },
     ...(isAdmin ? [{
-      name: "বিজ্ঞাপন",
+      name: t("common.advertisements"),
       icon: ImageIcon,
       href: "/advertisements",
     }] : []),
     {
-      name: "এআই",
+      name: t("common.ai"),
       icon: Sparkles,
       href: "/ai",
     },
     {
-      name: "কুইজ",
+      name: t("common.quiz"),
       icon: Brain,
       href: "/quiz",
     },
     ...(isAdmin ? [{
-      name: "ইউজার ম্যানেজমেন্ট",
+      name: t("common.user_management"),
       icon: Users,
       href: "/user-management",
     }] : []),
@@ -105,7 +109,7 @@ export function Header() {
       // Top-level category
       const categoryPath = category.internalRoute || `/?category=${encodeURIComponent(category.name)}`;
       if (!addedPaths.has(categoryPath)) {
-        items.push({ name: category.name, path: categoryPath, type: 'category', icon: category.icon });
+        items.push({ name: t(category.name), path: categoryPath, type: 'category', icon: category.icon });
         addedPaths.add(categoryPath);
       }
 
@@ -114,7 +118,7 @@ export function Header() {
         if (item.subItems) {
           const countryPath = `/?category=${encodeURIComponent(category.name)}&subCategory=${encodeURIComponent(item.name)}`;
           if (!addedPaths.has(countryPath)) {
-            items.push({ name: `${category.name} > ${item.name}`, path: countryPath, type: 'country' });
+            items.push({ name: `${t(category.name)} > ${t(item.name)}`, path: countryPath, type: 'country' });
             addedPaths.add(countryPath);
           }
           // Items within sub-category (e.g., newspapers, TV channels)
@@ -123,29 +127,29 @@ export function Header() {
             if (subItem.internalRoute) {
               subItemPath = subItem.internalRoute;
             } else if (subItem.url) {
-              subItemPath = `/view/${encodeURIComponent(subItem.url)}/${encodeURIComponent(subItem.name)}`;
+              subItemPath = `/view/${encodeURIComponent(subItem.url)}/${encodeURIComponent(t(subItem.name))}`;
             }
             if (subItemPath && !addedPaths.has(subItemPath)) {
-              items.push({ name: `${category.name} > ${item.name} > ${subItem.name}`, path: subItemPath, type: 'item' });
+              items.push({ name: `${t(category.name)} > ${t(item.name)} > ${t(subItem.name)}`, path: subItemPath, type: 'item' });
               addedPaths.add(subItemPath);
             }
           });
         } else if (item.url) { // Direct item under a top-level category (e.g., a shopping site)
-          const itemPath = `/view/${encodeURIComponent(item.url)}/${encodeURIComponent(item.name)}`;
+          const itemPath = `/view/${encodeURIComponent(item.url)}/${encodeURIComponent(t(item.name))}`;
           if (!addedPaths.has(itemPath)) {
-            items.push({ name: `${category.name} > ${item.name}`, path: itemPath, type: 'item' });
+            items.push({ name: `${t(category.name)} > ${t(item.name)}`, path: itemPath, type: 'item' });
             addedPaths.add(itemPath);
           }
         } else if (item.internalRoute) { // Direct internal route under a top-level category (e.g., Quiz)
           if (!addedPaths.has(item.internalRoute)) {
-            items.push({ name: `${category.name} > ${item.name}`, path: item.internalRoute, type: 'page' });
+            items.push({ name: `${t(category.name)} > ${t(item.name)}`, path: item.internalRoute, type: 'page' });
             addedPaths.add(item.internalRoute);
           }
         }
       });
     });
     return items;
-  }, [filteredNavItems]);
+  }, [filteredNavItems, allInOneCategories, t]);
 
   const performSearch = (query: string) => {
     const lowerCaseQuery = query.toLowerCase();
@@ -211,13 +215,13 @@ export function Header() {
         <SheetTrigger asChild>
           <Button size="icon" variant="outline" className="sm:hidden">
             <Menu className="h-5 w-5" />
-            <span className="sr-only">Toggle Menu</span>
+            <span className="sr-only">{t("common.dashboard")}</span>
           </Button>
         </SheetTrigger>
         <SheetContent side="left" className="sm:max-w-xs p-0">
           <div className="flex h-full flex-col space-y-4 bg-sidebar/80 p-4">
             <div className="flex items-center justify-center h-16">
-              <h1 className="text-2xl font-extrabold text-sidebar-primary">ড্যাশবোর্ড</h1>
+              <h1 className="text-2xl font-extrabold text-sidebar-primary">{t("common.dashboard")}</h1>
             </div>
             <nav className="flex-1 space-y-2">
               {filteredNavItems.map((item) => {
@@ -244,7 +248,7 @@ export function Header() {
                 onClick={signOut}
               >
                 <LogOut className="h-5 w-5 mr-3" />
-                <span className="font-bold">লগআউট</span>
+                <span className="font-bold">{t("common.logout")}</span>
               </Button>
             </div>
           </div>
@@ -271,12 +275,38 @@ export function Header() {
         })}
       </nav>
 
+      {/* Language Switcher */}
+      <div className="flex items-center gap-2 ml-4">
+        <Button
+          variant={currentLanguage === 'bn' ? 'default' : 'outline'}
+          size="sm"
+          onClick={() => switchLanguage('bn')}
+          className={cn(
+            "font-bold",
+            currentLanguage === 'bn' ? "bg-primary text-primary-foreground hover:bg-primary/90" : "bg-secondary text-secondary-foreground hover:bg-secondary/90"
+          )}
+        >
+          বাংলা ভার্সন
+        </Button>
+        <Button
+          variant={currentLanguage === 'en' ? 'default' : 'outline'}
+          size="sm"
+          onClick={() => switchLanguage('en')}
+          className={cn(
+            "font-bold",
+            currentLanguage === 'en' ? "bg-primary text-primary-foreground hover:bg-primary/90" : "bg-secondary text-secondary-foreground hover:bg-secondary/90"
+          )}
+        >
+          English Version
+        </Button>
+      </div>
+
       {/* Search Bar with Dropdown */}
       <div className="relative ml-auto flex-1 md:grow-0">
         <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
         <Input
           type="search"
-          placeholder="অনুসন্ধান করুন..."
+          placeholder={t("common.search")}
           className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px] border-primary/30 focus-visible:ring-primary"
           value={searchQuery}
           onChange={handleSearchChange}
@@ -308,7 +338,7 @@ export function Header() {
         <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
           3
         </span>
-        <span className="sr-only">নোটিফিকেশন</span>
+        <span className="sr-only">{t("common.notifications")}</span>
       </Button>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -335,19 +365,19 @@ export function Header() {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel className="font-extrabold">
-            {isGuest ? `গেস্ট: ${profile?.username}` : (user?.email || "আমার অ্যাকাউন্ট")}
+            {isGuest ? `${t("common.guest")}: ${profile?.username}` : (user?.email || t("common.my_account"))}
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           {!isGuest && (
             <>
-              <DropdownMenuItem>সেটিংস</DropdownMenuItem>
-              <DropdownMenuItem>সাপোর্ট</DropdownMenuItem>
+              <DropdownMenuItem>{t("common.settings")}</DropdownMenuItem>
+              <DropdownMenuItem>{t("common.support")}</DropdownMenuItem>
               <DropdownMenuSeparator />
             </>
           )}
           <DropdownMenuItem onClick={signOut} className="text-destructive hover:bg-destructive/10">
             <LogOut className="mr-2 h-4 w-4" />
-            লগআউট
+            {t("common.logout")}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

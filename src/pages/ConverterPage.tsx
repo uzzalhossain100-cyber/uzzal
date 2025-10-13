@@ -9,28 +9,30 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { ArrowLeft, Ruler, Weight, Thermometer, Clock, DollarSign, Languages, FileText, Calculator } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { useTranslation } from '@/lib/translations'; // Import useTranslation
 
 interface ConverterType {
   id: string;
-  name: string;
+  nameKey: string; // Use translation key for name
   icon: React.ElementType;
-  description: string;
+  descriptionKey: string; // Use translation key for description
 }
-
-const converterTypes: ConverterType[] = [
-  { id: 'length', name: 'দৈর্ঘ্য', icon: Ruler, description: 'মিটার, কিলোমিটার, ফুট, মাইল' },
-  { id: 'weight', name: 'ওজন', icon: Weight, description: 'কিলোগ্রাম, গ্রাম, পাউন্ড, আউন্স' },
-  { id: 'temperature', name: 'তাপমাত্রা', icon: Thermometer, description: 'সেলসিয়াস, ফারেনহাইট' },
-  { id: 'time', name: 'সময়', icon: Clock, description: 'সেকেন্ড, মিনিট, ঘণ্টা, দিন' },
-  { id: 'currency', name: 'মুদ্রা', icon: DollarSign, description: 'এক দেশের মুদ্রা থেকে অন্য দেশের মুদ্রায় রূপান্তর' },
-  { id: 'language', name: 'ভাষা পরিবর্তন', icon: Languages, description: 'সকল দেশের ভাষা পরিবর্তন বা কনভার্ট করা যাবে' },
-  { id: 'unitConverter', name: 'ইউনিট কনভার্টার', icon: Calculator, description: 'বিভিন্ন ইউনিট রূপান্তর করুন' },
-  { id: 'fileFormat', name: 'ফাইল ফরম্যাট কনভার্টার', icon: FileText, description: 'MP4, AVI, MKV, JPEG, PNG, DOCX, PDF' },
-];
 
 const ConverterPage: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation(); // Initialize useTranslation
   const [selectedConverter, setSelectedConverter] = useState<string | null>(null);
+
+  const converterTypes: ConverterType[] = [
+    { id: 'length', nameKey: 'common.length', icon: Ruler, descriptionKey: 'common.length_desc' },
+    { id: 'weight', nameKey: 'common.weight', icon: Weight, descriptionKey: 'common.weight_desc' },
+    { id: 'temperature', nameKey: 'common.temperature', icon: Thermometer, descriptionKey: 'common.temperature_desc' },
+    { id: 'time', nameKey: 'common.time', icon: Clock, descriptionKey: 'common.time_desc' },
+    { id: 'currency', nameKey: 'common.currency', icon: DollarSign, descriptionKey: 'common.currency' }, // Description can be same as name for external links
+    { id: 'language', nameKey: 'common.language_converter', icon: Languages, descriptionKey: 'common.language_converter' },
+    { id: 'unitConverter', nameKey: 'common.unit_converter', icon: Calculator, descriptionKey: 'common.unit_converter' },
+    { id: 'fileFormat', nameKey: 'common.file_format_converter', icon: FileText, descriptionKey: 'common.file_format_converter' },
+  ];
 
   // State for Length Converter
   const [lengthValue, setLengthValue] = useState<string>('');
@@ -60,26 +62,26 @@ const ConverterPage: React.FC = () => {
   useEffect(() => {
     if (selectedConverter === 'currency') {
       const encodedUrl = encodeURIComponent("https://www.xe.com/currencyconverter/");
-      const encodedItemName = encodeURIComponent("মুদ্রা রূপান্তর");
+      const encodedItemName = encodeURIComponent(t("common.currency"));
       navigate(`/view/${encodedUrl}/${encodedItemName}`);
       setSelectedConverter(null); // Reset to show grid when returning
     } else if (selectedConverter === 'language') {
       const encodedUrl = encodeURIComponent("https://translate.google.com/");
-      const encodedItemName = encodeURIComponent("ভাষা পরিবর্তন");
+      const encodedItemName = encodeURIComponent(t("common.language_converter"));
       navigate(`/view/${encodedUrl}/${encodedItemName}`);
       setSelectedConverter(null); // Reset to show grid when returning
     } else if (selectedConverter === 'unitConverter') {
       const encodedUrl = encodeURIComponent("https://www.unitconverters.net/");
-      const encodedItemName = encodeURIComponent("ইউনিট কনভার্টার");
+      const encodedItemName = encodeURIComponent(t("common.unit_converter"));
       navigate(`/view/${encodedUrl}/${encodedItemName}`);
       setSelectedConverter(null); // Reset to show grid when returning
     } else if (selectedConverter === 'fileFormat') { // New handler for File Format Converter
       const encodedUrl = encodeURIComponent("https://www.pdf2go.com/");
-      const encodedItemName = encodeURIComponent("ফাইল ফরম্যাট কনভার্টার");
+      const encodedItemName = encodeURIComponent(t("common.file_format_converter"));
       navigate(`/view/${encodedUrl}/${encodedItemName}`);
       setSelectedConverter(null); // Reset to show grid when returning
     }
-  }, [selectedConverter, navigate]);
+  }, [selectedConverter, navigate, t]);
 
   const handleBack = () => {
     if (selectedConverter) {
@@ -98,7 +100,7 @@ const ConverterPage: React.FC = () => {
   const convertLength = () => {
     const value = parseFloat(lengthValue);
     if (isNaN(value)) {
-      setConvertedLength('অবৈধ ইনপুট');
+      setConvertedLength(t('common.invalid_input'));
       return;
     }
 
@@ -120,7 +122,7 @@ const ConverterPage: React.FC = () => {
   const convertWeight = () => {
     const value = parseFloat(weightValue);
     if (isNaN(value)) {
-      setConvertedWeight('অবৈধ ইনপুট');
+      setConvertedWeight(t('common.invalid_input'));
       return;
     }
 
@@ -142,7 +144,7 @@ const ConverterPage: React.FC = () => {
   const convertTemperature = () => {
     const value = parseFloat(tempValue);
     if (isNaN(value)) {
-      setConvertedTemp('অবৈধ ইনপুট');
+      setConvertedTemp(t('common.invalid_input'));
       return;
     }
 
@@ -160,7 +162,7 @@ const ConverterPage: React.FC = () => {
   const convertTime = () => {
     const value = parseFloat(timeValue);
     if (isNaN(value)) {
-      setConvertedTime('অবৈধ ইনপুট');
+      setConvertedTime(t('common.invalid_input'));
       return;
     }
 
@@ -179,61 +181,81 @@ const ConverterPage: React.FC = () => {
     setConvertedTime(result.toFixed(4));
   };
 
+  const getTranslatedUnit = (unit: string) => {
+    switch (unit) {
+      case 'meter': return t('common.meters');
+      case 'kilometer': return t('common.kilometers');
+      case 'foot': return t('common.feet');
+      case 'mile': return t('common.miles');
+      case 'kilogram': return t('common.kilograms');
+      case 'gram': return t('common.grams');
+      case 'pound': return t('common.pounds');
+      case 'ounce': return t('common.ounces');
+      case 'celsius': return t('common.celsius');
+      case 'fahrenheit': return t('common.fahrenheit');
+      case 'second': return t('common.seconds');
+      case 'minute': return t('common.minutes');
+      case 'hour': return t('common.hours');
+      case 'day': return t('common.days');
+      default: return unit;
+    }
+  };
+
   const renderConverter = () => {
     switch (selectedConverter) {
       case 'length':
         return (
           <Card className="bg-background/60 backdrop-blur-sm border-primary/10">
             <CardHeader className="pb-3">
-              <CardTitle className="text-xl font-extrabold flex items-center"><Ruler className="h-5 w-5 mr-2" /> দৈর্ঘ্য</CardTitle>
-              <CardDescription>মিটার, কিলোমিটার, ফুট, মাইল</CardDescription>
+              <CardTitle className="text-xl font-extrabold flex items-center"><Ruler className="h-5 w-5 mr-2" /> {t('common.length')}</CardTitle>
+              <CardDescription>{t('common.length_desc')}</CardDescription>
             </CardHeader>
             <CardContent className="grid gap-4">
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
                 <div className="grid gap-2">
-                  <Label htmlFor="length-value">মান</Label>
+                  <Label htmlFor="length-value">{t('common.value')}</Label>
                   <Input
                     id="length-value"
                     type="number"
                     value={lengthValue}
                     onChange={(e) => setLengthValue(e.target.value)}
-                    placeholder="মান লিখুন"
+                    placeholder={t('common.enter_value')}
                     className="border-primary/30 focus-visible:ring-primary"
                   />
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="from-length-unit">থেকে</Label>
+                  <Label htmlFor="from-length-unit">{t('common.from')}</Label>
                   <Select value={fromLengthUnit} onValueChange={setFromLengthUnit}>
                     <SelectTrigger id="from-length-unit" className="border-primary/30 focus-visible:ring-primary">
-                      <SelectValue placeholder="ইউনিট নির্বাচন করুন" />
+                      <SelectValue placeholder={t('common.select_unit')} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="meter">মিটার</SelectItem>
-                      <SelectItem value="kilometer">কিলোমিটার</SelectItem>
-                      <SelectItem value="foot">ফুট</SelectItem>
-                      <SelectItem value="mile">মাইল</SelectItem>
+                      <SelectItem value="meter">{t('common.meters')}</SelectItem>
+                      <SelectItem value="kilometer">{t('common.kilometers')}</SelectItem>
+                      <SelectItem value="foot">{t('common.feet')}</SelectItem>
+                      <SelectItem value="mile">{t('common.miles')}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="to-length-unit">তে</Label>
+                  <Label htmlFor="to-length-unit">{t('common.to')}</Label>
                   <Select value={toLengthUnit} onValueChange={setToLengthUnit}>
                     <SelectTrigger id="to-length-unit" className="border-primary/30 focus-visible:ring-primary">
-                      <SelectValue placeholder="ইউনিট নির্বাচন করুন" />
+                      <SelectValue placeholder={t('common.select_unit')} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="meter">মিটার</SelectItem>
-                      <SelectItem value="kilometer">কিলোমিটার</SelectItem>
-                      <SelectItem value="foot">ফুট</SelectItem>
-                      <SelectItem value="mile">মাইল</SelectItem>
+                      <SelectItem value="meter">{t('common.meters')}</SelectItem>
+                      <SelectItem value="kilometer">{t('common.kilometers')}</SelectItem>
+                      <SelectItem value="foot">{t('common.feet')}</SelectItem>
+                      <SelectItem value="mile">{t('common.miles')}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
-              <Button onClick={convertLength} className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-bold">রূপান্তর করুন</Button>
+              <Button onClick={convertLength} className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-bold">{t('common.convert')}</Button>
               {convertedLength && (
                 <div className="mt-2 text-center text-lg font-extrabold text-foreground">
-                  ফল: {convertedLength} {toLengthUnit === 'meter' ? 'মিটার' : toLengthUnit === 'kilometer' ? 'কিলোমিটার' : toLengthUnit === 'foot' ? 'ফুট' : 'মাইল'}
+                  {t('common.result')}: {convertedLength} {getTranslatedUnit(toLengthUnit)}
                 </div>
               )}
             </CardContent>
@@ -243,55 +265,55 @@ const ConverterPage: React.FC = () => {
         return (
           <Card className="bg-background/60 backdrop-blur-sm border-primary/10">
             <CardHeader className="pb-3">
-              <CardTitle className="text-xl font-extrabold flex items-center"><Weight className="h-5 w-5 mr-2" /> ওজন</CardTitle>
-              <CardDescription>কিলোগ্রাম, গ্রাম, পাউন্ড, আউন্স</CardDescription>
+              <CardTitle className="text-xl font-extrabold flex items-center"><Weight className="h-5 w-5 mr-2" /> {t('common.weight')}</CardTitle>
+              <CardDescription>{t('common.weight_desc')}</CardDescription>
             </CardHeader>
             <CardContent className="grid gap-4">
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
                 <div className="grid gap-2">
-                  <Label htmlFor="weight-value">মান</Label>
+                  <Label htmlFor="weight-value">{t('common.value')}</Label>
                   <Input
                     id="weight-value"
                     type="number"
                     value={weightValue}
                     onChange={(e) => setWeightValue(e.target.value)}
-                    placeholder="মান লিখুন"
+                    placeholder={t('common.enter_value')}
                     className="border-primary/30 focus-visible:ring-primary"
                   />
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="from-weight-unit">থেকে</Label>
+                  <Label htmlFor="from-weight-unit">{t('common.from')}</Label>
                   <Select value={fromWeightUnit} onValueChange={setFromWeightUnit}>
                     <SelectTrigger id="from-weight-unit" className="border-primary/30 focus-visible:ring-primary">
-                      <SelectValue placeholder="ইউনিট নির্বাচন করুন" />
+                      <SelectValue placeholder={t('common.select_unit')} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="kilogram">কিলোগ্রাম</SelectItem>
-                      <SelectItem value="gram">গ্রাম</SelectItem>
-                      <SelectItem value="pound">পাউন্ড</SelectItem>
-                      <SelectItem value="ounce">আউন্স</SelectItem>
+                      <SelectItem value="kilogram">{t('common.kilograms')}</SelectItem>
+                      <SelectItem value="gram">{t('common.grams')}</SelectItem>
+                      <SelectItem value="pound">{t('common.pounds')}</SelectItem>
+                      <SelectItem value="ounce">{t('common.ounces')}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="to-weight-unit">তে</Label>
+                  <Label htmlFor="to-weight-unit">{t('common.to')}</Label>
                   <Select value={toWeightUnit} onValueChange={setToWeightUnit}>
                     <SelectTrigger id="to-weight-unit" className="border-primary/30 focus-visible:ring-primary">
-                      <SelectValue placeholder="ইউনিট নির্বাচন করুন" />
+                      <SelectValue placeholder={t('common.select_unit')} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="kilogram">কিলোগ্রাম</SelectItem>
-                      <SelectItem value="gram">গ্রাম</SelectItem>
-                      <SelectItem value="pound">পাউন্ড</SelectItem>
-                      <SelectItem value="ounce">আউন্স</SelectItem>
+                      <SelectItem value="kilogram">{t('common.kilograms')}</SelectItem>
+                      <SelectItem value="gram">{t('common.grams')}</SelectItem>
+                      <SelectItem value="pound">{t('common.pounds')}</SelectItem>
+                      <SelectItem value="ounce">{t('common.ounces')}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
-              <Button onClick={convertWeight} className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-bold">রূপান্তর করুন</Button>
+              <Button onClick={convertWeight} className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-bold">{t('common.convert')}</Button>
               {convertedWeight && (
                 <div className="mt-2 text-center text-lg font-extrabold text-foreground">
-                  ফল: {convertedWeight} {toWeightUnit === 'kilogram' ? 'কিলোগ্রাম' : toWeightUnit === 'gram' ? 'গ্রাম' : toWeightUnit === 'pound' ? 'পাউন্ড' : 'আউন্স'}
+                  {t('common.result')}: {convertedWeight} {getTranslatedUnit(toWeightUnit)}
                 </div>
               )}
             </CardContent>
@@ -301,51 +323,51 @@ const ConverterPage: React.FC = () => {
         return (
           <Card className="bg-background/60 backdrop-blur-sm border-primary/10">
             <CardHeader className="pb-3">
-              <CardTitle className="text-xl font-extrabold flex items-center"><Thermometer className="h-5 w-5 mr-2" /> তাপমাত্রা</CardTitle>
-              <CardDescription>সেলসিয়াস, ফারেনহাইট</CardDescription>
+              <CardTitle className="text-xl font-extrabold flex items-center"><Thermometer className="h-5 w-5 mr-2" /> {t('common.temperature')}</CardTitle>
+              <CardDescription>{t('common.temperature_desc')}</CardDescription>
             </CardHeader>
             <CardContent className="grid gap-4">
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
                 <div className="grid gap-2">
-                  <Label htmlFor="temp-value">মান</Label>
+                  <Label htmlFor="temp-value">{t('common.value')}</Label>
                   <Input
                     id="temp-value"
                     type="number"
                     value={tempValue}
                     onChange={(e) => setTempValue(e.target.value)}
-                    placeholder="মান লিখুন"
+                    placeholder={t('common.enter_value')}
                     className="border-primary/30 focus-visible:ring-primary"
                   />
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="from-temp-unit">থেকে</Label>
+                  <Label htmlFor="from-temp-unit">{t('common.from')}</Label>
                   <Select value={fromTempUnit} onValueChange={setFromTempUnit}>
                     <SelectTrigger id="from-temp-unit" className="border-primary/30 focus-visible:ring-primary">
-                      <SelectValue placeholder="ইউনিট নির্বাচন করুন" />
+                      <SelectValue placeholder={t('common.select_unit')} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="celsius">সেলসিয়াস</SelectItem>
-                      <SelectItem value="fahrenheit">ফারেনহাইট</SelectItem>
+                      <SelectItem value="celsius">{t('common.celsius')}</SelectItem>
+                      <SelectItem value="fahrenheit">{t('common.fahrenheit')}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="to-temp-unit">তে</Label>
+                  <Label htmlFor="to-temp-unit">{t('common.to')}</Label>
                   <Select value={toTempUnit} onValueChange={setToTempUnit}>
                     <SelectTrigger id="to-temp-unit" className="border-primary/30 focus-visible:ring-primary">
-                      <SelectValue placeholder="ইউনিট নির্বাচন করুন" />
+                      <SelectValue placeholder={t('common.select_unit')} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="celsius">সেলসিয়াস</SelectItem>
-                      <SelectItem value="fahrenheit">ফারেনহাইট</SelectItem>
+                      <SelectItem value="celsius">{t('common.celsius')}</SelectItem>
+                      <SelectItem value="fahrenheit">{t('common.fahrenheit')}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
-              <Button onClick={convertTemperature} className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-bold">রূপান্তর করুন</Button>
+              <Button onClick={convertTemperature} className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-bold">{t('common.convert')}</Button>
               {convertedTemp && (
                 <div className="mt-2 text-center text-lg font-extrabold text-foreground">
-                  ফল: {convertedTemp} {toTempUnit === 'celsius' ? 'সেলসিয়াস' : 'ফারেনহাইট'}
+                  {t('common.result')}: {convertedTemp} {getTranslatedUnit(toTempUnit)}
                 </div>
               )}
             </CardContent>
@@ -355,55 +377,55 @@ const ConverterPage: React.FC = () => {
         return (
           <Card className="bg-background/60 backdrop-blur-sm border-primary/10">
             <CardHeader className="pb-3">
-              <CardTitle className="text-xl font-extrabold flex items-center"><Clock className="h-5 w-5 mr-2" /> সময়</CardTitle>
-              <CardDescription>সেকেন্ড, মিনিট, ঘণ্টা, দিন</CardDescription>
+              <CardTitle className="text-xl font-extrabold flex items-center"><Clock className="h-5 w-5 mr-2" /> {t('common.time')}</CardTitle>
+              <CardDescription>{t('common.time_desc')}</CardDescription>
             </CardHeader>
             <CardContent className="grid gap-4">
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
                 <div className="grid gap-2">
-                  <Label htmlFor="time-value">মান</Label>
+                  <Label htmlFor="time-value">{t('common.value')}</Label>
                   <Input
                     id="time-value"
                     type="number"
                     value={timeValue}
                     onChange={(e) => setTimeValue(e.target.value)}
-                    placeholder="মান লিখুন"
+                    placeholder={t('common.enter_value')}
                     className="border-primary/30 focus-visible:ring-primary"
                   />
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="from-time-unit">থেকে</Label>
+                  <Label htmlFor="from-time-unit">{t('common.from')}</Label>
                   <Select value={fromTimeUnit} onValueChange={setFromTimeUnit}>
                     <SelectTrigger id="from-time-unit" className="border-primary/30 focus-visible:ring-primary">
-                      <SelectValue placeholder="ইউনিট নির্বাচন করুন" />
+                      <SelectValue placeholder={t('common.select_unit')} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="second">সেকেন্ড</SelectItem>
-                      <SelectItem value="minute">মিনিট</SelectItem>
-                      <SelectItem value="hour">ঘণ্টা</SelectItem>
-                      <SelectItem value="day">দিন</SelectItem>
+                      <SelectItem value="second">{t('common.seconds')}</SelectItem>
+                      <SelectItem value="minute">{t('common.minutes')}</SelectItem>
+                      <SelectItem value="hour">{t('common.hours')}</SelectItem>
+                      <SelectItem value="day">{t('common.days')}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="to-time-unit">তে</Label>
+                  <Label htmlFor="to-time-unit">{t('common.to')}</Label>
                   <Select value={toTimeUnit} onValueChange={setToTimeUnit}>
                     <SelectTrigger id="to-time-unit" className="border-primary/30 focus-visible:ring-primary">
-                      <SelectValue placeholder="ইউনিট নির্বাচন করুন" />
+                      <SelectValue placeholder={t('common.select_unit')} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="second">সেকেন্ড</SelectItem>
-                      <SelectItem value="minute">মিনিট</SelectItem>
-                      <SelectItem value="hour">ঘণ্টা</SelectItem>
-                      <SelectItem value="day">দিন</SelectItem>
+                      <SelectItem value="second">{t('common.seconds')}</SelectItem>
+                      <SelectItem value="minute">{t('common.minutes')}</SelectItem>
+                      <SelectItem value="hour">{t('common.hours')}</SelectItem>
+                      <SelectItem value="day">{t('common.days')}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
-              <Button onClick={convertTime} className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-bold">রূপান্তর করুন</Button>
+              <Button onClick={convertTime} className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-bold">{t('common.convert')}</Button>
               {convertedTime && (
                 <div className="mt-2 text-center text-lg font-extrabold text-foreground">
-                  ফল: {convertedTime} {toTimeUnit === 'second' ? 'সেকেন্ড' : toTimeUnit === 'minute' ? 'মিনিট' : toTimeUnit === 'hour' ? 'ঘণ্টা' : 'দিন'}
+                  {t('common.result')}: {convertedTime} {getTranslatedUnit(toTimeUnit)}
                 </div>
               )}
             </CardContent>
@@ -422,9 +444,9 @@ const ConverterPage: React.FC = () => {
             <Button variant="ghost" onClick={handleBack} className="p-0 h-auto mr-2 text-primary dark:text-primary-foreground hover:bg-transparent hover:text-primary/80">
               <ArrowLeft className="h-6 w-6" />
             </Button>
-            কনভার্টার
+            {t('common.converter_page_title')}
           </CardTitle>
-          <CardDescription className="text-muted-foreground hidden sm:block">বিভিন্ন ইউনিট এবং ফরম্যাট রূপান্তর করুন</CardDescription>
+          <CardDescription className="text-muted-foreground hidden sm:block">{t('common.converter_page_desc')}</CardDescription>
         </CardHeader>
         <CardContent className="flex-1 p-0">
           <ScrollArea className="h-[calc(100vh-130px)] w-full p-4">
@@ -455,7 +477,7 @@ const ConverterPage: React.FC = () => {
                       onClick={() => setSelectedConverter(converter.id)}
                     >
                       {Icon && <Icon className="h-12 w-12 mb-2 text-white text-shadow-sm" />}
-                      <span className="font-extrabold text-xl tracking-wide text-shadow-sm">{converter.name}</span>
+                      <span className="font-extrabold text-xl tracking-wide text-shadow-sm">{t(converter.nameKey)}</span>
                     </Button>
                   );
                 })}

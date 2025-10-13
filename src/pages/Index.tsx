@@ -7,6 +7,7 @@ import { allInOneCategories, Category, CategoryItem } from '@/data/categories.ts
 import { countryFlags } from '@/data/countryFlags'; // Import countryFlags
 import { ArrowLeft, ExternalLink, Newspaper as NewspaperIcon, Globe, Tv, GraduationCap, BookOpen, Film } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useTranslation } from '@/lib/translations'; // Import useTranslation
 
 // Define a set of vibrant gradient colors for top-level categories
 const categoryGradientColors = [
@@ -64,36 +65,37 @@ const itemGradientColors = [
 const Index: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { t } = useTranslation(); // Initialize useTranslation
 
   const categoryParam = searchParams.get('category');
   const subCategoryParam = searchParams.get('subCategory'); // For countries within News/Live TV/Education/Entertainment
 
   const currentCategory = categoryParam
-    ? allInOneCategories.find(cat => cat.name === categoryParam)
+    ? allInOneCategories.find(cat => t(cat.name) === categoryParam) // Translate category name for comparison
     : null;
 
-  const currentSubCategoryItems = (currentCategory?.name === "খবর" || currentCategory?.name === "লাইভ টিভি" || currentCategory?.name === "শিক্ষা" || currentCategory?.name === "বিনোদন") && subCategoryParam
-    ? currentCategory.items?.find(item => item.name === subCategoryParam)?.subItems
+  const currentSubCategoryItems = (currentCategory?.name === "category.news" || currentCategory?.name === "category.live_tv" || currentCategory?.name === "category.education" || currentCategory?.name === "category.entertainment") && subCategoryParam
+    ? currentCategory.items?.find(item => t(item.name) === subCategoryParam)?.subItems // Translate item name for comparison
     : null;
 
   const handleCategoryClick = (category: Category) => {
     if (category.internalRoute) {
       navigate(category.internalRoute);
     } else {
-      setSearchParams({ category: category.name }); // Update URL param
+      setSearchParams({ category: t(category.name) }); // Update URL param with translated name
     }
   };
 
   const handleItemClick = (item: CategoryItem) => {
     if (item.internalRoute) { // Handle internal routes for sub-items first
       navigate(item.internalRoute);
-    } else if ((currentCategory?.name === "খবর" || currentCategory?.name === "লাইভ টিভি" || currentCategory?.name === "শিক্ষা" || currentCategory?.name === "বিনোদন") && item.subItems) {
+    } else if ((currentCategory?.name === "category.news" || currentCategory?.name === "category.live_tv" || currentCategory?.name === "category.education" || currentCategory?.name === "category.entertainment") && item.subItems) {
       // If it's a country within "খবর", "লাইভ টিভি", "শিক্ষা" or "বিনোদন" category
-      setSearchParams({ category: currentCategory.name, subCategory: item.name });
+      setSearchParams({ category: t(currentCategory.name), subCategory: t(item.name) }); // Update URL param with translated names
     } else if (item.url) {
       // If it's a final item with a URL (e.g., a newspaper, TV channel, educational site, or entertainment site)
       const encodedUrl = encodeURIComponent(item.url);
-      const encodedItemName = encodeURIComponent(item.name);
+      const encodedItemName = encodeURIComponent(t(item.name)); // Translate item name for URL
       navigate(`/view/${encodedUrl}/${encodedItemName}`);
     }
   };
@@ -114,7 +116,7 @@ const Index: React.FC = () => {
       <Card className="w-full flex flex-col h-full bg-background/80 backdrop-blur-sm shadow-xl border-primary/20"> {/* Added bg-background/80 backdrop-blur-sm */}
         <CardHeader className="pb-4 border-b">
           <CardTitle className="text-3xl font-extrabold text-center text-primary dark:text-primary-foreground">
-            সমস্ত ক্যাটাগরি
+            {t("common.all_categories")}
           </CardTitle>
         </CardHeader>
         <CardContent className="flex-1 overflow-hidden p-6">
@@ -135,7 +137,7 @@ const Index: React.FC = () => {
                     onClick={() => handleCategoryClick(category)}
                   >
                     {Icon && <Icon className="h-12 w-12 mb-2 text-white text-shadow-sm" />} {/* Icon color white */}
-                    <span className="font-extrabold text-xl tracking-wide text-shadow-sm">{category.name}</span> {/* Attractive text style */}
+                    <span className="font-extrabold text-xl tracking-wide text-shadow-sm">{t(category.name)}</span> {/* Attractive text style */}
                   </Button>
                 );
               })}
@@ -147,23 +149,23 @@ const Index: React.FC = () => {
   }
 
   // State 2: Displaying Countries for "খবর", "লাইভ টিভি", "শিক্ষা" or "বিনোদন"
-  if ((currentCategory.name === "খবর" || currentCategory.name === "লাইভ টিভি" || currentCategory.name === "শিক্ষা" || currentCategory.name === "বিনোদন") && !subCategoryParam) {
+  if ((currentCategory.name === "category.news" || currentCategory.name === "category.live_tv" || currentCategory.name === "category.education" || currentCategory.name === "category.entertainment") && !subCategoryParam) {
     // Determine icon based on category
     let CountryIcon: React.ElementType;
     let titleSuffix: string;
 
-    if (currentCategory.name === "খবর") {
+    if (currentCategory.name === "category.news") {
       CountryIcon = Globe;
-      titleSuffix = "দেশ নির্বাচন করুন";
-    } else if (currentCategory.name === "লাইভ টিভি") {
+      titleSuffix = t("common.select_country");
+    } else if (currentCategory.name === "category.live_tv") {
       CountryIcon = Tv;
-      titleSuffix = "দেশ নির্বাচন করুন";
-    } else if (currentCategory.name === "শিক্ষা") {
+      titleSuffix = t("common.select_country");
+    } else if (currentCategory.name === "category.education") {
       CountryIcon = GraduationCap;
-      titleSuffix = "দেশ নির্বাচন করুন";
-    } else { // currentCategory.name === "বিনোদন"
+      titleSuffix = t("common.select_country");
+    } else { // currentCategory.name === "category.entertainment"
       CountryIcon = Film; // Specific icon for entertainment country selection
-      titleSuffix = "দেশ নির্বাচন করুন";
+      titleSuffix = t("common.select_country");
     }
 
     return (
@@ -173,7 +175,7 @@ const Index: React.FC = () => {
             <Button variant="ghost" onClick={handleBack} className="p-0 h-auto mr-2 text-primary dark:text-primary-foreground hover:bg-transparent hover:text-primary/80">
               <ArrowLeft className="h-6 w-6" />
             </Button>
-            {currentCategory.name} - {titleSuffix}
+            {t(currentCategory.name)} - {titleSuffix}
           </CardTitle>
         </CardHeader>
         <CardContent className="flex-1 overflow-hidden p-6">
@@ -196,7 +198,7 @@ const Index: React.FC = () => {
                     {/* Overlay for better text readability */}
                     <div className="absolute inset-0 bg-black opacity-30 group-hover:opacity-20 transition-opacity duration-200 rounded-lg"></div>
                     <CountryIcon className="h-12 w-12 mb-2 text-white relative z-10 text-shadow-sm" /> {/* Icon color white */}
-                    <span className="font-extrabold text-xl tracking-wide relative z-10 text-shadow-sm">{country.name}</span> {/* Attractive text style */}
+                    <span className="font-extrabold text-xl tracking-wide relative z-10 text-shadow-sm">{t(country.name)}</span> {/* Attractive text style */}
                   </Button>
                 );
               })}
@@ -210,41 +212,41 @@ const Index: React.FC = () => {
   // State 3: Displaying Newspapers/TV Channels/Educational Sites/Entertainment Sites for a selected country
   let itemsToDisplay: CategoryItem[] | undefined = [];
 
-  if ((currentCategory.name === "খবর" || currentCategory.name === "লাইভ টিভি" || currentCategory.name === "শিক্ষা" || currentCategory.name === "বিনোদন") && subCategoryParam) {
+  if ((currentCategory.name === "category.news" || currentCategory.name === "category.live_tv" || currentCategory.name === "category.education" || currentCategory.name === "category.entertainment") && subCategoryParam) {
     itemsToDisplay = currentSubCategoryItems;
-    if (currentCategory.name === "লাইভ টিভি" && itemsToDisplay) {
+    if (currentCategory.name === "category.live_tv" && itemsToDisplay) {
       let allInOneTvUrl = "https://tv.garden/"; // Default URL
-      if (subCategoryParam === "বাংলাদেশ") {
+      if (subCategoryParam === t("country.bangladesh")) { // Compare with translated name
         allInOneTvUrl = "https://tv.garden/bd/NikPw9VKIQ0CfQ";
-      } else if (subCategoryParam === "ভারত") {
+      } else if (subCategoryParam === t("country.india")) { // Compare with translated name
         allInOneTvUrl = "https://tv.garden/in/A75lVEYwDx8Emp";
-      } else if (subCategoryParam === "যুক্তরাজ্য") {
+      } else if (subCategoryParam === t("country.united_kingdom")) { // Compare with translated name
         allInOneTvUrl = "https://tv.garden/uk/g1kSsRGdu6pjqO";
-      } else if (subCategoryParam === "যুক্তরাষ্ট্র") {
+      } else if (subCategoryParam === t("country.united_states")) { // Compare with translated name
         allInOneTvUrl = "https://tv.garden/us/1vLEWY7mhnX4hE";
-      } else if (subCategoryParam === "কানাডা") {
+      } else if (subCategoryParam === t("country.canada")) { // Compare with translated name
         allInOneTvUrl = "https://tv.garden/ca/uBUxokoZzvdGBC";
-      } else if (subCategoryParam === "অস্ট্রেলিয়া") {
+      } else if (subCategoryParam === t("country.australia")) { // Compare with translated name
         allInOneTvUrl = "https://tv.garden/au/1U3UtAxYHSHl5p";
       }
       // Prepend "All In One TV" with the dynamic URL
-      itemsToDisplay = [{ name: "All In One TV", url: allInOneTvUrl }, ...itemsToDisplay];
+      itemsToDisplay = [{ name: "item.all_in_one_tv", url: allInOneTvUrl }, ...itemsToDisplay];
     }
   } else {
     itemsToDisplay = currentCategory.items;
   }
 
   let titleText: string;
-  if (currentCategory.name === "খবর" && subCategoryParam) {
-    titleText = `${subCategoryParam} - সংবাদপত্র`;
-  } else if (currentCategory.name === "লাইভ টিভি" && subCategoryParam) {
-    titleText = `${subCategoryParam} - টেলিভিশন`;
-  } else if (currentCategory.name === "শিক্ষা" && subCategoryParam) {
-    titleText = `${subCategoryParam} - শিক্ষা বিষয়ক ওয়েবসাইট`;
-  } else if (currentCategory.name === "বিনোদন" && subCategoryParam) {
-    titleText = `${subCategoryParam} - বিনোদন বিষয়ক ওয়েবসাইট`;
+  if (currentCategory.name === "category.news" && subCategoryParam) {
+    titleText = `${subCategoryParam} - ${t("common.newspapers")}`;
+  } else if (currentCategory.name === "category.live_tv" && subCategoryParam) {
+    titleText = `${subCategoryParam} - ${t("common.television")}`;
+  } else if (currentCategory.name === "category.education" && subCategoryParam) {
+    titleText = `${subCategoryParam} - ${t("common.educational_websites")}`;
+  } else if (currentCategory.name === "category.entertainment" && subCategoryParam) {
+    titleText = `${subCategoryParam} - ${t("common.entertainment_websites")}`;
   } else {
-    titleText = currentCategory.name;
+    titleText = t(currentCategory.name);
   }
 
   return (
@@ -272,7 +274,7 @@ const Index: React.FC = () => {
                 onClick={() => handleItemClick(item)}
               >
                 <span className="font-extrabold text-lg flex items-center mb-1 text-white text-shadow-sm"> {/* Attractive text style */}
-                  {item.name}
+                  {t(item.name)}
                 </span>
                 {/* Removed the URL display */}
               </Button>
