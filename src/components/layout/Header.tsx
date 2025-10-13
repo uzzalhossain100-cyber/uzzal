@@ -156,7 +156,7 @@ export function Header() {
     const filtered = allSearchableItems.filter(item =>
       item.name.toLowerCase().includes(lowerCaseQuery)
     );
-    setSearchResults(filtered.slice(0, 10)); // Limit to top 10 results
+    setSearchResults(filtered); // Removed .slice(0, 10) limit
     setShowSearchResults(filtered.length > 0);
   };
 
