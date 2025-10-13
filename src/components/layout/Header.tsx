@@ -118,7 +118,7 @@ export function Header() {
         if (item.subItems) {
           const countryPath = `/?category=${encodeURIComponent(t(category.name))}&subCategory=${encodeURIComponent(t(item.name))}`; // Use translated names for path
           if (!addedPaths.has(countryPath)) {
-            items.push({ name: `${t(category.name)} > ${t(item.name)}`, path: countryPath, type: 'country' });
+            items.push({ name: `${t(category.name)} / ${t(item.name)}`, path: countryPath, type: 'country' });
             addedPaths.add(countryPath);
           }
           // Items within sub-category (e.g., newspapers, TV channels)
@@ -130,19 +130,19 @@ export function Header() {
               subItemPath = `/view/${encodeURIComponent(subItem.url)}/${encodeURIComponent(t(subItem.name))}`;
             }
             if (subItemPath && !addedPaths.has(subItemPath)) {
-              items.push({ name: `${t(category.name)} > ${t(item.name)} > ${t(subItem.name)}`, path: subItemPath, type: 'item' });
+              items.push({ name: `${t(category.name)} / ${t(item.name)} / ${t(subItem.name)}`, path: subItemPath, type: 'item' });
               addedPaths.add(subItemPath);
             }
           });
         } else if (item.url) { // Direct item under a top-level category (e.g., a shopping site)
           const itemPath = `/view/${encodeURIComponent(item.url)}/${encodeURIComponent(t(item.name))}`;
           if (!addedPaths.has(itemPath)) {
-            items.push({ name: `${t(category.name)} > ${t(item.name)}`, path: itemPath, type: 'item' });
+            items.push({ name: `${t(category.name)} / ${t(item.name)}`, path: itemPath, type: 'item' });
             addedPaths.add(itemPath);
           }
         } else if (item.internalRoute) { // Direct internal route under a top-level category (e.g., Quiz)
           if (!addedPaths.has(item.internalRoute)) {
-            items.push({ name: `${t(category.name)} > ${t(item.name)}`, path: item.internalRoute, type: 'page' });
+            items.push({ name: `${t(category.name)} / ${t(item.name)}`, path: item.internalRoute, type: 'page' });
             addedPaths.add(item.internalRoute);
           }
         }
@@ -156,14 +156,14 @@ export function Header() {
     const filtered = allSearchableItems.filter(item =>
       item.name.toLowerCase().includes(lowerCaseQuery)
     );
-    setSearchResults(filtered); // Removed .slice(0, 10) limit
+    setSearchResults(filtered);
     setShowSearchResults(filtered.length > 0);
   };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;
     setSearchQuery(query);
-    if (query.length > 0) { // Start searching immediately
+    if (query.length > 0) {
       performSearch(query);
     } else {
       setSearchResults([]);
