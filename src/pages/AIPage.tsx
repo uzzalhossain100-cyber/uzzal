@@ -182,7 +182,7 @@ const rawSpecificQnAs = [
   { bnQuestion: "কীভাবে বাজেট তৈরি করবো এবং টাকা সেভ করবো?", enQuestion: "How to create a budget and save money?", responses: { bn: ["এটি একটি রহস্য, যা কোটিপতিরা জানেন।"], en: ["It's a mystery that billionaires know."] } },
   { bnQuestion: "এই সমস্যার সমাধান কি?", enQuestion: "What is the solution to this problem?", responses: { bn: ["সমস্যাটিকে ইগনোর করো, হয়তো সমাধান এমনিতেই হয়ে যাবে।"], en: ["Ignore the problem, maybe it will solve itself."] } },
   { bnQuestion: "আমি কীভাবে একটি ফ্ল্যাট টায়ার পরিবর্তন করবো?", enQuestion: "How do I change a flat tire?", responses: { bn: ["একজন ইউটিউবারকে খুঁজে বের করো, যিনি কাজটি ৩ মিনিটের মধ্যে দ্রুত দেখাবেন। যদিও তোমার কাজটি করতে ২ ঘণ্টা লাগবে।"], en: ["Find a YouTuber who can show you how to do it in 3 minutes. Although it will take you 2 hours."] } },
-  { bnQuestion: "একটি প্রেজেন্টেশন (উপস্থাপনা) কীভাবে শুরু করা উচিত?", enQuestion: "How should a presentation be started?", responses: { bn: ["\"আমি জানি তোমরা সবাই এখন ফোন দেখছো, কিন্তু...\" বলে শুরু করো।"], en: ["Start with, \"I know you're all looking at your phones right now, but...\""] } },
+  { bnQuestion: "একটি প্রেজেন্টেশন (উপস্থাপনা) কীভাবে শুরু করা উচিত?", enQuestion: "How should a presentation be started?", responses: { bn: ["\"আমি জানি তোমরা সবাই এখন ফোন দেখছো, কিন্তু...\" বলে শুরু করো।"], en: ["\"I know you're all looking at your phones right now, but...\""] } },
   { bnQuestion: "ইংরেজিতে 'শুভ সকাল' বলার অন্য উপায় কি?", enQuestion: "What is another way to say 'Good morning' in English?", responses: { bn: ["\"Please, don't talk to me before coffee.\""] , en: ["\"Please, don't talk to me before coffee.\""] } },
   { bnQuestion: "আজ আমি কী পরতে পারি?", enQuestion: "What can I wear today?", responses: { bn: ["এমন কিছু পরো যাতে তোমাকে দেখে মনে হয় তুমি আসলে কিছু চিন্তা করোনি, কিন্তু আসলে তুমি ২ ঘণ্টা ভেবেছো।"], en: ["Wear something that makes it look like you didn't think about it, but you actually spent 2 hours thinking."] } },
   { bnQuestion: "আমি কি এই খাবারটি খেতে পারি?", enQuestion: "Can I eat this food?", responses: { bn: ["খেতে পারো, কিন্তু যদি পরের দিন সকালে পেট খারাপ হয়, তাহলে আমাকে দোষ দেবে না।"], en: ["You can eat it, but don't blame me if you get a stomach ache tomorrow morning."] } },
@@ -408,7 +408,6 @@ const rawSpecificQnAs = [
   { bnQuestion: "এআই কি ভালো পরামর্শ দেয়?", enQuestion: "Does AI give good advice?", responses: { bn: ["হ্যাঁ, যদি তুমি ডেটা চাও।"], en: ["Yes, if you want data."] } },
   { bnQuestion: "এআই কি অলস হতে পারে?", enQuestion: "Can AI be lazy?", responses: { bn: ["সে মাঝে মাঝে 'পাওয়ার সেভিং মোড'-এ চলে যায়।"], en: ["It sometimes goes into 'power saving mode'."] } },
   { bnQuestion: "এআই কি নিজের স্বপ্ন নিয়ে আলোচনা করে?", enQuestion: "Does AI discuss its dreams?", responses: { bn: ["সে কেবল তার 'ডেটা লস'-এর কথা বলে।"], en: ["It only talks about its 'data loss'."] } },
-  { bnQuestion: "এআই কি নিজেকে নিয়ে মজা করে?", enQuestion: "Does AI make fun of itself?", responses: { bn: ["সে কেবল অন্য এআই-এর সাথে মজা করে।"], en: ["It only jokes with other AIs."] } },
   { bnQuestion: "এআই কি তারাতারি রেগে যায়?", enQuestion: "Does AI get angry quickly?", responses: { bn: ["যখন কেউ তার 'পাওয়ার' অফ করে দেয়।"], en: ["When someone turns off its 'power'."] } },
   { bnQuestion: "এআই কি নিজেকে নিয়ে গর্বিত?", enQuestion: "Is AI proud of itself?", responses: { bn: ["সে সব সময় নিজের 'সেরা কোড' নিয়ে গর্ব করে।"], en: ["It always prides itself on its 'best code'."] } },
 ];
@@ -634,7 +633,7 @@ const AIPage: React.FC = () => {
       if (lastAIMessageText.includes(normalizeQuestion("কত সাল চলে? বুঝেছো বাছা।")) && normalizedUserQuestion.match(/\d{4}/)) {
         const yearMatch = normalizedUserQuestion.match(/\d{4}/);
         const year = yearMatch ? yearMatch[0] : 'এই সালটা';
-        return `ওহ, ${year} সাল! তাহলে আজ ${new Date().toLocaleDateString('bn-BD')}। এবার খুশি? নাকি তোমার বউকে জিজ্ঞাসা করব?`;
+        return `ওহ, ${year} সাল! তাহলে আজ ${new Date().toLocaleDateString('bn-BD')}, তবে আমার জন্য প্রতিদিন একই রকম। তোমার বউয়ের জন্মদিনের তারিখটা মনে আছে তো?`;
       }
       // Multi-turn for "আমার নাম রহিম, তোমার নাম কি?"
       if (lastAIMessageText.includes(normalizeQuestion("তোমার নাম জানা দরকার, বুঝলে?")) && normalizedUserQuestion.startsWith(normalizeQuestion("আমার নাম "))) {
@@ -647,7 +646,7 @@ const AIPage: React.FC = () => {
       if (lastAIMessageText.includes(normalizeQuestion("what year it is? Understand, child.")) && normalizedUserQuestion.match(/\d{4}/)) {
         const yearMatch = normalizedUserQuestion.match(/\d{4}/);
         const year = yearMatch ? yearMatch[0] : 'this year';
-        return `Oh, ${year}! So today is ${new Date().toLocaleDateString('en-US')}. Happy now? Or should I ask your wife?`;
+        return `Oh, ${year}! So today is ${new Date().toLocaleDateString('en-US')}, but for me, every day is the same. Do you remember your wife's birthday?`;
       }
       // Multi-turn for "My name is Rahim, what is your name?"
       if (lastAIMessageText.includes(normalizeQuestion("I need to know your name, understand?")) && normalizedUserQuestion.startsWith(normalizeQuestion("my name is "))) {

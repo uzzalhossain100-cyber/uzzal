@@ -67,22 +67,23 @@ const Index: React.FC = () => {
   const navigate = useNavigate();
   const { t } = useTranslation(); // Initialize useTranslation
 
-  const categoryParam = searchParams.get('category');
-  const subCategoryParam = searchParams.get('subCategory'); // For countries within News/Live TV/Education/Entertainment
+  // Use translation keys directly from URL params
+  const categoryKey = searchParams.get('category');
+  const subCategoryKey = searchParams.get('subCategory');
 
-  const currentCategory = categoryParam
-    ? allInOneCategories.find(cat => t(cat.name) === categoryParam) // Translate category name for comparison
+  const currentCategory = categoryKey
+    ? allInOneCategories.find(cat => cat.name === categoryKey) // Match by key directly
     : null;
 
-  const currentSubCategoryItems = (currentCategory?.name === "category.news" || currentCategory?.name === "category.live_tv" || currentCategory?.name === "category.education" || currentCategory?.name === "category.entertainment") && subCategoryParam
-    ? currentCategory.items?.find(item => t(item.name) === subCategoryParam)?.subItems // Translate item name for comparison
+  const currentSubCategoryItems = (currentCategory?.name === "category.news" || currentCategory?.name === "category.live_tv" || currentCategory?.name === "category.education" || currentCategory?.name === "category.entertainment") && subCategoryKey
+    ? currentCategory.items?.find(item => item.name === subCategoryKey)?.subItems // Match by key directly
     : null;
 
   const handleCategoryClick = (category: Category) => {
     if (category.internalRoute) {
       navigate(category.internalRoute);
     } else {
-      setSearchParams({ category: t(category.name) }); // Update URL param with translated name
+      setSearchParams({ category: category.name }); // Use translation key for URL param
     }
   };
 
@@ -91,25 +92,25 @@ const Index: React.FC = () => {
       navigate(item.internalRoute);
     } else if ((currentCategory?.name === "category.news" || currentCategory?.name === "category.live_tv" || currentCategory?.name === "category.education" || currentCategory?.name === "category.entertainment") && item.subItems) {
       // If it's a country within "খবর", "লাইভ টিভি", "শিক্ষা" or "বিনোদন" category
-      setSearchParams({ category: t(currentCategory.name), subCategory: t(item.name) }); // Update URL param with translated names
+      setSearchParams({ category: currentCategory.name, subCategory: item.name }); // Use translation keys for URL params
     } else if (item.url) {
       // If it's a final item with a URL (e.g., a newspaper, TV channel, educational site, or entertainment site)
       const encodedUrl = encodeURIComponent(item.url);
-      const encodedItemName = encodeURIComponent(t(item.name)); // Translate item name for URL
+      const encodedItemName = encodeURIComponent(t(item.name)); // Translate item name for URL display
       navigate(`/view/${encodedUrl}/${encodedItemName}`, {
         state: {
-          fromCategory: categoryParam,
-          fromSubCategory: subCategoryParam,
+          fromCategory: categoryKey, // Pass translation key
+          fromSubCategory: subCategoryKey, // Pass translation key
         }
       });
     }
   };
 
   const handleBack = () => {
-    if (subCategoryParam) {
+    if (subCategoryKey) {
       // If currently viewing sub-items (newspapers/TV channels/educational sites/entertainment sites), go back to countries
-      setSearchParams({ category: categoryParam || '' });
-    } else if (categoryParam) {
+      setSearchParams({ category: categoryKey || '' });
+    } else if (categoryKey) {
       // If currently viewing countries or a regular category, go back to all categories
       setSearchParams({});
     }
@@ -162,7 +163,7 @@ const Index: React.FC = () => {
   }
 
   // State 2: Displaying Countries for "খবর", "লাইভ টিভি", "শিক্ষা" or "বিনোদন"
-  if ((currentCategory.name === "category.news" || currentCategory.name === "category.live_tv" || currentCategory.name === "category.education" || currentCategory.name === "category.entertainment") && !subCategoryParam) {
+  if ((currentCategory.name === "category.news" || currentCategory.name === "category.live_tv" || currentCategory.name === "category.education" || currentCategory.name === "category.entertainment") && !subCategoryKey) {
     console.log("Index.tsx: Rendering Country Selection screen for category:", currentCategory.name);
     // Determine icon based on category
     let CountryIcon: React.ElementType;
@@ -226,22 +227,22 @@ const Index: React.FC = () => {
   // State 3: Displaying Newspapers/TV Channels/Educational Sites/Entertainment Sites for a selected country
   let itemsToDisplay: CategoryItem[] | undefined = [];
 
-  if ((currentCategory.name === "category.news" || currentCategory.name === "category.live_tv" || currentCategory.name === "category.education" || currentCategory.name === "category.entertainment") && subCategoryParam) {
-    console.log("Index.tsx: Rendering Sub-Category Items for:", subCategoryParam);
+  if ((currentCategory.name === "category.news" || currentCategory.name === "category.live_tv" || currentCategory.name === "category.education" || currentCategory.name === "category.entertainment") && subCategoryKey) {
+    console.log("Index.tsx: Rendering Sub-Category Items for:", subCategoryKey);
     itemsToDisplay = currentSubCategoryItems;
     if (currentCategory.name === "category.live_tv" && itemsToDisplay) {
       let allInOneTvUrl = "https://tv.garden/"; // Default URL
-      if (subCategoryParam === t("country.bangladesh")) { // Compare with translated name
+      if (subCategoryKey === "country.bangladesh") { // Compare with translation key
         allInOneTvUrl = "https://tv.garden/bd/NikPw9VKIQ0CfQ";
-      } else if (subCategoryParam === t("country.india")) { // Compare with translated name
+      } else if (subCategoryKey === "country.india") { // Compare with translation key
         allInOneTvUrl = "https://tv.garden/in/A75lVEYwDx8Emp";
-      } else if (subCategoryParam === t("country.united_kingdom")) { // Compare with translated name
+      } else if (subCategoryKey === "country.united_kingdom") { // Compare with translation key
         allInOneTvUrl = "https://tv.garden/uk/g1kSsRGdu6pjqO";
-      } else if (subCategoryParam === t("country.united_states")) { // Compare with translated name
+      } else if (subCategoryKey === "country.united_states") { // Compare with translation key
         allInOneTvUrl = "https://tv.garden/us/1vLEWY7mhnX4hE";
-      } else if (subCategoryParam === t("country.canada")) { // Compare with translated name
+      } else if (subCategoryKey === "country.canada") { // Compare with translation key
         allInOneTvUrl = "https://tv.garden/ca/uBUxokoZzvdGBC";
-      } else if (subCategoryParam === t("country.australia")) { // Compare with translated name
+      } else if (subCategoryKey === "country.australia") { // Compare with translation key
         allInOneTvUrl = "https://tv.garden/au/1U3UtAxYHSHl5p";
       }
       // Prepend "All In One TV" with the dynamic URL
@@ -253,14 +254,14 @@ const Index: React.FC = () => {
   }
 
   let titleText: string;
-  if (currentCategory.name === "category.news" && subCategoryParam) {
-    titleText = `${subCategoryParam} - ${t("common.newspapers")}`;
-  } else if (currentCategory.name === "category.live_tv" && subCategoryParam) {
-    titleText = `${subCategoryParam} - ${t("common.television")}`;
-  } else if (currentCategory.name === "category.education" && subCategoryParam) {
-    titleText = `${subCategoryParam} - ${t("common.educational_websites")}`;
-  } else if (currentCategory.name === "category.entertainment" && subCategoryParam) {
-    titleText = `${subCategoryParam} - ${t("common.entertainment_websites")}`;
+  if (currentCategory.name === "category.news" && subCategoryKey) {
+    titleText = `${t(subCategoryKey)} - ${t("common.newspapers")}`;
+  } else if (currentCategory.name === "category.live_tv" && subCategoryKey) {
+    titleText = `${t(subCategoryKey)} - ${t("common.television")}`;
+  } else if (currentCategory.name === "category.education" && subCategoryKey) {
+    titleText = `${t(subCategoryKey)} - ${t("common.educational_websites")}`;
+  } else if (currentCategory.name === "category.entertainment" && subCategoryKey) {
+    titleText = `${t(subCategoryKey)} - ${t("common.entertainment_websites")}`;
   } else {
     titleText = t(currentCategory.name);
   }

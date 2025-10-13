@@ -25,7 +25,8 @@ import { useLanguage } from "@/context/LanguageContext"; // Import useLanguage
 import { useTranslation } from "@/lib/translations"; // Import useTranslation
 
 interface SearchableItem {
-  name: string;
+  name: string; // Display name (translated)
+  key: string; // Original translation key for categories/items
   path: string;
   type: 'category' | 'country' | 'item' | 'page';
   icon?: React.ElementType;
@@ -40,8 +41,8 @@ export function Header() {
   const [searchParams, setSearchParams] = useSearchParams();
   const searchInputRef = useRef<HTMLInputElement>(null);
   const searchResultsRef = useRef<HTMLDivElement>(null);
-  const { t } = useTranslation(); // Initialize useTranslation
-  const { currentLanguage, switchLanguage } = useLanguage(); // Initialize useLanguage
+  const { t, currentLanguage } = useTranslation(); // Initialize useTranslation and get currentLanguage
+  const { switchLanguage } = useLanguage(); // Initialize useLanguage
 
   const isAdmin = profile?.email === 'uzzal@admin.com';
   const isGuest = profile?.is_guest;
@@ -54,41 +55,49 @@ export function Header() {
       name: t("common.home"),
       icon: Home,
       href: "/",
+      key: "common.home",
     },
     ...(!isGuest ? [{
       name: t("common.active_users"),
       icon: MessageSquareText,
       href: "/active-users",
+      key: "common.active_users",
     }] : []),
     ...(isAdmin ? [{
       name: t("common.live_chat"),
       icon: MessageCircleMore,
       href: "/live-chat",
+      key: "common.live_chat",
     }] : []),
     {
       name: t("common.contact"),
       icon: Mail,
       href: "/contact",
+      key: "common.contact",
     },
     ...(isAdmin ? [{
       name: t("common.advertisements"),
       icon: ImageIcon,
       href: "/advertisements",
+      key: "common.advertisements",
     }] : []),
     {
       name: t("common.ai"),
       icon: Sparkles,
       href: "/ai",
+      key: "common.ai",
     },
     {
       name: t("common.quiz"),
       icon: Brain,
       href: "/quiz",
+      key: "common.quiz",
     },
     ...(isAdmin ? [{
       name: t("common.user_management"),
       icon: Users,
       href: "/user-management",
+      key: "common.user_management",
     }] : []),
   ], [t, isGuest, isAdmin]); // Add t to dependencies to re-evaluate on language change
 
@@ -99,7 +108,7 @@ export function Header() {
     // Add direct pages from filteredNavItems
     filteredNavItems.forEach(navItem => {
       if (!addedPaths.has(navItem.href)) {
-        items.push({ name: navItem.name, path: navItem.href, type: 'page', icon: navItem.icon });
+        items.push({ name: navItem.name, key: navItem.key, path: navItem.href, type: 'page', icon: navItem.icon });
         addedPaths.add(navItem.href);
       }
     });
@@ -107,18 +116,18 @@ export function Header() {
     // Add items from allInOneCategories
     allInOneCategories.forEach(category => {
       // Top-level category
-      const categoryPath = category.internalRoute || `/?category=${encodeURIComponent(t(category.name))}`; // Use translated name for path
+      const categoryPath = category.internalRoute || `/?category=${encodeURIComponent(category.name)}`; // Use translation key for path
       if (!addedPaths.has(categoryPath)) {
-        items.push({ name: t(category.name), path: categoryPath, type: 'category', icon: category.icon });
+        items.push({ name: t(category.name), key: category.name, path: categoryPath, type: 'category', icon: category.icon });
         addedPaths.add(categoryPath);
       }
 
       category.items?.forEach(item => {
         // Sub-category (country)
         if (item.subItems) {
-          const countryPath = `/?category=${encodeURIComponent(t(category.name))}&subCategory=${encodeURIComponent(t(item.name))}`; // Use translated names for path
+          const countryPath = `/?category=${encodeURIComponent(category.name)}&subCategory=${encodeURIComponent(item.name)}`; // Use translation keys for path
           if (!addedPaths.has(countryPath)) {
-            items.push({ name: `${t(category.name)} / ${t(item.name)}`, path: countryPath, type: 'country' });
+            items.push({ name: `${t(category.name)} / ${t(item.name)}`, key: item.name, path: countryPath, type: 'country' });
             addedPaths.add(countryPath);
           }
           // Items within sub-category (e.g., newspapers, TV channels)
@@ -130,19 +139,19 @@ export function Header() {
               subItemPath = `/view/${encodeURIComponent(subItem.url)}/${encodeURIComponent(t(subItem.name))}`;
             }
             if (subItemPath && !addedPaths.has(subItemPath)) {
-              items.push({ name: `${t(category.name)} / ${t(item.name)} / ${t(subItem.name)}`, path: subItemPath, type: 'item' });
+              items.push({ name: `${t(category.name)} / ${t(item.name)} / ${t(subItem.name)}`, key: subItem.name, path: subItemPath, type: 'item' });
               addedPaths.add(subItemPath);
             }
           });
         } else if (item.url) { // Direct item under a top-level category (e.g., a shopping site)
           const itemPath = `/view/${encodeURIComponent(item.url)}/${encodeURIComponent(t(item.name))}`;
           if (!addedPaths.has(itemPath)) {
-            items.push({ name: `${t(category.name)} / ${t(item.name)}`, path: itemPath, type: 'item' });
+            items.push({ name: `${t(category.name)} / ${t(item.name)}`, key: item.name, path: itemPath, type: 'item' });
             addedPaths.add(itemPath);
           }
         } else if (item.internalRoute) { // Direct internal route under a top-level category (e.g., Quiz)
           if (!addedPaths.has(item.internalRoute)) {
-            items.push({ name: `${t(category.name)} / ${t(item.name)}`, path: item.internalRoute, type: 'page' });
+            items.push({ name: `${t(category.name)} / ${t(item.name)}`, key: item.name, path: item.internalRoute, type: 'page' });
             addedPaths.add(item.internalRoute);
           }
         }
@@ -177,7 +186,7 @@ export function Header() {
     setShowSearchResults(false);
 
     if (result.path.startsWith('/?')) {
-      // Handle paths with search params (e.g., /?category=খবর&subCategory=বাংলাদেশ)
+      // Handle paths with search params (e.g., /?category=category.news&subCategory=country.bangladesh)
       const url = new URL(`http://dummy.com${result.path}`); // Use a dummy base URL to parse search params
       const category = url.searchParams.get('category');
       const subCategory = url.searchParams.get('subCategory');

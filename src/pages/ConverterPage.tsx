@@ -20,7 +20,7 @@ interface ConverterType {
 
 const ConverterPage: React.FC = () => {
   const navigate = useNavigate();
-  const { t } = useTranslation(); // Initialize useTranslation
+  const { t, currentLanguage } = useTranslation(); // Initialize useTranslation and get currentLanguage
   const [selectedConverter, setSelectedConverter] = useState<string | null>(null);
 
   const converterTypes: ConverterType[] = [
@@ -81,7 +81,7 @@ const ConverterPage: React.FC = () => {
       navigate(`/view/${encodedUrl}/${encodedItemName}`);
       setSelectedConverter(null); // Reset to show grid when returning
     }
-  }, [selectedConverter, navigate, t]);
+  }, [selectedConverter, navigate, t, currentLanguage]); // Added currentLanguage to dependencies
 
   const handleBack = () => {
     if (selectedConverter) {

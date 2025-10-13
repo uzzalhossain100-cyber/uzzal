@@ -20,7 +20,7 @@ export function DashboardCard({
   icon: Icon,
   className,
 }: DashboardCardProps) {
-  const { t } = useTranslation(); // Initialize useTranslation
+  const { t, currentLanguage } = useTranslation(); // Initialize useTranslation and get currentLanguage
 
   return (
     <Card className={cn("flex-1 bg-background/80 backdrop-blur-sm", className)}> {/* Added bg-background/80 backdrop-blur-sm */}

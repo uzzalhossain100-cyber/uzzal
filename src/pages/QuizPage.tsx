@@ -14,7 +14,7 @@ const QUESTION_SCORE = 10;
 
 const QuizPage: React.FC = () => {
   const navigate = useNavigate();
-  const { t } = useTranslation(); // Initialize useTranslation
+  const { t, currentLanguage } = useTranslation(); // Initialize useTranslation and get currentLanguage
 
   const [showScreen, setShowScreen] = useState<'ageSelection' | 'subjectSelection' | 'quiz' | 'result'>('ageSelection');
   const [selectedAgeGroup, setSelectedAgeGroup] = useState<keyof typeof allQuizQuestions | null>(null);
@@ -146,7 +146,7 @@ const QuizPage: React.FC = () => {
     if (showScreen === 'quiz' && selectedQuestions.length > 0) {
       loadQuestion();
     }
-  }, [currentQuestionIndex, selectedQuestions, showScreen]);
+  }, [currentQuestionIndex, selectedQuestions, showScreen, currentLanguage]); // Added currentLanguage to dependencies
 
   // Cleanup timer on component unmount
   useEffect(() => {

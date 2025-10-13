@@ -15,15 +15,15 @@ const ViewPlatformPage: React.FC = () => {
   const decodedUrl = encodedUrl ? decodeURIComponent(encodedUrl) : '';
   const decodedItemName = itemName ? decodeURIComponent(itemName) : t("common.view_platform_page_title"); // Use translation for default
 
-  // Retrieve state passed from Index.tsx
+  // Retrieve state passed from Index.tsx (now containing translation keys)
   const { fromCategory, fromSubCategory } = (location.state as { fromCategory?: string; fromSubCategory?: string }) || {};
 
   const handleBack = () => {
     if (fromSubCategory && fromCategory) {
-      // Go back to the specific sub-category (e.g., Bangladesh newspapers)
+      // Go back to the specific sub-category using translation keys
       navigate(`/?category=${fromCategory}&subCategory=${fromSubCategory}`);
     } else if (fromCategory) {
-      // Go back to the specific category (e.g., News countries)
+      // Go back to the specific category using translation key
       navigate(`/?category=${fromCategory}`);
     } else {
       // Fallback to home if no specific context was passed

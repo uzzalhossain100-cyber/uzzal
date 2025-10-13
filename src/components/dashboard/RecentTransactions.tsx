@@ -58,7 +58,7 @@ const transactions: Transaction[] = [
 ];
 
 export function RecentTransactions() {
-  const { t } = useTranslation(); // Initialize useTranslation
+  const { t, currentLanguage } = useTranslation(); // Initialize useTranslation and get currentLanguage
 
   return (
     <Card className="bg-background/80 backdrop-blur-sm"> {/* Added bg-background/80 backdrop-blur-sm */}

@@ -31,7 +31,7 @@ const data = [
 ];
 
 export function SalesOverviewChart() {
-  const { t } = useTranslation(); // Initialize useTranslation
+  const { t, currentLanguage } = useTranslation(); // Initialize useTranslation and get currentLanguage
 
   return (
     <Card className="col-span-4 bg-background/80 backdrop-blur-sm"> {/* Added bg-background/80 backdrop-blur-sm */}
