@@ -96,7 +96,12 @@ const Index: React.FC = () => {
       // If it's a final item with a URL (e.g., a newspaper, TV channel, educational site, or entertainment site)
       const encodedUrl = encodeURIComponent(item.url);
       const encodedItemName = encodeURIComponent(t(item.name)); // Translate item name for URL
-      navigate(`/view/${encodedUrl}/${encodedItemName}`);
+      navigate(`/view/${encodedUrl}/${encodedItemName}`, {
+        state: {
+          fromCategory: categoryParam,
+          fromSubCategory: subCategoryParam,
+        }
+      });
     }
   };
 

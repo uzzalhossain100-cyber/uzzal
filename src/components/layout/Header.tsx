@@ -49,7 +49,7 @@ export function Header() {
   const avatarSrc = isAdmin ? "/images/uzzal-hossain.jpg" : (user?.user_metadata?.avatar_url || "https://github.com/shadcn.png");
   const avatarFallback = user?.email ? user.email.charAt(0).toUpperCase() : (profile?.username ? profile.username.charAt(0).toUpperCase() : 'U');
 
-  const filteredNavItems = [
+  const filteredNavItems = useMemo(() => [
     {
       name: t("common.home"),
       icon: Home,
@@ -90,7 +90,7 @@ export function Header() {
       icon: Users,
       href: "/user-management",
     }] : []),
-  ];
+  ], [t, isGuest, isAdmin]); // Add t to dependencies to re-evaluate on language change
 
   const allSearchableItems = useMemo(() => {
     const items: SearchableItem[] = [];
@@ -107,7 +107,7 @@ export function Header() {
     // Add items from allInOneCategories
     allInOneCategories.forEach(category => {
       // Top-level category
-      const categoryPath = category.internalRoute || `/?category=${encodeURIComponent(category.name)}`;
+      const categoryPath = category.internalRoute || `/?category=${encodeURIComponent(t(category.name))}`; // Use translated name for path
       if (!addedPaths.has(categoryPath)) {
         items.push({ name: t(category.name), path: categoryPath, type: 'category', icon: category.icon });
         addedPaths.add(categoryPath);
@@ -116,7 +116,7 @@ export function Header() {
       category.items?.forEach(item => {
         // Sub-category (country)
         if (item.subItems) {
-          const countryPath = `/?category=${encodeURIComponent(category.name)}&subCategory=${encodeURIComponent(item.name)}`;
+          const countryPath = `/?category=${encodeURIComponent(t(category.name))}&subCategory=${encodeURIComponent(t(item.name))}`; // Use translated names for path
           if (!addedPaths.has(countryPath)) {
             items.push({ name: `${t(category.name)} > ${t(item.name)}`, path: countryPath, type: 'country' });
             addedPaths.add(countryPath);

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom'; // Import useLocation
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, ExternalLink } from 'lucide-react';
@@ -9,13 +9,26 @@ import { useTranslation } from '@/lib/translations'; // Import useTranslation
 const ViewPlatformPage: React.FC = () => {
   const { encodedUrl, itemName } = useParams<{ encodedUrl: string; itemName: string }>();
   const navigate = useNavigate();
+  const location = useLocation(); // Initialize useLocation
   const { t } = useTranslation(); // Initialize useTranslation
 
   const decodedUrl = encodedUrl ? decodeURIComponent(encodedUrl) : '';
   const decodedItemName = itemName ? decodeURIComponent(itemName) : t("common.view_platform_page_title"); // Use translation for default
 
+  // Retrieve state passed from Index.tsx
+  const { fromCategory, fromSubCategory } = (location.state as { fromCategory?: string; fromSubCategory?: string }) || {};
+
   const handleBack = () => {
-    navigate(-1); // Go back to the previous page (category list)
+    if (fromSubCategory && fromCategory) {
+      // Go back to the specific sub-category (e.g., Bangladesh newspapers)
+      navigate(`/?category=${fromCategory}&subCategory=${fromSubCategory}`);
+    } else if (fromCategory) {
+      // Go back to the specific category (e.g., News countries)
+      navigate(`/?category=${fromCategory}`);
+    } else {
+      // Fallback to home if no specific context was passed
+      navigate('/');
+    }
   };
 
   const handleOpenInNewTab = () => {
