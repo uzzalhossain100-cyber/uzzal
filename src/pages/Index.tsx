@@ -127,7 +127,8 @@ const Index: React.FC = () => {
         <CardContent className="flex-1 overflow-hidden p-6">
           <ScrollArea className="h-[calc(100vh-180px)] w-full rounded-xl border-2 border-primary/20 bg-background/80 p-4 shadow-lg">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-              {allInOneCategories.map((category, index) => {
+              {/* Use a shallow copy here to prevent any potential mutation issues */}
+              {[...allInOneCategories].map((category, index) => {
                 const Icon = category.icon;
                 const gradientClass = categoryGradientColors[index % categoryGradientColors.length];
                 return (
