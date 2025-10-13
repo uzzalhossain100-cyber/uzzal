@@ -208,6 +208,7 @@ export function Header() {
     }
   };
 
+  // Start of JSX
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background/80 backdrop-blur-sm px-4 sm:px-6 shadow-sm">
       {/* Mobile Sheet (Hamburger Menu) */}
@@ -228,7 +229,7 @@ export function Header() {
                 const isActive = location.pathname === item.href;
                 return (
                   <Link
-                    key={item.href} {/* Changed key to item.href */}
+                    key={item.href}
                     to={item.href}
                     className={cn(
                       "flex items-center gap-3 rounded-lg px-3 py-2 text-sidebar-foreground transition-all hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
@@ -261,7 +262,7 @@ export function Header() {
           const isActive = location.pathname === item.href;
           return (
             <Link
-              key={item.href} {/* Changed key to item.href */}
+              key={item.href}
               to={item.href}
               className={cn(
                 "flex items-center gap-1 px-3 py-2 rounded-md transition-colors text-muted-foreground hover:text-primary",
@@ -321,7 +322,7 @@ export function Header() {
           >
             {searchResults.map((result, index) => (
               <div
-                key={result.path} {/* Changed key to result.path */}
+                key={result.path}
                 className="flex items-center gap-2 p-2 cursor-pointer hover:bg-accent hover:text-accent-foreground"
                 onClick={() => handleResultClick(result)}
               >
@@ -363,7 +364,7 @@ export function Header() {
             </Avatar>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" key={currentLanguage}> {/* Added key={currentLanguage} here */}
+        <DropdownMenuContent align="end" key={currentLanguage}>
           <DropdownMenuLabel className="font-extrabold">
             {isGuest ? `${t("common.guest")}: ${profile?.username}` : (user?.email || t("common.my_account"))}
           </DropdownMenuLabel>
