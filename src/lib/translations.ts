@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback } from "react"; // Import useCallback
 import { useLanguage } from "@/context/LanguageContext";
 
 interface TranslationKeys {
@@ -150,8 +151,8 @@ const translations: TranslationKeys = {
   "common.no_question_asked": { bn: "কোনো প্রশ্ন জিজ্ঞাসা করা হয়নি। Funny AI-কে কিছু জিজ্ঞাসা করো!", en: "No question asked. Ask Funny AI something!" },
   "common.ask_question": { bn: "তোমার প্রশ্ন জিজ্ঞাসা করো...", en: "Ask your question..." },
   "common.ask_button": { bn: "জিজ্ঞাসা করো", en: "Ask" },
-  "common.you": { bn: "তুমি:", en: "You:" },
-  "common.funny_ai": { bn: "Funny AI:", en: "Funny AI:" },
+  "common.ai_you_label": { bn: "তুমি:", en: "You:" },
+  "common.ai_ai_label": { bn: "Funny AI:", en: "Funny AI:" },
   "common.quiz_loading_data": { bn: "ইউজার ডেটা লোড হচ্ছে...", en: "User data loading..." },
   "common.quiz_question_no": { bn: "প্রশ্ন নং:", en: "Question No:" },
   "common.quiz_time": { bn: "সময়:", en: "Time:" },
@@ -291,7 +292,7 @@ const translations: TranslationKeys = {
   "category.news": { bn: "খবর", en: "News" },
   "category.live_tv": { bn: "লাইভ টিভি", en: "Live TV" },
   "category.emergency_contacts": { bn: "জরুরি যোগাযোগ", en: "Emergency Contacts" },
-  "category.shopping": { bn: "কেনাকাটা", en: "Shopping" },
+  "category.shopping": { bn: "কেনাকাটা", en : "Shopping" },
   "category.banking_finance": { bn: "ব্যাংকিং ও ফিনান্স", en: "Banking & Finance" },
   "category.travel": { bn: "ভ্রমণ", en: "Travel" },
   "category.health": { bn: "স্বাস্থ্য", en: "Health" },
@@ -880,7 +881,7 @@ const translations: TranslationKeys = {
 export const useTranslation = () => {
   const { currentLanguage } = useLanguage();
 
-  const t = (key: string, replacements?: { [key: string]: string | number }) => {
+  const t = useCallback((key: string, replacements?: { [key: string]: string | number }) => {
     const translation = translations[key];
     if (!translation) {
       console.warn(`Translation key "${key}" not found.`);
@@ -893,7 +894,7 @@ export const useTranslation = () => {
       }
     }
     return text;
-  };
+  }, [currentLanguage]); // 't' function itself depends on currentLanguage
 
   return { t, currentLanguage };
 };

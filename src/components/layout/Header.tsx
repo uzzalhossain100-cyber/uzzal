@@ -228,7 +228,7 @@ export function Header() {
                 const isActive = location.pathname === item.href;
                 return (
                   <Link
-                    key={item.name}
+                    key={item.href} {/* Changed key to item.href */}
                     to={item.href}
                     className={cn(
                       "flex items-center gap-3 rounded-lg px-3 py-2 text-sidebar-foreground transition-all hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
@@ -261,7 +261,7 @@ export function Header() {
           const isActive = location.pathname === item.href;
           return (
             <Link
-              key={item.name}
+              key={item.href} {/* Changed key to item.href */}
               to={item.href}
               className={cn(
                 "flex items-center gap-1 px-3 py-2 rounded-md transition-colors text-muted-foreground hover:text-primary",
@@ -321,7 +321,7 @@ export function Header() {
           >
             {searchResults.map((result, index) => (
               <div
-                key={index}
+                key={result.path} {/* Changed key to result.path */}
                 className="flex items-center gap-2 p-2 cursor-pointer hover:bg-accent hover:text-accent-foreground"
                 onClick={() => handleResultClick(result)}
               >
