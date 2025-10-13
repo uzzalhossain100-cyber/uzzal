@@ -143,7 +143,7 @@ const translations: TranslationKeys = {
   "common.no_permission_access_page": { bn: "আপনার এই পেজটি অ্যাক্সেস করার অনুমতি নেই।", en: "You do not have permission to access this page." },
   "common.no_messages_yet": { bn: "কোনো মেসেজ নেই। একটি নতুন মেসেজ পোস্ট করুন!", en: "No messages yet. Post a new message!" },
   "common.failed_to_load_messages": { bn: "মেসেজ লোড করতে ব্যর্থ:", en: "Failed to load messages:" },
-  "common.failed_to_load_comments": { bn: "কমেন্ট লোড করতে ব্যর্থ:", en: "Failed to load comments:" },
+  "common.failed_to_load_comments": { bn: "কমেন্ট লোড করতে ব্যর্থ:", en "Failed to load comments:" },
   "common.post_message": { bn: "পোস্ট করুন", en: "Post Message" },
   "common.delete_message_confirm": { bn: "আপনি কি নিশ্চিত যে আপনি এই মেসেজটি ডিলিট করতে চান? এই অ্যাকশনটি পূর্বাবস্থায় ফেরানো যাবে না।", en: "Are you sure you want to delete this message? This action cannot be undone." },
   "common.delete_comment_confirm": { bn: "আপনি কি নিশ্চিত যে আপনি এই কমেন্টটি ডিলিট করতে চান? এই অ্যাকশনটি পূর্বাবস্থায় ফেরানো যাবে না।", en: "Are you sure you want to delete this comment? This action cannot be undone." },
