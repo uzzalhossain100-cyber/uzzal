@@ -4,22 +4,25 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Brain, Trophy, Clock, CheckCircle, XCircle, BookOpen, Globe, Calculator, History, Laptop, Languages, Loader2 } from 'lucide-react';
+import { ArrowLeft, Brain, Trophy, Clock, CheckCircle, XCircle, BookOpen, Globe, Calculator, History, Laptop, Languages, Loader2, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Question, SubjectQuestions } from '@/data/quizQuestions'; // Keep Question and SubjectQuestions interfaces
-import { getQuizQuestions } from '@/lib/quizService'; // Import the new service
-import { useTranslation } from '@/lib/translations'; // Import useTranslation
-import { showError } from '@/utils/toast'; // Import showError
+import { Question, SubjectQuestions } from '@/data/quizQuestions';
+import { getQuizQuestions } from '@/lib/quizService';
+import { useTranslation } from '@/lib/translations';
+import { showError } from '@/utils/toast';
+import { useAuth } from '@/context/AuthContext'; // Import useAuth
+import QuizManagement from '@/components/quiz/QuizManagement'; // Import QuizManagement
 
 const MAX_QUESTIONS = 10;
 const QUESTION_SCORE = 10;
 
 const QuizPage: React.FC = () => {
   const navigate = useNavigate();
-  const { t, currentLanguage } = useTranslation(); // Initialize useTranslation and get currentLanguage
+  const { t, currentLanguage } = useTranslation();
+  const { profile, loading: authLoading } = useAuth(); // Get profile and authLoading
 
-  const [showScreen, setShowScreen] = useState<'ageSelection' | 'subjectSelection' | 'quiz' | 'result'>('ageSelection');
-  const [selectedAgeGroup, setSelectedAgeGroup] = useState<string | null>(null); // Changed type to string
+  const [showScreen, setShowScreen] = useState<'ageSelection' | 'subjectSelection' | 'quiz' | 'result' | 'management'>('ageSelection');
+  const [selectedAgeGroup, setSelectedAgeGroup] = useState<string | null>(null);
   const [selectedSubject, setSelectedSubject] = useState<keyof SubjectQuestions | null>(null);
   const [selectedQuestions, setSelectedQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -31,13 +34,14 @@ const QuizPage: React.FC = () => {
   const [shuffledOptions, setShuffledOptions] = useState<string[]>([]);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [correctAnswer, setCorrectAnswer] = useState<string | null>(null);
-  const [loadingQuestions, setLoadingQuestions] = useState(false); // New loading state for questions
+  const [loadingQuestions, setLoadingQuestions] = useState(false);
 
   const timerIntervalRef = useRef<number | null>(null);
   const gameStartedTimeRef = useRef<number>(0);
 
-  // Define age groups and subjects directly or fetch from a config if needed
-  const ageGroups = ['5-10', '11-25', '26+']; // Hardcoded for now, can be fetched from DB if dynamic
+  const isAdmin = profile?.email === 'uzzal@admin.com';
+
+  const ageGroups = ['5-10', '11-25', '26+'];
   const subjects: { id: keyof SubjectQuestions; name: string; icon: React.ElementType }[] = [
     { id: 'generalKnowledge', name: t("common.quiz_general_knowledge"), icon: Globe },
     { id: 'islamicKnowledge', name: t("common.quiz_islamic_knowledge"), icon: BookOpen },
@@ -58,9 +62,11 @@ const QuizPage: React.FC = () => {
     } else if (showScreen === 'subjectSelection') {
       setShowScreen('ageSelection');
       setSelectedAgeGroup(null);
-      setSelectedSubject(null); // Reset subject when going back to age selection
+      setSelectedSubject(null);
+    } else if (showScreen === 'management') {
+      setShowScreen('ageSelection'); // Go back to age selection from management
     } else {
-      navigate(-1); // Go back to previous page (Index)
+      navigate(-1);
     }
   };
 
@@ -89,7 +95,7 @@ const QuizPage: React.FC = () => {
     } else {
       showError(t("common.no_questions_found_for_selection"));
       setSelectedQuestions([]);
-      setShowScreen('subjectSelection'); // Go back to subject selection if no questions
+      setShowScreen('subjectSelection');
     }
     setLoadingQuestions(false);
   };
@@ -108,14 +114,14 @@ const QuizPage: React.FC = () => {
     const q = selectedQuestions[currentQuestionIndex];
     setShuffledOptions(shuffleOptions(q));
     setCorrectAnswer(q.a);
-    setSelectedOption(null); // Reset selected option for new question
-    setIsQuizActive(true); // Re-activate quiz for new question
+    setSelectedOption(null);
+    setIsQuizActive(true);
   };
 
   const checkAnswer = (option: string) => {
     if (!isQuizActive) return;
 
-    setIsQuizActive(false); // Disable further clicks for this question
+    setIsQuizActive(false);
     setSelectedOption(option);
 
     if (option === correctAnswer) {
@@ -141,7 +147,7 @@ const QuizPage: React.FC = () => {
     setSelectedAgeGroup(ageGroup);
     setSelectedSubject(subjectId);
     resetQuizState();
-    await fetchAndSelectQuestions(ageGroup, subjectId); // Fetch questions from Supabase
+    await fetchAndSelectQuestions(ageGroup, subjectId);
     setShowScreen('quiz');
     startTimer();
   };
@@ -160,7 +166,6 @@ const QuizPage: React.FC = () => {
     }
   }, [currentQuestionIndex, selectedQuestions, showScreen, currentLanguage, loadingQuestions]);
 
-  // Cleanup timer on component unmount
   useEffect(() => {
     return () => {
       if (timerIntervalRef.current) {
@@ -176,13 +181,35 @@ const QuizPage: React.FC = () => {
     pageTitle = `${t("common.select_subject")} (${selectedAgeGroup} ${t("common.quiz_years")})`;
   } else if ((showScreen === 'quiz' || showScreen === 'result') && selectedSubject && selectedAgeGroup) {
     pageTitle = `${getSubjectName(selectedSubject)} ${t("common.quiz_page_title")} (${selectedAgeGroup} ${t("common.quiz_years")})`;
+  } else if (showScreen === 'management') {
+    pageTitle = t("common.quiz_management_title");
   }
 
-  if (loadingQuestions) {
+  if (authLoading) {
     return (
       <div className="flex items-center justify-center min-h-[calc(100vh-100px)]">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        <span className="ml-2 text-lg text-muted-foreground font-bold">{t("common.quiz_loading_questions")}</span>
+        <span className="ml-2 text-lg text-muted-foreground font-bold">{t("common.data_loading")}</span>
+      </div>
+    );
+  }
+
+  if (showScreen === 'management') {
+    return (
+      <div className="flex flex-col h-full">
+        <Card className="w-full flex flex-col flex-1 bg-background/80 backdrop-blur-sm shadow-lg border-primary/20 dark:border-primary/50">
+          <CardHeader className="flex flex-row items-center justify-between pb-4 border-b">
+            <CardTitle className="text-3xl font-extrabold text-primary dark:text-primary-foreground flex items-center">
+              <Button variant="ghost" onClick={handleBack} className="p-0 h-auto mr-2 text-primary dark:text-primary-foreground hover:bg-transparent hover:text-primary/80">
+                <ArrowLeft className="h-6 w-6" />
+              </Button>
+              <Brain className="h-7 w-7 mr-2" /> {pageTitle}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="flex-1 p-0">
+            <QuizManagement />
+          </CardContent>
+        </Card>
       </div>
     );
   }
@@ -196,6 +223,17 @@ const QuizPage: React.FC = () => {
               <ArrowLeft className="h-6 w-6" />
             </Button>
             <Brain className="h-7 w-7 mr-2" /> {pageTitle}
+            {isAdmin && showScreen !== 'management' && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setShowScreen('management')}
+                className="absolute right-4 top-4 text-primary dark:text-primary-foreground hover:bg-primary/10"
+              >
+                <Settings className="h-5 w-5" />
+                <span className="sr-only">{t("common.quiz_manage_questions")}</span>
+              </Button>
+            )}
           </CardTitle>
           <CardDescription className="text-muted-foreground">{t("common.quiz_page_desc")}</CardDescription>
         </CardHeader>
@@ -229,7 +267,7 @@ const QuizPage: React.FC = () => {
                   <Button
                     key={subject.id}
                     onClick={() => {
-                      startGame(selectedAgeGroup, subject.id); // Pass ageGroup and subject.id directly
+                      startGame(selectedAgeGroup, subject.id);
                     }}
                     className="h-24 flex flex-col items-center justify-center text-center p-2 rounded-lg shadow-md transition-all duration-200 bg-secondary text-secondary-foreground hover:bg-secondary/90 font-bold text-lg"
                   >
@@ -291,7 +329,7 @@ const QuizPage: React.FC = () => {
               </p>
               <p className="text-base text-foreground mb-6">{t("common.quiz_total_time_label")} <span id="time-taken" className="text-orange-600 font-bold">{timeElapsed} {t("common.quiz_seconds")}</span></p>
               <Button
-                onClick={() => setShowScreen('ageSelection')} // Go back to age selection to restart
+                onClick={() => setShowScreen('ageSelection')}
                 className="start-button bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-lg px-8 py-4 rounded-lg transition-colors"
               >
                 {t("common.quiz_restart_button")}
