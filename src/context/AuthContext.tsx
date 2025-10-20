@@ -283,7 +283,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [t]); // Added t to dependency array
 
   const signIn = async (identifier: string, password: string) => {
-    if (identifier === 'Uzzal' && password === '200186') {
+    // Updated mock admin login credentials
+    if (identifier === 'uzzal@admin.com' && password === '200186') {
       setMockAdminSession();
       showSuccess(t("common.admin_login_success"));
       return { success: true };
