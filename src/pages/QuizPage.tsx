@@ -4,10 +4,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Brain, Trophy, Clock, CheckCircle, XCircle, BookOpen, Globe, Calculator, History, Laptop, Languages } from 'lucide-react';
+import { ArrowLeft, Brain, Trophy, Clock, CheckCircle, XCircle, BookOpen, Globe, Calculator, History, Laptop, Languages, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { allQuizQuestions, Question, SubjectQuestions } from '@/data/quizQuestions';
+import { Question, SubjectQuestions } from '@/data/quizQuestions'; // Keep Question and SubjectQuestions interfaces
+import { getQuizQuestions } from '@/lib/quizService'; // Import the new service
 import { useTranslation } from '@/lib/translations'; // Import useTranslation
+import { showError } from '@/utils/toast'; // Import showError
 
 const MAX_QUESTIONS = 10;
 const QUESTION_SCORE = 10;
@@ -17,7 +19,7 @@ const QuizPage: React.FC = () => {
   const { t, currentLanguage } = useTranslation(); // Initialize useTranslation and get currentLanguage
 
   const [showScreen, setShowScreen] = useState<'ageSelection' | 'subjectSelection' | 'quiz' | 'result'>('ageSelection');
-  const [selectedAgeGroup, setSelectedAgeGroup] = useState<keyof typeof allQuizQuestions | null>(null);
+  const [selectedAgeGroup, setSelectedAgeGroup] = useState<string | null>(null); // Changed type to string
   const [selectedSubject, setSelectedSubject] = useState<keyof SubjectQuestions | null>(null);
   const [selectedQuestions, setSelectedQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -29,11 +31,13 @@ const QuizPage: React.FC = () => {
   const [shuffledOptions, setShuffledOptions] = useState<string[]>([]);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [correctAnswer, setCorrectAnswer] = useState<string | null>(null);
+  const [loadingQuestions, setLoadingQuestions] = useState(false); // New loading state for questions
 
   const timerIntervalRef = useRef<number | null>(null);
   const gameStartedTimeRef = useRef<number>(0);
 
-  const ageGroups = Object.keys(allQuizQuestions) as (keyof typeof allQuizQuestions)[];
+  // Define age groups and subjects directly or fetch from a config if needed
+  const ageGroups = ['5-10', '11-25', '26+']; // Hardcoded for now, can be fetched from DB if dynamic
   const subjects: { id: keyof SubjectQuestions; name: string; icon: React.ElementType }[] = [
     { id: 'generalKnowledge', name: t("common.quiz_general_knowledge"), icon: Globe },
     { id: 'islamicKnowledge', name: t("common.quiz_islamic_knowledge"), icon: BookOpen },
@@ -74,12 +78,20 @@ const QuizPage: React.FC = () => {
     }
   };
 
-  const selectRandomQuestions = (ageGroup: keyof typeof allQuizQuestions, subject: keyof SubjectQuestions) => {
-    const questionsForSubject = allQuizQuestions[ageGroup][subject];
-    const totalQuestions = questionsForSubject.length;
-    const qCount = Math.min(MAX_QUESTIONS, totalQuestions);
-    const shuffled = [...questionsForSubject].sort(() => 0.5 - Math.random());
-    setSelectedQuestions(shuffled.slice(0, qCount));
+  const fetchAndSelectQuestions = async (ageGroup: string, subject: keyof SubjectQuestions) => {
+    setLoadingQuestions(true);
+    const fetchedQuestions = await getQuizQuestions(ageGroup, subject);
+    if (fetchedQuestions && fetchedQuestions.length > 0) {
+      const totalQuestions = fetchedQuestions.length;
+      const qCount = Math.min(MAX_QUESTIONS, totalQuestions);
+      const shuffled = [...fetchedQuestions].sort(() => 0.5 - Math.random());
+      setSelectedQuestions(shuffled.slice(0, qCount));
+    } else {
+      showError(t("common.no_questions_found_for_selection"));
+      setSelectedQuestions([]);
+      setShowScreen('subjectSelection'); // Go back to subject selection if no questions
+    }
+    setLoadingQuestions(false);
   };
 
   const shuffleOptions = (question: Question) => {
@@ -88,7 +100,7 @@ const QuizPage: React.FC = () => {
   };
 
   const loadQuestion = () => {
-    if (currentQuestionIndex >= MAX_QUESTIONS) {
+    if (currentQuestionIndex >= MAX_QUESTIONS || currentQuestionIndex >= selectedQuestions.length) {
       endQuiz();
       return;
     }
@@ -125,11 +137,11 @@ const QuizPage: React.FC = () => {
     }, 1000);
   };
 
-  const startGame = (ageGroup: keyof typeof allQuizQuestions, subjectId: keyof SubjectQuestions) => {
-    setSelectedAgeGroup(ageGroup); // Ensure age group is set
-    setSelectedSubject(subjectId); // Ensure subject is set
-    resetQuizState(); // Reset all states before starting a new game
-    selectRandomQuestions(ageGroup, subjectId);
+  const startGame = async (ageGroup: string, subjectId: keyof SubjectQuestions) => {
+    setSelectedAgeGroup(ageGroup);
+    setSelectedSubject(subjectId);
+    resetQuizState();
+    await fetchAndSelectQuestions(ageGroup, subjectId); // Fetch questions from Supabase
     setShowScreen('quiz');
     startTimer();
   };
@@ -143,10 +155,10 @@ const QuizPage: React.FC = () => {
   };
 
   useEffect(() => {
-    if (showScreen === 'quiz' && selectedQuestions.length > 0) {
+    if (showScreen === 'quiz' && selectedQuestions.length > 0 && !loadingQuestions) {
       loadQuestion();
     }
-  }, [currentQuestionIndex, selectedQuestions, showScreen, currentLanguage]); // Added currentLanguage to dependencies
+  }, [currentQuestionIndex, selectedQuestions, showScreen, currentLanguage, loadingQuestions]);
 
   // Cleanup timer on component unmount
   useEffect(() => {
@@ -164,6 +176,15 @@ const QuizPage: React.FC = () => {
     pageTitle = `${t("common.select_subject")} (${selectedAgeGroup} ${t("common.quiz_years")})`;
   } else if ((showScreen === 'quiz' || showScreen === 'result') && selectedSubject && selectedAgeGroup) {
     pageTitle = `${getSubjectName(selectedSubject)} ${t("common.quiz_page_title")} (${selectedAgeGroup} ${t("common.quiz_years")})`;
+  }
+
+  if (loadingQuestions) {
+    return (
+      <div className="flex items-center justify-center min-h-[calc(100vh-100px)]">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <span className="ml-2 text-lg text-muted-foreground font-bold">{t("common.quiz_loading_questions")}</span>
+      </div>
+    );
   }
 
   return (
