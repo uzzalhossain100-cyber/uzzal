@@ -124,7 +124,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
 
       presenceChannelRef.current.on('presence', { event: 'join' }, ({ newPresences }: { newPresences: any[] }) => {
-        const newState = presenceRef.current.presenceState();
+        const newState = presenceChannelRef.current.presenceState();
         updateOnlineUsers(newState);
       });
 
@@ -299,6 +299,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const sanitizedUsername = username.trim().replace(/[^\x00-\x7F]/g, '');
     const sanitizedMobileNumber = mobileNumber.trim().replace(/[^\x00-\x7F]/g, '');
 
+    // Check if sanitization changed the input, indicating non-ASCII characters were present
     if (sanitizedUsername !== username.trim() || (mobileNumber.trim() && sanitizedMobileNumber !== mobileNumber.trim())) {
       showError(t("common.non_ascii_characters_detected"));
       return { success: false, error: t("common.non_ascii_characters_detected") };
@@ -329,7 +330,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return { success: false, error: t("common.account_exists") };
     }
 
-    const { data: authData, error: authError } = await supabase.auth.signUp({ email, password });
+    // Pass sanitized username and mobile_number as user_metadata to supabase.auth.signUp
+    const { data: authData, error: authError } = await supabase.auth.signUp({ 
+      email, 
+      password,
+      options: {
+        data: {
+          username: sanitizedUsername,
+          mobile_number: sanitizedMobileNumber || null,
+        }
+      }
+    });
 
     if (authError) {
       showError(authError.message);
