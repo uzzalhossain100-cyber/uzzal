@@ -3,6 +3,7 @@ import { supabase } from '@/lib/supabaseClient';
 import { User } from '@supabase/supabase-js';
 import { showSuccess, showError } from '@/utils/toast';
 import { useTranslation } from '@/lib/translations'; // Import useTranslation
+import { sanitizeToAscii } from '@/lib/utils'; // Import sanitizeToAscii
 
 interface Profile {
   id: string;
@@ -126,8 +127,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (status === 'SUBSCRIBED') {
           const { error: presenceError } = await presenceChannelRef.current.track({
             user_id: sessionUser.id,
-            username: userProfile.username,
-            email: userProfile.email,
+            username: sanitizeToAscii(userProfile.username), // Sanitize username
+            email: sanitizeToAscii(userProfile.email),     // Sanitize email
             online_at: Date.now(),
           });
           if (presenceError) {
@@ -400,8 +401,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const recordVisit = async (visitData: { userId?: string; username?: string; email?: string; ipAddress?: string; }) => {
     const { error } = await supabase.from('visits').insert({
       user_id: visitData.userId,
-      username: visitData.username,
-      email: visitData.email,
+      username: sanitizeToAscii(visitData.username), // Sanitize username
+      email: sanitizeToAscii(visitData.email),     // Sanitize email
       ip_address: visitData.ipAddress,
       is_guest_visit: false,
     });

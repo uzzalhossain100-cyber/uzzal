@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useTranslation } from '@/lib/translations'; // Import useTranslation
+import { sanitizeToAscii } from '@/lib/utils'; // Import sanitizeToAscii
 
 const VisitorTracker: React.FC = () => {
   const { user, profile, loading, recordVisit } = useAuth();
@@ -25,8 +26,8 @@ const VisitorTracker: React.FC = () => {
       if (user || profile) {
         recordVisit({
           userId: user?.id,
-          username: profile?.username,
-          email: profile?.email,
+          username: sanitizeToAscii(profile?.username), // Sanitize username
+          email: sanitizeToAscii(profile?.email),     // Sanitize email
           ipAddress: ipAddress,
           // isGuestVisit: profile?.is_guest || false, // Removed
         });
