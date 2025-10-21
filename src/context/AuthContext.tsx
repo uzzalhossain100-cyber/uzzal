@@ -298,7 +298,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const { data: existingProfiles, error: checkError } = await supabase
       .from('profiles')
       .select('id, username, email, mobile_number')
-      .or(`username.eq.${username},email.eq.${email},mobile_number.eq.${mobileNumber}`); // Added mobile_number to check
+      .or(`username.eq.${username},email.eq.${email},mobile_number.eq.${mobileNumber}`);
 
     if (checkError) {
       console.error("Error checking existing profiles:", checkError);
@@ -340,7 +340,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Removed guestSignIn function
 
   const signOut = async () => {
-    // Always untrack/unsubscribe presence
+    // If the current user is the mock admin, clear their session first
+    if (profile?.email === 'uzzal@admin.com' && localStorage.getItem('isMockAdminLoggedIn') === 'true') {
+      clearMockAdminSession();
+      showSuccess(t("common.logout_successful"));
+      return; // Exit early for mock admin
+    }
+
+    // For real Supabase users:
+    // Untrack/unsubscribe presence
     if (presenceChannelRef.current) {
       try {
         await presenceChannelRef.current.untrack();
@@ -358,10 +366,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     }
 
-    // Always clear local storage items related to mock/guest sessions
-    localStorage.removeItem('isMockAdminLoggedIn');
-    localStorage.removeItem('guestUser'); // Removed
-    localStorage.removeItem('guestProfile'); // Removed
+    // Clear local storage items related to mock/guest sessions (redundant for real users, but harmless)
+    localStorage.removeItem('isMockAdminLoggedIn'); // This should already be false for real users
 
     // Optimistically clear state for immediate UI update
     setUser(null);
@@ -369,7 +375,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setOnlineUsers([]);
     showSuccess(t("common.logout_successful")); // Show success immediately
 
-    // Always call Supabase signOut
+    // Call Supabase signOut for real users
     const { error } = await supabase.auth.signOut();
     if (error) {
       console.error("Error during Supabase signOut:", error.message);
