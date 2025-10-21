@@ -55,7 +55,6 @@ export function Header() {
       icon: Home,
       href: "/",
     },
-    // Removed isGuest condition
     {
       name: t("common.active_users"),
       icon: MessageSquareText,
@@ -91,7 +90,7 @@ export function Header() {
       icon: Users,
       href: "/user-management",
     }] : []),
-  ], [t, isAdmin, currentLanguage]); // Add currentLanguage to dependencies
+  ], [t, isAdmin, currentLanguage]);
 
   const allSearchableItems = useMemo(() => {
     const items: SearchableItem[] = [];
@@ -108,7 +107,7 @@ export function Header() {
     // Add items from allInOneCategories
     allInOneCategories.forEach(category => {
       // Top-level category
-      const categoryPath = category.internalRoute || `/?category=${encodeURIComponent(category.name)}`; // Use category.name (key)
+      const categoryPath = category.internalRoute || `/?category=${encodeURIComponent(category.name)}`;
       if (!addedPaths.has(categoryPath)) {
         items.push({ name: t(category.name), path: categoryPath, type: 'category', icon: category.icon });
         addedPaths.add(categoryPath);
@@ -117,7 +116,7 @@ export function Header() {
       category.items?.forEach(item => {
         // Sub-category (country)
         if (item.subItems) {
-          const countryPath = `/?category=${encodeURIComponent(category.name)}&subCategory=${encodeURIComponent(item.name)}`; // Use item.name (key)
+          const countryPath = `/?category=${encodeURIComponent(category.name)}&subCategory=${encodeURIComponent(item.name)}`;
           if (!addedPaths.has(countryPath)) {
             items.push({ name: `${t(category.name)} / ${t(item.name)}`, path: countryPath, type: 'country' });
             addedPaths.add(countryPath);
@@ -150,7 +149,7 @@ export function Header() {
       });
     });
     return items;
-  }, [filteredNavItems, allInOneCategories, t, currentLanguage]); // Add currentLanguage to dependencies
+  }, [filteredNavItems, allInOneCategories, t, currentLanguage]);
 
   const performSearch = (query: string) => {
     const lowerCaseQuery = query.toLowerCase();
@@ -178,8 +177,7 @@ export function Header() {
     setShowSearchResults(false);
 
     if (result.path.startsWith('/?')) {
-      // Handle paths with search params (e.g., /?category=category.news&subCategory=country.bangladesh)
-      const url = new URL(`http://dummy.com${result.path}`); // Use a dummy base URL to parse search params
+      const url = new URL(`http://dummy.com${result.path}`);
       const category = url.searchParams.get('category');
       const subCategory = url.searchParams.get('subCategory');
 
@@ -194,13 +192,12 @@ export function Header() {
   };
 
   const handleBlur = (e: React.FocusEvent) => {
-    // Check if the related target is within the search results dropdown
     if (searchResultsRef.current && searchResultsRef.current.contains(e.relatedTarget as Node)) {
-      return; // Don't hide if clicking on a search result
+      return;
     }
     setTimeout(() => {
       setShowSearchResults(false);
-    }, 100); // Small delay to allow click event on results to fire
+    }, 100);
   };
 
   const handleFocus = () => {
@@ -209,9 +206,12 @@ export function Header() {
     }
   };
 
-  // Start of JSX
+  const midPoint = Math.ceil(filteredNavItems.length / 2);
+  const firstRowItems = filteredNavItems.slice(0, midPoint);
+  const secondRowItems = filteredNavItems.slice(midPoint);
+
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background/80 backdrop-blur-sm px-4 sm:px-6 shadow-sm">
+    <header className="sticky top-0 z-30 flex flex-wrap items-center gap-4 border-b bg-background/80 backdrop-blur-sm px-4 sm:px-6 shadow-sm py-2">
       {/* Mobile Sheet (Hamburger Menu) */}
       <Sheet>
         <SheetTrigger asChild>
@@ -258,24 +258,46 @@ export function Header() {
       </Sheet>
 
       {/* Desktop Navigation */}
-      <nav className="hidden sm:flex items-center gap-4 text-sm font-medium">
-        {filteredNavItems.map((item) => {
-          const isActive = location.pathname === item.href;
-          return (
-            <Link
-              key={item.href}
-              to={item.href}
-              className={cn(
-                "flex items-center gap-1 px-3 py-2 rounded-md transition-colors text-muted-foreground hover:text-primary",
-                isActive && "text-primary font-extrabold bg-primary/10",
-              )}
-            >
-              <item.icon className="h-4 w-4" />
-              {item.name}
-            </Link>
-          );
-        })}
-      </nav>
+      <div className="hidden sm:flex flex-col gap-1"> {/* Container for two rows of nav items */}
+        <nav className="flex items-center gap-4 text-sm font-medium"> {/* First row */}
+          {firstRowItems.map((item) => {
+            const isActive = location.pathname === item.href;
+            return (
+              <Link
+                key={item.href}
+                to={item.href}
+                className={cn(
+                  "flex items-center gap-1 px-3 py-2 rounded-md transition-colors text-muted-foreground hover:text-primary",
+                  isActive && "text-primary font-extrabold bg-primary/10",
+                )}
+              >
+                <item.icon className="h-4 w-4" />
+                {item.name}
+              </Link>
+            );
+          })}
+        </nav>
+        {secondRowItems.length > 0 && ( // Only render second row if there are items
+          <nav className="flex items-center gap-4 text-sm font-medium"> {/* Second row */}
+            {secondRowItems.map((item) => {
+              const isActive = location.pathname === item.href;
+              return (
+                <Link
+                  key={item.href}
+                  to={item.href}
+                  className={cn(
+                    "flex items-center gap-1 px-3 py-2 rounded-md transition-colors text-muted-foreground hover:text-primary",
+                    isActive && "text-primary font-extrabold bg-primary/10",
+                  )}
+                >
+                  <item.icon className="h-4 w-4" />
+                  {item.name}
+                </Link>
+              );
+            })}
+          </nav>
+        )}
+      </div>
 
       {/* Language Switcher */}
       <div className="flex items-center gap-2 ml-4">
@@ -350,7 +372,6 @@ export function Header() {
             className="overflow-hidden rounded-full border-primary/30 hover:bg-primary/10"
           >
             <Avatar>
-              {/* Removed isGuest check */}
               <>
                 <AvatarImage src={avatarSrc} alt={user?.email || "@user"} />
                 <AvatarFallback>
@@ -360,12 +381,11 @@ export function Header() {
             </Avatar>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end"> {/* Removed key={currentLanguage} */}
+        <DropdownMenuContent align="end">
           <DropdownMenuLabel className="font-extrabold">
-            {user?.email || (profile?.username || t("common.my_account"))} {/* Simplified label */}
+            {user?.email || (profile?.username || t("common.my_account"))}
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          {/* Removed isGuest check */}
           <>
             <DropdownMenuItem>{t("common.settings")}</DropdownMenuItem>
             <DropdownMenuItem>{t("common.support")}</DropdownMenuItem>
