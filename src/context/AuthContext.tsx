@@ -296,11 +296,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signUp = async (username: string, email: string, mobileNumber: string, password: string) => {
     // Sanitize username and mobileNumber to ensure they are ASCII
-    const sanitizedUsername = username.trim().replace(/[^\x00-\x7F]/g, '');
-    const sanitizedMobileNumber = mobileNumber.trim().replace(/[^\x00-\x7F]/g, '');
+    const trimmedUsername = username.trim();
+    const trimmedMobileNumber = mobileNumber.trim();
+
+    const sanitizedUsername = trimmedUsername.replace(/[^\x00-\x7F]/g, '');
+    const sanitizedMobileNumber = trimmedMobileNumber.replace(/[^\x00-\x7F]/g, '');
 
     // Check if sanitization changed the input, indicating non-ASCII characters were present
-    if (sanitizedUsername !== username.trim() || (mobileNumber.trim() && sanitizedMobileNumber !== mobileNumber.trim())) {
+    if (sanitizedUsername !== trimmedUsername || (trimmedMobileNumber && sanitizedMobileNumber !== trimmedMobileNumber)) {
       showError(t("common.non_ascii_characters_detected"));
       return { success: false, error: t("common.non_ascii_characters_detected") };
     }
@@ -330,14 +333,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return { success: false, error: t("common.account_exists") };
     }
 
-    // Pass sanitized username and mobile_number as user_metadata to supabase.auth.signUp
+    // Pass ONLY username in user_metadata to supabase.auth.signUp
     const { data: authData, error: authError } = await supabase.auth.signUp({ 
       email, 
       password,
       options: {
         data: {
           username: sanitizedUsername,
-          mobile_number: sanitizedMobileNumber || null,
+          // mobile_number is intentionally NOT sent in user_metadata to avoid header issues
         }
       }
     });
@@ -352,7 +355,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         id: authData.user.id,
         username: sanitizedUsername,
         email,
-        mobile_number: sanitizedMobileNumber || null, // Ensure empty string becomes null if DB allows
+        mobile_number: sanitizedMobileNumber || null, // Still insert into profiles table
         is_active: true,
       });
 
