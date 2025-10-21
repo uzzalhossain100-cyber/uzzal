@@ -28,6 +28,16 @@ const SignupPage: React.FC = () => {
     }
   };
 
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    // Allow only ASCII characters for email
+    if (/^[\x00-\x7F]*$/.test(value)) {
+      setEmail(value);
+    } else {
+      showError(t("common.email_validation_error"));
+    }
+  };
+
   const handleMobileNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     // Allow only digits
@@ -35,6 +45,16 @@ const SignupPage: React.FC = () => {
       setMobileNumber(value);
     } else {
       showError(t("common.mobile_number_validation_error"));
+    }
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    // Allow only ASCII characters for password
+    if (/^[\x00-\x7F]*$/.test(value)) {
+      setPassword(value);
+    } else {
+      showError(t("common.password_validation_error"));
     }
   };
 
@@ -79,7 +99,7 @@ const SignupPage: React.FC = () => {
                 placeholder={t("common.enter_email_placeholder")}
                 required
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={handleEmailChange}
                 className="border-primary/30 focus-visible:ring-primary"
               />
             </div>
@@ -103,7 +123,7 @@ const SignupPage: React.FC = () => {
                 placeholder={t("common.enter_password_placeholder")}
                 required
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={handlePasswordChange}
                 className="border-primary/30 focus-visible:ring-primary"
               />
             </div>

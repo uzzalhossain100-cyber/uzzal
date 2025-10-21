@@ -20,6 +20,26 @@ const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const { t } = useTranslation(); // Initialize useTranslation
 
+  const handleIdentifierChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    // Allow only ASCII characters for identifier (email or username)
+    if (/^[\x00-\x7F]*$/.test(value)) {
+      setIdentifier(value);
+    } else {
+      showError(t("common.identifier_validation_error"));
+    }
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    // Allow only ASCII characters for password
+    if (/^[\x00-\x7F]*$/.test(value)) {
+      setPassword(value);
+    } else {
+      showError(t("common.password_validation_error"));
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -53,7 +73,7 @@ const LoginPage: React.FC = () => {
                 placeholder={t("common.enter_username_placeholder")}
                 required
                 value={identifier}
-                onChange={(e) => setIdentifier(e.target.value)}
+                onChange={handleIdentifierChange}
                 className="border-primary/30 focus-visible:ring-primary"
               />
             </div>
@@ -65,7 +85,7 @@ const LoginPage: React.FC = () => {
                 placeholder={t("common.enter_password_placeholder")}
                 required
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={handlePasswordChange}
                 className="border-primary/30 focus-visible:ring-primary"
               />
             </div>

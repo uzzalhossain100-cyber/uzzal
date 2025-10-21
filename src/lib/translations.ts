@@ -180,6 +180,9 @@ const translations: TranslationKeys = {
   "common.signup_desc": { bn: "একটি নতুন অ্যাকাউন্ট তৈরি করতে আপনার তথ্য লিখুন।", en: "Enter your information to create a new account." },
   "common.username_validation_error": { bn: "ইউজারনেম শুধুমাত্র ইংরেজি অক্ষর, সংখ্যা, আন্ডারস্কোর এবং হাইফেন দিয়ে গঠিত হতে পারে।", en: "Username can only consist of English letters, numbers, underscores, and hyphens." },
   "common.mobile_number_validation_error": { bn: "মোবাইল নম্বর শুধুমাত্র সংখ্যা দিয়ে গঠিত হতে পারে।", en: "Mobile number can only consist of digits." },
+  "common.email_validation_error": { bn: "ইমেল শুধুমাত্র ইংরেজি অক্ষর, সংখ্যা এবং নির্দিষ্ট চিহ্ন দিয়ে গঠিত হতে পারে।", en: "Email can only consist of English letters, numbers, and specific symbols." },
+  "common.password_validation_error": { bn: "পাসওয়ার্ড শুধুমাত্র ইংরেজি অক্ষর, সংখ্যা এবং নির্দিষ্ট চিহ্ন দিয়ে গঠিত হতে পারে।", en: "Password can only consist of English letters, numbers, and specific symbols." },
+  "common.identifier_validation_error": { bn: "ইউজারনেম/ইমেল শুধুমাত্র ইংরেজি অক্ষর, সংখ্যা এবং নির্দিষ্ট চিহ্ন দিয়ে গঠিত হতে পারে।", en: "Username/Email can only consist of English letters, numbers, and specific symbols." },
   "common.username_required": { bn: "ইউজারনেম প্রয়োজন।", en: "Username is required." },
   // "common.guest_login_failed": { bn: "সাধারণ ইউজার হিসেবে লগইন ব্যর্থ হয়েছে।", en: "Guest user login failed." }, // Removed
   // "common.guest_login_title": { bn: "সাধারণ ইউজার হিসেবে প্রবেশ করুন", en: "Log in as Guest User" }, // Removed
