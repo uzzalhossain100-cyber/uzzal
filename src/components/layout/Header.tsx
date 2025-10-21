@@ -360,7 +360,7 @@ export function Header() {
             </Avatar>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" key={currentLanguage}>
+        <DropdownMenuContent align="end"> {/* Removed key={currentLanguage} */}
           <DropdownMenuLabel className="font-extrabold">
             {user?.email || (profile?.username || t("common.my_account"))} {/* Simplified label */}
           </DropdownMenuLabel>
