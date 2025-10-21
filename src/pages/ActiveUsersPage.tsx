@@ -12,12 +12,11 @@ import { useTranslation } from '@/lib/translations'; // Import useTranslation
 
 interface Profile {
   id: string;
-  username: string;
+  username: string | null; // Made nullable
   mobile_number: string | null;
   is_active: boolean;
   email: string;
   created_at: string;
-  // is_guest?: boolean; // Removed
   isOnline?: boolean; // Added for online status
 }
 
@@ -42,7 +41,6 @@ const ActiveUsersPage: React.FC = () => {
         fetchedUsers.push({
           ...currentUserProfile,
           is_active: true, // Admin is always active when logged in
-          // is_guest: false, // Removed
         });
       }
       
@@ -58,9 +56,8 @@ const ActiveUsersPage: React.FC = () => {
   useEffect(() => {
     // Combine all users (real and online guests) with online status
     const onlineUserIds = new Set(onlineUsers.map(u => u.id));
-    // const onlineGuestUsers = onlineUsers.filter(u => u.is_guest); // Removed
 
-    const combinedUsers = [...allUsers]; // No guests from onlineUsers to combine anymore
+    const combinedUsers = [...allUsers];
 
     const usersWithStatus = combinedUsers.map(user => ({
       ...user,
@@ -69,7 +66,7 @@ const ActiveUsersPage: React.FC = () => {
 
     // Filter based on search query
     const searchFiltered = usersWithStatus.filter(user =>
-      user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (user.username?.toLowerCase() || '').includes(searchQuery.toLowerCase()) || // Handle null username
       user.email.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
@@ -77,14 +74,14 @@ const ActiveUsersPage: React.FC = () => {
     searchFiltered.sort((a, b) => {
       if (a.isOnline && !b.isOnline) return -1;
       if (!a.isOnline && b.isOnline) return 1;
-      return a.username.localeCompare(b.username);
+      return (a.username || a.email).localeCompare(b.username || b.email); // Use email for sorting if username is null
     });
 
     setFilteredUsers(searchFiltered);
   }, [allUsers, onlineUsers, searchQuery, currentUserProfile]);
 
   const handleChatClick = (user: Profile) => {
-    toast.info(t("common.start_private_chat", { username: user.username }));
+    toast.info(t("common.start_private_chat", { username: user.username || user.email })); // Use email if username is null
     // Here you would navigate to a chat page or open a chat modal
     // Example: navigate(`/chat/${user.id}`);
   };
@@ -136,8 +133,7 @@ const ActiveUsersPage: React.FC = () => {
                       />
                       <div>
                         <p className="font-extrabold text-foreground flex items-center">
-                          {user.username}
-                          {/* Removed is_guest badge */}
+                          {user.username || user.email} {/* Display email if username is null */}
                         </p>
                         <p className="text-sm text-muted-foreground">{user.email}</p>
                       </div>

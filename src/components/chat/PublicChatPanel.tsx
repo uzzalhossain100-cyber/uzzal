@@ -21,7 +21,7 @@ import { useTranslation } from '@/lib/translations'; // Import useTranslation
 interface ChatMessage {
   id: string;
   user_id: string;
-  username: string;
+  username: string | null; // Made nullable
   email: string;
   message_text: string;
   created_at: string;
@@ -32,7 +32,7 @@ interface ChatComment {
   id: string;
   message_id: string;
   user_id: string;
-  username: string;
+  username: string | null; // Made nullable
   email: string;
   comment_text: string;
   created_at: string;
@@ -145,7 +145,7 @@ const PublicChatPanel: React.FC<PublicChatPanelProps> = ({ user, profile, isAdmi
     setPostingMessage(true);
     const { error } = await supabase.from('chat_messages').insert({
       user_id: user.id,
-      username: profile.username,
+      username: profile.username, // username can be null
       email: profile.email,
       message_text: newMessage.trim(),
     });
@@ -187,7 +187,7 @@ const PublicChatPanel: React.FC<PublicChatPanelProps> = ({ user, profile, isAdmi
     const { error } = await supabase.from('chat_comments').insert({
       message_id: messageId,
       user_id: user.id,
-      username: profile.username,
+      username: profile.username, // username can be null
       email: profile.email,
       comment_text: commentText.trim(),
     });
@@ -235,11 +235,11 @@ const PublicChatPanel: React.FC<PublicChatPanelProps> = ({ user, profile, isAdmi
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Avatar className="h-8 w-8">
-                      <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${msg.username}`} alt={msg.username} />
-                      <AvatarFallback>{msg.username.charAt(0).toUpperCase()}</AvatarFallback>
+                      <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${msg.username || msg.email}`} alt={msg.username || msg.email} />
+                      <AvatarFallback>{(msg.username || msg.email).charAt(0).toUpperCase()}</AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col">
-                      <span className="font-extrabold text-foreground">{msg.username}</span>
+                      <span className="font-extrabold text-foreground">{msg.username || msg.email}</span> {/* Display email if username is null */}
                       <span className="text-xs text-muted-foreground">{new Date(msg.created_at).toLocaleString()}</span>
                     </div>
                   </div>
@@ -265,7 +265,7 @@ const PublicChatPanel: React.FC<PublicChatPanelProps> = ({ user, profile, isAdmi
                     </Dialog>
                   )}
                 </div>
-                <p className="text-foreground text-base mt-2 font-semibold">{msg.username}: {msg.message_text}</p>
+                <p className="text-foreground text-base mt-2 font-semibold">{msg.username || msg.email}: {msg.message_text}</p>
 
                 {/* Comments Section */}
                 {msg.comments && msg.comments.length > 0 && (
@@ -274,11 +274,11 @@ const PublicChatPanel: React.FC<PublicChatPanelProps> = ({ user, profile, isAdmi
                       <div key={comment.id} className="flex items-start justify-between gap-2 text-sm text-muted-foreground">
                         <div className="flex items-center gap-2">
                           <Avatar className="h-6 w-6">
-                            <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${comment.username}`} alt={comment.username} />
-                            <AvatarFallback>{comment.username.charAt(0).toUpperCase()}</AvatarFallback>
+                            <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${comment.username || comment.email}`} alt={comment.username || comment.email} />
+                            <AvatarFallback>{(comment.username || comment.email).charAt(0).toUpperCase()}</AvatarFallback>
                           </Avatar>
                           <div className="flex flex-col">
-                            <span className="font-extrabold text-foreground">{comment.username}</span>
+                            <span className="font-extrabold text-foreground">{comment.username || comment.email}</span> {/* Display email if username is null */}
                             <span className="text-xs font-semibold">{comment.comment_text}</span>
                             <span className="text-xs text-muted-foreground">{new Date(comment.created_at).toLocaleString()}</span>
                           </div>

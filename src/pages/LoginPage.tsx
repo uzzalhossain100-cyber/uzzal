@@ -6,27 +6,24 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuth } from '@/context/AuthContext';
 import { showError } from '@/utils/toast';
-// import GuestLoginDialog from '@/components/GuestLoginDialog'; // Removed
 import { ArrowLeft } from 'lucide-react';
 import { useTranslation } from '@/lib/translations'; // Import useTranslation
 
 const LoginPage: React.FC = () => {
-  const [identifier, setIdentifier] = useState(''); // Can be email or username
+  const [email, setEmail] = useState(''); // Changed identifier to email
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  // const [isGuestLoginDialogOpen, setIsGuestLoginDialogOpen] = useState(false); // Removed
-  // const [showAdminLoginForm, setShowAdminLoginForm] = useState(false); // Removed
   const { signIn } = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation(); // Initialize useTranslation
 
-  const handleIdentifierChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => { // Changed to handleEmailChange
     const value = e.target.value;
-    // Allow only ASCII characters for identifier (email or username)
+    // Allow only ASCII characters for email
     if (/^[\x00-\x7F]*$/.test(value)) {
-      setIdentifier(value);
+      setEmail(value);
     } else {
-      showError(t("common.identifier_validation_error"));
+      showError(t("common.email_validation_error")); // Updated error message
     }
   };
 
@@ -43,7 +40,7 @@ const LoginPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    const { success, error } = await signIn(identifier, password);
+    const { success, error } = await signIn(email, password); // Updated call
     if (success) {
       navigate('/');
     } else {
@@ -66,14 +63,14 @@ const LoginPage: React.FC = () => {
         <CardContent>
           <form onSubmit={handleSubmit} className="grid gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="identifier" className="font-bold">{t("common.username")} / {t("common.email")}</Label>
+              <Label htmlFor="email" className="font-bold">{t("common.email")}</Label> {/* Changed label */}
               <Input
-                id="identifier"
-                type="text"
-                placeholder={t("common.enter_username_placeholder")}
+                id="email"
+                type="email" // Changed type to email
+                placeholder={t("common.enter_email_placeholder")} // Updated placeholder
                 required
-                value={identifier}
-                onChange={handleIdentifierChange}
+                value={email}
+                onChange={handleEmailChange} // Updated handler
                 className="border-primary/30 focus-visible:ring-primary"
               />
             </div>
@@ -101,7 +98,6 @@ const LoginPage: React.FC = () => {
           </div>
         </CardContent>
       </Card>
-      {/* Removed GuestLoginDialog */}
     </div>
   );
 };

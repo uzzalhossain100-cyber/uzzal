@@ -44,10 +44,9 @@ export function Header() {
   const { switchLanguage } = useLanguage(); // Initialize useLanguage
 
   const isAdmin = profile?.email === 'uzzal@admin.com';
-  // const isGuest = profile?.is_guest; // Removed
 
   const avatarSrc = isAdmin ? "/images/uzzal-hossain.jpg" : (user?.user_metadata?.avatar_url || "https://github.com/shadcn.png");
-  const avatarFallback = user?.email ? user.email.charAt(0).toUpperCase() : (profile?.username ? profile.username.charAt(0).toUpperCase() : 'U');
+  const avatarFallback = profile?.username ? profile.username.charAt(0).toUpperCase() : (user?.email ? user.email.charAt(0).toUpperCase() : 'U'); // Updated fallback
 
   const filteredNavItems = useMemo(() => [
     {
@@ -383,7 +382,7 @@ export function Header() {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel className="font-extrabold">
-            {user?.email || (profile?.username || t("common.my_account"))}
+            {profile?.username || user?.email || t("common.my_account")}
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <>

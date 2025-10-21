@@ -106,18 +106,17 @@ const translations: TranslationKeys = {
   "common.write_a_comment": { bn: "একটি কমেন্ট লিখুন...", en: "Write a comment..." },
   "common.write_your_message": { bn: "আপনার মেসেজ লিখুন...", en: "Write your message..." },
   "common.admin_login_success": { bn: "এডমিন লগইন সফল!", en: "Admin login successful!" },
-  "common.wrong_username_password": { bn: "ভুল ইউজারনেম বা পাসওয়ার্ড।", en: "Wrong username or password." },
+  "common.wrong_username_password": { bn: "ভুল ইমেল বা পাসওয়ার্ড।", en: "Wrong email or password." }, // Updated
   "common.failed_to_load_profile": { bn: "প্রোফাইল ডেটা লোড করতে ব্যর্থ।", en: "Failed to load profile data." },
   "common.account_deactivated": { bn: "আপনার অ্যাকাউন্ট নিষ্ক্রিয় করা হয়েছে।", en: "Your account has been deactivated." },
   "common.login_successful": { bn: "লগইন সফল!", en: "Login successful!" },
   "common.account_exists": { bn: "আপনার নামে একটি একাউন্ট আছে।", en: "An account already exists with your details." },
   "common.signup_failed_check_error": { bn: "সাইন আপ চেক করতে সমস্যা হয়েছে।", en: "Problem checking existing profiles." },
   "common.signup_successful": { bn: "সাইন আপ সফল হয়েছে!", en: "Signup successful!" },
-  // "common.guest_login_successful": { bn: "সাধারণ ইউজার হিসেবে লগইন সফল!", en: "Guest user login successful!" }, // Removed
   "common.logout_successful": { bn: "লগআউট সফল!", en: "Logout successful!" },
   "common.logout_failed": { bn: "লগআউট ব্যর্থ হয়েছে:", en: "Logout failed:" },
   "common.permission_denied": { bn: "আপনার এই অ্যাকশন করার অনুমতি নেই।", en: "You do not have permission to perform this action." },
-  "common.user_status_updated": { bn: "ইউজার {status} করা হয়েছে।", en: "User {status}." }, // {status} will be 'সক্রিয়'/'নিষ্ক্রিয়' or 'activated'/'deactivated'
+  "common.user_status_updated": { bn: "ইউজার {status} করা হয়েছে।", en: "User {status}." },
   "common.failed_to_load_visits": { bn: "ভিজিট ডেটা লোড করতে ব্যর্থ।", en: "Failed to load visit data." },
   "common.failed_to_load_visit_counts": { bn: "ভিজিট কাউন্ট লোড করতে ব্যর্থ।", en: "Failed to load visit counts." },
   "common.no_recent_visits": { bn: "কোনো সাম্প্রতিক ভিজিট পাওয়া যায়নি।", en: "No recent visits found." },
@@ -174,19 +173,14 @@ const translations: TranslationKeys = {
   "common.no_users_found": { bn: "কোনো ইউজার পাওয়া যায়নি।", en: "No users found." },
   "common.admin_login": { bn: "এডমিন লগইন", en: "Admin Login" },
   "common.admin_login_desc": { bn: "এডমিন হিসেবে প্রবেশ করতে আপনার ইউজারনেম/ইমেল এবং পাসওয়ার্ড লিখুন।", en: "Enter your username/email and password to log in as admin." },
-  "common.login_desc": { bn: "আপনার অ্যাকাউন্টে প্রবেশ করতে আপনার ইউজারনেম/ইমেল এবং পাসওয়ার্ড লিখুন।", en: "Enter your username/email and password to access your account." }, // Updated
-  // "common.guest_login_button": { bn: "সাধারণ ইউজার হিসেবে প্রবেশ করুন", en: "Log in as Guest User" }, // Removed
-  // "common.login_as_admin_button": { bn: "এডমিন হিসাবে প্রবেশ করুন", en: "Log in as Admin" }, // Removed
-  "common.signup_desc": { bn: "একটি নতুন অ্যাকাউন্ট তৈরি করতে আপনার তথ্য লিখুন।", en: "Enter your information to create a new account." },
+  "common.login_desc": { bn: "আপনার অ্যাকাউন্টে প্রবেশ করতে আপনার ইমেল এবং পাসওয়ার্ড লিখুন।", en: "Enter your email and password to access your account." }, // Updated
+  "common.signup_desc": { bn: "একটি নতুন অ্যাকাউন্ট তৈরি করতে আপনার ইমেল এবং পাসওয়ার্ড লিখুন।", en: "Enter your email and password to create a new account." }, // Updated
   "common.username_validation_error": { bn: "ইউজারনেম শুধুমাত্র ইংরেজি অক্ষর, সংখ্যা, আন্ডারস্কোর এবং হাইফেন দিয়ে গঠিত হতে পারে।", en: "Username can only consist of English letters, numbers, underscores, and hyphens." },
   "common.mobile_number_validation_error": { bn: "মোবাইল নম্বর শুধুমাত্র সংখ্যা দিয়ে গঠিত হতে পারে।", en: "Mobile number can only consist of digits." },
-  "common.email_validation_error": { bn: "ইমেল শুধুমাত্র ইংরেজি অক্ষর, সংখ্যা এবং নির্দিষ্ট চিহ্ন দিয়ে গঠিত হতে পারে।", en: "Email can only consist of English letters, numbers, and specific symbols." },
-  "common.password_validation_error": { bn: "পাসওয়ার্ড শুধুমাত্র ইংরেজি অক্ষর, সংখ্যা এবং নির্দিষ্ট চিহ্ন দিয়ে গঠিত হতে পারে।", en: "Password can only consist of English letters, numbers, and specific symbols." },
-  "common.identifier_validation_error": { bn: "ইউজারনেম/ইমেল শুধুমাত্র ইংরেজি অক্ষর, সংখ্যা এবং নির্দিষ্ট চিহ্ন দিয়ে গঠিত হতে পারে।", en: "Username/Email can only consist of English letters, numbers, and specific symbols." },
+  "common.email_validation_error": { bn: "ইমেল শুধুমাত্র ASCII অক্ষর, সংখ্যা এবং নির্দিষ্ট চিহ্ন দিয়ে গঠিত হতে পারে।", en: "Email can only consist of ASCII letters, numbers, and specific symbols." }, // Updated
+  "common.password_validation_error": { bn: "পাসওয়ার্ড শুধুমাত্র ASCII অক্ষর, সংখ্যা এবং নির্দিষ্ট চিহ্ন দিয়ে গঠিত হতে পারে।", en: "Password can only consist of ASCII letters, numbers, and specific symbols." }, // Updated
+  "common.identifier_validation_error": { bn: "ইমেল শুধুমাত্র ASCII অক্ষর, সংখ্যা এবং নির্দিষ্ট চিহ্ন দিয়ে গঠিত হতে পারে।", en: "Email can only consist of ASCII letters, numbers, and specific symbols." }, // Updated
   "common.username_required": { bn: "ইউজারনেম প্রয়োজন।", en: "Username is required." },
-  // "common.guest_login_failed": { bn: "সাধারণ ইউজার হিসেবে লগইন ব্যর্থ হয়েছে।", en: "Guest user login failed." }, // Removed
-  // "common.guest_login_title": { bn: "সাধারণ ইউজার হিসেবে প্রবেশ করুন", en: "Log in as Guest User" }, // Removed
-  // "common.guest_login_dialog_desc": { bn: "আপনার ইউজারনেম দিয়ে সাইটে প্রবেশ করুন।", en: "Enter your username to access the site." }, // Removed
   "common.logging_in": { bn: "প্রবেশ করা হচ্ছে...", en: "Logging in..." },
   "common.enter_username_placeholder": { bn: "আপনার ইউজারনেম (শুধুমাত্র ইংরেজি)", en: "Your Username (English only)" },
   "common.enter_email_placeholder": { bn: "m@example.com", en: "m@example.com" },
@@ -222,7 +216,6 @@ const translations: TranslationKeys = {
   "common.active_users_page_title": { bn: "সক্রিয় ইউজার", en: "Active Users" },
   "common.active_users_desc": { bn: "অনলাইন এবং নিবন্ধিত ইউজারদের তালিকা", en: "List of online and registered users" },
   "common.search_users_placeholder": { bn: "ইউজারনেম বা ইমেল দিয়ে সার্চ করুন...", en: "Search by username or email..." },
-  // "common.guest_label": { bn: "(গেস্ট)", en: "(Guest)" }, // Removed
   "common.chat_button": { bn: "চ্যাট", en: "Chat" },
   "common.live_chat_page_title": { bn: "লাইভ চ্যাট", en: "Live Chat" },
   "common.online_users_list": { bn: "অনলাইন ইউজারদের তালিকা", en: "List of online users" },
@@ -235,7 +228,7 @@ const translations: TranslationKeys = {
   "common.uploading_image": { bn: "আপলোড হচ্ছে...", en: "Uploading..." },
   "common.upload_image_prompt": { bn: "ছবি আপলোড করুন (JPG/PNG)", en: "Upload Image (JPG/PNG)" },
   "common.new_row_button": { bn: "নতুন সারি যোগ করুন", en: "Add New Row" },
-  "common.view_platform_page_title": { bn: "ওয়েবসাইট", en: "Website" }, // Default for ViewPlatformPage
+  "common.view_platform_page_title": { bn: "ওয়েবসাইট", en: "Website" },
   "common.emergency_contacts_page_title": { bn: "জরুরি যোগাযোগ", en: "Emergency Contacts" },
   "common.emergency_contacts_desc": { bn: "বাংলাদেশের জরুরি প্রয়োজনে যোগাযোগের নম্বরসমূহ", en: "Emergency contact numbers in Bangladesh" },
   "common.service": { bn: "সেবা", en: "Service" },
@@ -310,7 +303,7 @@ const translations: TranslationKeys = {
   "common.quiz_confirm_delete_question": { bn: "আপনি কি নিশ্চিত যে এই প্রশ্নটি ডিলিট করতে চান?", en: "Are you sure you want to delete this question?" },
   "common.no_questions_found": { bn: "কোনো প্রশ্ন পাওয়া যায়নি।", en: "No questions found." },
   "common.non_ascii_characters_detected": { bn: "ইউজারনেম বা মোবাইল নম্বরে শুধুমাত্র ইংরেজি অক্ষর, সংখ্যা, আন্ডারস্কোর এবং হাইফেন ব্যবহার করা যাবে।", en: "Username or mobile number can only contain English letters, numbers, underscores, and hyphens." },
-  "common.non_ascii_characters_detected_all": { bn: "শুধুমাত্র ইংরেজি অক্ষর, সংখ্যা এবং নির্দিষ্ট চিহ্ন ব্যবহার করা যাবে।", en: "Only English letters, numbers, and specific symbols can be used." },
+  "common.non_ascii_characters_detected_all": { bn: "শুধুমাত্র ASCII অক্ষর, সংখ্যা এবং নির্দিষ্ট চিহ্ন ব্যবহার করা যাবে।", en: "Only ASCII letters, numbers, and specific symbols can be used." },
 
 
   // Categories

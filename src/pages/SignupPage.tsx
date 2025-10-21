@@ -9,24 +9,12 @@ import { showError } from '@/utils/toast';
 import { useTranslation } from '@/lib/translations'; // Import useTranslation
 
 const SignupPage: React.FC = () => {
-  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
-  const [mobileNumber, setMobileNumber] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { signUp } = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation(); // Initialize useTranslation
-
-  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    // Allow only English letters, numbers, underscore, and hyphen
-    if (/^[a-zA-Z0-9_-]*$/.test(value)) {
-      setUsername(value);
-    } else {
-      showError(t("common.username_validation_error"));
-    }
-  };
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -35,16 +23,6 @@ const SignupPage: React.FC = () => {
       setEmail(value);
     } else {
       showError(t("common.email_validation_error"));
-    }
-  };
-
-  const handleMobileNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    // Allow only digits
-    if (/^\d*$/.test(value)) {
-      setMobileNumber(value);
-    } else {
-      showError(t("common.mobile_number_validation_error"));
     }
   };
 
@@ -61,7 +39,7 @@ const SignupPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    const { success, error } = await signUp(username, email, mobileNumber, password);
+    const { success, error } = await signUp(email, password); // Updated call
     if (success) {
       navigate('/login'); // Redirect to login after successful signup
     } else {
@@ -72,25 +50,13 @@ const SignupPage: React.FC = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen p-4">
-      <Card className="w-full max-w-md bg-background/80 backdrop-blur-sm shadow-lg border-primary/20 dark:border-primary/50"> {/* Added bg-background/80 backdrop-blur-sm */}
+      <Card className="w-full max-w-md bg-background/80 backdrop-blur-sm shadow-lg border-primary/20 dark:border-primary/50">
         <CardHeader className="text-center">
           <CardTitle className="text-3xl font-extrabold text-primary dark:text-primary-foreground">{t("common.signup")}</CardTitle>
           <CardDescription className="text-muted-foreground">{t("common.signup_desc")}</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="grid gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="username" className="font-bold">{t("common.username")}</Label>
-              <Input
-                id="username"
-                type="text"
-                placeholder={t("common.enter_username_placeholder")}
-                required
-                value={username}
-                onChange={handleUsernameChange}
-                className="border-primary/30 focus-visible:ring-primary"
-              />
-            </div>
             <div className="grid gap-2">
               <Label htmlFor="email" className="font-bold">{t("common.email")}</Label>
               <Input
@@ -100,18 +66,6 @@ const SignupPage: React.FC = () => {
                 required
                 value={email}
                 onChange={handleEmailChange}
-                className="border-primary/30 focus-visible:ring-primary"
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="mobileNumber" className="font-bold">{t("common.mobile_number")}</Label>
-              <Input
-                id="mobileNumber"
-                type="tel"
-                placeholder={t("common.enter_mobile_placeholder")}
-                required
-                value={mobileNumber}
-                onChange={handleMobileNumberChange}
                 className="border-primary/30 focus-visible:ring-primary"
               />
             </div>

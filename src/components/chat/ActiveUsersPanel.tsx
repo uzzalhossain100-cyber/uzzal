@@ -12,12 +12,11 @@ import { useTranslation } from '@/lib/translations'; // Import useTranslation
 
 interface Profile {
   id: string;
-  username: string;
+  username: string | null; // Made nullable
   mobile_number: string | null;
   is_active: boolean;
   email: string;
   created_at: string;
-  // is_guest?: boolean; // Removed
   isOnline?: boolean; // Added for online status
 }
 
@@ -28,9 +27,9 @@ const ActiveUsersPanel: React.FC = () => {
   const { t } = useTranslation(); // Initialize useTranslation
 
   const filteredOnlineUsers = onlineUsers.filter(user =>
-    user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (user.username?.toLowerCase() || '').includes(searchQuery.toLowerCase()) || // Handle null username
     user.email.toLowerCase().includes(searchQuery.toLowerCase())
-  ).sort((a, b) => a.username.localeCompare(b.username));
+  ).sort((a, b) => (a.username || a.email).localeCompare(b.username || b.email)); // Use email for sorting if username is null
 
   const handleUserSelect = (user: Profile) => {
     setSelectedUsers(prev =>
@@ -41,7 +40,7 @@ const ActiveUsersPanel: React.FC = () => {
   };
 
   const handleStartPrivateChat = (user: Profile) => {
-    toast.info(t("common.start_private_chat", { username: user.username }));
+    toast.info(t("common.start_private_chat", { username: user.username || user.email })); // Use email if username is null
     // Future: navigate to private chat with this user
   };
 
@@ -50,7 +49,7 @@ const ActiveUsersPanel: React.FC = () => {
       toast.error(t("common.select_at_least_two_users"));
       return;
     }
-    const userNames = selectedUsers.map(u => u.username).join(', ');
+    const userNames = selectedUsers.map(u => u.username || u.email).join(', '); // Use email if username is null
     toast.info(t("common.start_group_chat", { userNames }));
     // Future: navigate to group chat with selected users
     setSelectedUsers([]); // Clear selection after attempting to start chat
@@ -96,8 +95,7 @@ const ActiveUsersPanel: React.FC = () => {
                     <Circle className="h-3 w-3 fill-green-500 text-green-500" />
                     <div>
                       <p className="font-extrabold text-foreground flex items-center">
-                        {user.username}
-                        {/* Removed is_guest badge */}
+                        {user.username || user.email} {/* Display email if username is null */}
                       </p>
                       <p className="text-xs text-muted-foreground">{user.email}</p>
                     </div>
@@ -123,7 +121,7 @@ const ActiveUsersPanel: React.FC = () => {
             <div className="flex flex-wrap gap-2">
               {selectedUsers.map(user => (
                 <Badge key={user.id} variant="secondary" className="flex items-center gap-1 font-bold">
-                  {user.username}
+                  {user.username || user.email} {/* Display email if username is null */}
                   <Button
                     variant="ghost"
                     size="icon"

@@ -14,7 +14,7 @@ import { useTranslation } from '@/lib/translations'; // Import useTranslation
 
 interface Profile {
   id: string;
-  username: string;
+  username: string | null; // Made nullable
   mobile_number: string | null;
   is_active: boolean;
   email: string;
@@ -230,7 +230,7 @@ const UserManagementPage: React.FC = () => {
                 ) : (
                   recentVisits.map((visit) => (
                     <TableRow key={visit.id}>
-                      <TableCell className="font-semibold">{visit.username || 'Anonymous'}</TableCell>
+                      <TableCell className="font-semibold">{visit.username || 'N/A'}</TableCell> {/* Handle null username */}
                       <TableCell>{visit.email || 'N/A'}</TableCell>
                       <TableCell>{visit.ip_address || 'N/A'}</TableCell>
                       <TableCell>{format(new Date(visit.visited_at), 'yyyy-MM-dd HH:mm')}</TableCell>
@@ -271,7 +271,7 @@ const UserManagementPage: React.FC = () => {
               <TableBody>
                 {users.map((userProfile) => (
                   <TableRow key={userProfile.id}>
-                    <TableCell className="font-semibold">{userProfile.username}</TableCell>
+                    <TableCell className="font-semibold">{userProfile.username || 'N/A'}</TableCell> {/* Handle null username */}
                     <TableCell>{userProfile.email}</TableCell>
                     <TableCell className="hidden md:table-cell">{userProfile.mobile_number || 'N/A'}</TableCell>
                     <TableCell>

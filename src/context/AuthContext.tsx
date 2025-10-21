@@ -6,21 +6,19 @@ import { useTranslation } from '@/lib/translations'; // Import useTranslation
 
 interface Profile {
   id: string;
-  username: string;
-  mobile_number: string | null;
+  username: string | null; // Made nullable
+  mobile_number: string | null; // Made nullable
   is_active: boolean;
   email: string;
   created_at: string;
-  // is_guest?: boolean; // Removed for guest users
 }
 
 interface PresenceState {
   [key: string]: {
     user_id: string;
-    username: string;
+    username: string | null; // Made nullable
     email: string;
     online_at: number;
-    // is_guest?: boolean; // Removed for guest users in presence
   }[];
 }
 
@@ -28,14 +26,13 @@ interface AuthContextType {
   user: User | null;
   profile: Profile | null;
   loading: boolean;
-  onlineUsers: Profile[]; // New: List of currently online users
-  signIn: (identifier: string, password: string) => Promise<{ success: boolean; error?: string }>;
-  signUp: (username: string, email: string, mobileNumber: string, password: string) => Promise<{ success: boolean; error?: string }>;
-  // guestSignIn: (username: string) => Promise<{ success: boolean; error?: string }>; // Removed: Only username
+  onlineUsers: Profile[];
+  signIn: (email: string, password: string) => Promise<{ success: boolean; error?: string }>; // Changed identifier to email
+  signUp: (email: string, password: string) => Promise<{ success: boolean; error?: string }>; // Simplified to email and password
   signOut: () => Promise<void>;
   getUsersProfiles: () => Promise<Profile[] | null>;
   updateUserProfileStatus: (userId: string, isActive: boolean) => Promise<{ success: boolean; error?: string }>;
-  recordVisit: (visitData: { userId?: string; username?: string; email?: string; ipAddress?: string; }) => Promise<void>; // Updated: Removed guestId and isGuestVisit
+  recordVisit: (visitData: { userId?: string; username?: string; email?: string; ipAddress?: string; }) => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -45,11 +42,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
   const [onlineUsers, setOnlineUsers] = useState<Profile[]>([]);
-  const presenceChannelRef = useRef<any>(null); // Ref for Supabase Realtime channel
-  const authListenerRef = useRef<any>(null); // Ref to store the auth listener subscription
-  const { t } = useTranslation(); // Initialize useTranslation
+  const presenceChannelRef = useRef<any>(null);
+  const authListenerRef = useRef<any>(null);
+  const { t } = useTranslation();
 
-  // Function to update online users based on presence state
   const updateOnlineUsers = async (presenceState: PresenceState) => {
     const currentOnlineUserIds = new Set<string>();
     const newOnlineUsers: Profile[] = [];
@@ -63,10 +59,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               id: p.user_id,
               username: p.username,
               email: p.email,
-              mobile_number: null, // Mobile number is not part of presence payload
-              is_active: true, // Assume online users are active
+              mobile_number: null,
+              is_active: true,
               created_at: new Date(p.online_at).toISOString(),
-              // is_guest: p.is_guest || false, // Removed is_guest from presence
             });
           }
         });
@@ -75,15 +70,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setOnlineUsers(newOnlineUsers);
   };
 
-  // Helper function to set mock admin state
   const setMockAdminSession = () => {
     const adminUser: User = { id: 'admin-id', email: 'uzzal@admin.com', app_metadata: {}, user_metadata: {}, aud: 'authenticated', created_at: new Date().toISOString() } as User;
     const adminProfile: Profile = { id: 'admin-id', username: 'Uzzal', mobile_number: '01713236980', is_active: true, email: 'uzzal@admin.com', created_at: new Date().toISOString() };
     setUser(adminUser);
     setProfile(adminProfile);
-    localStorage.setItem('isMockAdminLoggedIn', 'true'); // Persist mock admin state
+    localStorage.setItem('isMockAdminLoggedIn', 'true');
 
-    // Manually add mock admin to onlineUsers for immediate display
     setOnlineUsers(prev => {
       if (!prev.some(u => u.id === adminProfile.id)) {
         return [...prev, adminProfile];
@@ -92,16 +85,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   };
 
-  // Helper function to clear mock admin state
   const clearMockAdminSession = () => {
     setUser(null);
     setProfile(null);
     localStorage.removeItem('isMockAdminLoggedIn');
-    // Manually remove mock admin from onlineUsers
     setOnlineUsers(prev => prev.filter(u => u.id !== 'admin-id'));
   };
-
-  // Removed setGuestSession and clearGuestSession functions
 
   useEffect(() => {
     const setupPresenceChannel = (sessionUser: User, userProfile: Profile) => {
@@ -140,7 +129,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             username: userProfile.username,
             email: userProfile.email,
             online_at: Date.now(),
-            // is_guest: userProfile.is_guest || false, // Removed is_guest from presence
           });
           if (presenceError) {
             console.error("Error tracking presence:", presenceError);
@@ -170,22 +158,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setProfile(null);
             showError(t("common.account_deactivated"));
             clearMockAdminSession();
-            // clearGuestSession(); // Removed
           } else {
             setupPresenceChannel(sessionUser, data);
           }
         }
-        // Ensure these are cleared if a real user logs in over a mock/guest session
         localStorage.removeItem('isMockAdminLoggedIn');
-        localStorage.removeItem('guestUser'); // Removed
-        localStorage.removeItem('guestProfile'); // Removed
       } else {
         if (localStorage.getItem('isMockAdminLoggedIn') === 'true') {
           setMockAdminSession();
           const adminUser: User = { id: 'admin-id', email: 'uzzal@admin.com', app_metadata: {}, user_metadata: {}, aud: 'authenticated', created_at: new Date().toISOString() } as User;
           const adminProfile: Profile = { id: 'admin-id', username: 'Uzzal', mobile_number: '01713236980', is_active: true, email: 'uzzal@admin.com', created_at: new Date().toISOString() };
           setupPresenceChannel(adminUser, adminProfile);
-        } else { // Removed guest session check
+        } else {
           if (presenceChannelRef.current) {
             try {
               presenceChannelRef.current.unsubscribe();
@@ -231,33 +215,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         presenceChannelRef.current = null;
       }
     };
-  }, [t]); // Added t to dependency array
+  }, [t]);
 
-  const signIn = async (identifier: string, password: string) => {
-    // Updated mock admin login credentials
-    if (identifier === 'uzzal@admin.com' && password === 'Goodman') { // Updated password
+  const signIn = async (email: string, password: string) => {
+    if (email === 'uzzal@admin.com' && password === 'Goodman') {
       setMockAdminSession();
       showSuccess(t("common.admin_login_success"));
       return { success: true };
     }
 
-    let emailToSignIn = identifier;
+    const trimmedEmail = email.trim();
+    const trimmedPassword = password.trim();
 
-    if (!identifier.includes('@')) {
-      const { data: profileData, error: profileError } = await supabase
-        .from('profiles')
-        .select('email')
-        .eq('username', identifier)
-        .single();
+    const sanitizedEmail = trimmedEmail.replace(/[^\x00-\x7F]/g, '');
+    const sanitizedPassword = trimmedPassword.replace(/[^\x00-\x7F]/g, '');
 
-      if (profileError || !profileData) {
-        showError(t("common.wrong_username_password"));
-        return { success: false, error: t("common.wrong_username_password") };
-      }
-      emailToSignIn = profileData.email;
+    if (sanitizedEmail !== trimmedEmail || sanitizedPassword !== trimmedPassword) {
+      showError(t("common.non_ascii_characters_detected_all"));
+      return { success: false, error: t("common.non_ascii_characters_detected_all") };
     }
 
-    const { data, error } = await supabase.auth.signInWithPassword({ email: emailToSignIn, password });
+    const { data, error } = await supabase.auth.signInWithPassword({ email: sanitizedEmail, password: sanitizedPassword });
     if (error) {
       showError(error.message);
       return { success: false, error: error.message };
@@ -273,7 +251,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       showError(t("common.failed_to_load_profile"));
       await supabase.auth.signOut();
       clearMockAdminSession();
-      // clearGuestSession(); // Removed
       return { success: false, error: t("common.failed_to_load_profile") };
     }
 
@@ -281,54 +258,36 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       showError(t("common.account_deactivated"));
       await supabase.auth.signOut();
       clearMockAdminSession();
-      // clearGuestSession(); // Removed
       return { success: false, error: t("common.account_deactivated") };
     }
 
     setUser(data.user);
     setProfile(profileData);
     localStorage.removeItem('isMockAdminLoggedIn');
-    localStorage.removeItem('guestUser'); // Removed
-    localStorage.removeItem('guestProfile'); // Removed
     showSuccess(t("common.login_successful"));
     return { success: true };
   };
 
-  const signUp = async (username: string, email: string, mobileNumber: string, password: string) => {
-    // Sanitize all input fields to ensure they are ASCII
-    const trimmedUsername = username.trim();
-    const trimmedMobileNumber = mobileNumber.trim();
+  const signUp = async (email: string, password: string) => {
     const trimmedEmail = email.trim();
     const trimmedPassword = password.trim();
 
-    const sanitizedUsername = trimmedUsername.replace(/[^\x00-\x7F]/g, '');
-    const sanitizedMobileNumber = trimmedMobileNumber.replace(/[^\x00-\x7F]/g, '');
     const sanitizedEmail = trimmedEmail.replace(/[^\x00-\x7F]/g, '');
     const sanitizedPassword = trimmedPassword.replace(/[^\x00-\x7F]/g, '');
 
-    // Check if sanitization changed any input, indicating non-ASCII characters were present
-    if (sanitizedUsername !== trimmedUsername || (trimmedMobileNumber && sanitizedMobileNumber !== trimmedMobileNumber) || sanitizedEmail !== trimmedEmail || sanitizedPassword !== trimmedPassword) {
-      showError(t("common.non_ascii_characters_detected_all")); // Use new, broader translation key
+    if (sanitizedEmail !== trimmedEmail || sanitizedPassword !== trimmedPassword) {
+      showError(t("common.non_ascii_characters_detected_all"));
       return { success: false, error: t("common.non_ascii_characters_detected_all") };
     }
 
-    const conditions = [`username.eq.${sanitizedUsername}`, `email.eq.${sanitizedEmail}`];
-    
-    // Only add mobile_number to the OR condition if it's not empty after sanitization
-    if (sanitizedMobileNumber) {
-      conditions.push(`mobile_number.eq.${sanitizedMobileNumber}`);
-    }
-
-    const orClause = conditions.join(',');
-
     const { data: existingProfiles, error: checkError } = await supabase
       .from('profiles')
-      .select('id, username, email, mobile_number')
-      .or(orClause);
+      .select('id, email')
+      .eq('email', sanitizedEmail);
 
     if (checkError) {
       console.error("Error checking existing profiles:", checkError);
-      showError(checkError.message || t("common.signup_failed_check_error")); // Provide specific error message
+      showError(checkError.message || t("common.signup_failed_check_error"));
       return { success: false, error: checkError.message };
     }
 
@@ -337,11 +296,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return { success: false, error: t("common.account_exists") };
     }
 
-    // Pass NO user_metadata to supabase.auth.signUp to avoid header issues
     const { data: authData, error: authError } = await supabase.auth.signUp({ 
-      email: sanitizedEmail, // Use sanitized email
-      password: sanitizedPassword, // Use sanitized password
-      // Removed options.data entirely
+      email: sanitizedEmail,
+      password: sanitizedPassword,
     });
 
     if (authError) {
@@ -352,10 +309,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (authData.user) {
       const { error: profileError } = await supabase.from('profiles').insert({
         id: authData.user.id,
-        username: sanitizedUsername,
         email: sanitizedEmail,
-        mobile_number: sanitizedMobileNumber || null, // Ensure empty string becomes null if DB allows
         is_active: true,
+        username: null, // Set to null by default
+        mobile_number: null, // Set to null by default
       });
 
       if (profileError) {
@@ -368,18 +325,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return { success: true };
   };
 
-  // Removed guestSignIn function
-
   const signOut = async () => {
-    // If the current user is the mock admin, clear their session first
     if (profile?.email === 'uzzal@admin.com' && localStorage.getItem('isMockAdminLoggedIn') === 'true') {
       clearMockAdminSession();
       showSuccess(t("common.logout_successful"));
-      return; // Exit early for mock admin
+      return;
     }
 
-    // For real Supabase users:
-    // Untrack/unsubscribe presence
     if (presenceChannelRef.current) {
       try {
         await presenceChannelRef.current.untrack();
@@ -397,16 +349,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     }
 
-    // Clear local storage items related to mock/guest sessions (redundant for real users, but harmless)
-    localStorage.removeItem('isMockAdminLoggedIn'); // This should already be false for real users
+    localStorage.removeItem('isMockAdminLoggedIn');
 
-    // Optimistically clear state for immediate UI update
     setUser(null);
     setProfile(null);
     setOnlineUsers([]);
-    showSuccess(t("common.logout_successful")); // Show success immediately
+    showSuccess(t("common.logout_successful"));
 
-    // Call Supabase signOut for real users
     const { error } = await supabase.auth.signOut();
     if (error) {
       console.error("Error during Supabase signOut:", error.message);
@@ -444,14 +393,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return { success: true };
   };
 
-  const recordVisit = async (visitData: { userId?: string; username?: string; email?: string; ipAddress?: string; }) => { // Updated parameters
+  const recordVisit = async (visitData: { userId?: string; username?: string; email?: string; ipAddress?: string; }) => {
     const { error } = await supabase.from('visits').insert({
       user_id: visitData.userId,
-      // guest_id: visitData.guestId, // Removed
       username: visitData.username,
       email: visitData.email,
       ip_address: visitData.ipAddress,
-      is_guest_visit: false, // Always false as guest login is removed
+      is_guest_visit: false,
     });
 
     if (error) {
