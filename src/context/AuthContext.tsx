@@ -124,7 +124,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
 
       presenceChannelRef.current.on('presence', { event: 'join' }, ({ newPresences }: { newPresences: any[] }) => {
-        const newState = presenceChannelRef.current.presenceState();
+        const newState = presenceRef.current.presenceState();
         updateOnlineUsers(newState);
       });
 
@@ -295,11 +295,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signUp = async (username: string, email: string, mobileNumber: string, password: string) => {
-    const conditions = [`username.eq.${username.trim()}`, `email.eq.${email.trim()}`];
+    // Sanitize username and mobileNumber to ensure they are ASCII
+    const sanitizedUsername = username.trim().replace(/[^\x00-\x7F]/g, '');
+    const sanitizedMobileNumber = mobileNumber.trim().replace(/[^\x00-\x7F]/g, '');
+
+    if (sanitizedUsername !== username.trim() || (mobileNumber.trim() && sanitizedMobileNumber !== mobileNumber.trim())) {
+      showError(t("common.non_ascii_characters_detected"));
+      return { success: false, error: t("common.non_ascii_characters_detected") };
+    }
+
+    const conditions = [`username.eq.${sanitizedUsername}`, `email.eq.${email.trim()}`];
     
-    // Only add mobile_number to the OR condition if it's not empty
-    if (mobileNumber.trim()) {
-      conditions.push(`mobile_number.eq.${mobileNumber.trim()}`);
+    // Only add mobile_number to the OR condition if it's not empty after sanitization
+    if (sanitizedMobileNumber) {
+      conditions.push(`mobile_number.eq.${sanitizedMobileNumber}`);
     }
 
     const orClause = conditions.join(',');
@@ -330,9 +339,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (authData.user) {
       const { error: profileError } = await supabase.from('profiles').insert({
         id: authData.user.id,
-        username,
+        username: sanitizedUsername,
         email,
-        mobile_number: mobileNumber.trim() || null, // Ensure empty string becomes null if DB allows
+        mobile_number: sanitizedMobileNumber || null, // Ensure empty string becomes null if DB allows
         is_active: true,
       });
 

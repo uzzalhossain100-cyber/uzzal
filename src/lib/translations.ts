@@ -101,7 +101,6 @@ const translations: TranslationKeys = {
   "common.delete_comment": { bn: "কমেন্ট ডিলিট করুন", en: "Delete Comment" },
   "common.confirm_delete_comment": { bn: "আপনি কি নিশ্চিত যে আপনি এই কমেন্টটি ডিলিট করতে চান? এই অ্যাকশনটি পূর্বাবস্থায় ফেরানো যাবে না।", en: "Are you sure you want to delete this comment? This action cannot be undone." },
   "common.permission_denied_delete_comment": { bn: "আপনার এই কমেন্ট ডিলিট করার অনুমতি নেই।", en: "You do not have permission to delete this comment." },
-  "common.failed_to_delete_comment": { bn: "কমেন্ট ডিলিট করতে ব্যর্থ:", en: "Failed to delete comment:" },
   "common.comment_deleted_successfully": { bn: "কমেন্ট সফলভাবে ডিলিট করা হয়েছে!", en: "Comment successfully deleted!" },
   "common.no_messages": { bn: "কোনো মেসেজ নেই। একটি নতুন মেসেজ পোস্ট করুন!", en: "No messages. Post a new message!" },
   "common.write_a_comment": { bn: "একটি কমেন্ট লিখুন...", en: "Write a comment..." },
@@ -147,6 +146,9 @@ const translations: TranslationKeys = {
   "common.post_message": { bn: "পোস্ট করুন", en: "Post Message" },
   "common.delete_message_confirm": { bn: "আপনি কি নিশ্চিত যে আপনি এই মেসেজটি ডিলিট করতে চান? এই অ্যাকশনটি পূর্বাবস্থায় ফেরানো যাবে না।", en: "Are you sure you want to delete this message? This action cannot be undone." },
   "common.delete_comment_confirm": { bn: "আপনি কি নিশ্চিত যে আপনি এই কমেন্টটি ডিলিট করতে চান? এই অ্যাকশনটি পূর্বাবস্থায় ফেরানো যাবে না।", en: "Are you sure you want to delete this comment? This action cannot be undone." },
+  "common.permission_denied_delete_message": { bn: "আপনার এই মেসেজ ডিলিট করার অনুমতি নেই।", en: "You do not have permission to delete this message." },
+  "common.failed_to_delete_message": { bn: "মেসেজ ডিলিট করতে ব্যর্থ:", en: "Failed to delete message:" },
+  "common.message_deleted_successfully": { bn: "মেসেজ সফলভাবে ডিলিট করা হয়েছে!", en: "Message deleted successfully!" },
   "common.ai_thinking": { bn: "Funny AI উত্তর দিচ্ছে...", en: "Funny AI is responding..." },
   "common.no_question_asked": { bn: "কোনো প্রশ্ন জিজ্ঞাসা করা হয়নি। Funny AI-কে কিছু জিজ্ঞাসা করো!", en: "No question asked. Ask Funny AI something!" },
   "common.ai_ask_question_placeholder": { bn: "তোমার প্রশ্ন জিজ্ঞাসা করো...", en: "Ask your question..." },
@@ -304,6 +306,8 @@ const translations: TranslationKeys = {
   "common.quiz_fill_all_fields": { bn: "অনুগ্রহ করে সমস্ত ফিল্ড পূরণ করুন।", en: "Please fill in all fields." },
   "common.quiz_confirm_delete_question": { bn: "আপনি কি নিশ্চিত যে এই প্রশ্নটি ডিলিট করতে চান?", en: "Are you sure you want to delete this question?" },
   "common.no_questions_found": { bn: "কোনো প্রশ্ন পাওয়া যায়নি।", en: "No questions found." },
+  "common.non_ascii_characters_detected": { bn: "ইউজারনেম বা মোবাইল নম্বরে শুধুমাত্র ইংরেজি অক্ষর, সংখ্যা, আন্ডারস্কোর এবং হাইফেন ব্যবহার করা যাবে।", en: "Username or mobile number can only contain English letters, numbers, underscores, and hyphens." },
+
 
   // Categories
   "category.education": { bn: "শিক্ষা", en: "Education" },
