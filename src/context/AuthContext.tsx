@@ -369,13 +369,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setOnlineUsers([]);
     showSuccess(t("common.logout_successful")); // Show success immediately
 
-    // Only call Supabase signOut for real users (not mock admin or guest)
-    if (!(profile?.email === 'uzzal@admin.com')) { // Removed is_guest check
-      const { error } = await supabase.auth.signOut();
-      if (error) {
-        console.error("Error during Supabase signOut:", error.message);
-        showError(t("common.logout_failed") + error.message);
-      }
+    // Always call Supabase signOut
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      console.error("Error during Supabase signOut:", error.message);
+      showError(t("common.logout_failed") + error.message);
     }
   };
 
