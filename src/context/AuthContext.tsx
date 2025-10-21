@@ -298,7 +298,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const { data: existingProfiles, error: checkError } = await supabase
       .from('profiles')
       .select('id, username, email, mobile_number')
-      .or(`username.eq.${username},email.eq.${email},mobile_number.eq.${mobileNumber}`);
+      .or(`username.eq.${username},email.eq.${email},mobile_number.eq.${mobileNumber}`); // Added mobile_number to check
 
     if (checkError) {
       console.error("Error checking existing profiles:", checkError);
