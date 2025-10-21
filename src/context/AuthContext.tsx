@@ -295,15 +295,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signUp = async (username: string, email: string, mobileNumber: string, password: string) => {
+    const conditions = [`username.eq.${username.trim()}`, `email.eq.${email.trim()}`];
+    
+    // Only add mobile_number to the OR condition if it's not empty
+    if (mobileNumber.trim()) {
+      conditions.push(`mobile_number.eq.${mobileNumber.trim()}`);
+    }
+
+    const orClause = conditions.join(',');
+
     const { data: existingProfiles, error: checkError } = await supabase
       .from('profiles')
       .select('id, username, email, mobile_number')
-      .or(`username.eq.${username},email.eq.${email},mobile_number.eq.${mobileNumber}`);
+      .or(orClause);
 
     if (checkError) {
       console.error("Error checking existing profiles:", checkError);
-      showError(t("common.signup_failed_check_error"));
-      return { success: false, error: t("common.signup_failed_check_error") };
+      showError(checkError.message || t("common.signup_failed_check_error")); // Provide specific error message
+      return { success: false, error: checkError.message };
     }
 
     if (existingProfiles && existingProfiles.length > 0) {
@@ -323,7 +332,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         id: authData.user.id,
         username,
         email,
-        mobile_number: mobileNumber,
+        mobile_number: mobileNumber.trim() || null, // Ensure empty string becomes null if DB allows
         is_active: true,
       });
 
