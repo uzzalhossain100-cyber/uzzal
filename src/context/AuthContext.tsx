@@ -333,16 +333,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return { success: false, error: t("common.account_exists") };
     }
 
-    // Pass ONLY username in user_metadata to supabase.auth.signUp
+    // Pass NO user_metadata to supabase.auth.signUp to avoid header issues
     const { data: authData, error: authError } = await supabase.auth.signUp({ 
       email, 
       password,
-      options: {
-        data: {
-          username: sanitizedUsername,
-          // mobile_number is intentionally NOT sent in user_metadata to avoid header issues
-        }
-      }
+      // Removed options.data entirely
     });
 
     if (authError) {
@@ -355,7 +350,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         id: authData.user.id,
         username: sanitizedUsername,
         email,
-        mobile_number: sanitizedMobileNumber || null, // Still insert into profiles table
+        mobile_number: sanitizedMobileNumber || null, // Ensure empty string becomes null if DB allows
         is_active: true,
       });
 
