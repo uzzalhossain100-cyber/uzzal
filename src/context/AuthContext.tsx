@@ -280,6 +280,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return { success: false, error: t("common.non_ascii_characters_detected_all") };
     }
 
+    // Log sanitized values before sending to Supabase
+    console.log("Attempting signup with sanitized email:", sanitizedEmail);
+    console.log("Attempting signup with sanitized password (length):", sanitizedPassword.length); // Log length for security
+
     const { data: existingProfiles, error: checkError } = await supabase
       .from('profiles')
       .select('id, email')

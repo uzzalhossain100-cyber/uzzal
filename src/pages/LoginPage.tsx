@@ -6,7 +6,6 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuth } from '@/context/AuthContext';
 import { showError } from '@/utils/toast';
-import { ArrowLeft } from 'lucide-react';
 import { useTranslation } from '@/lib/translations'; // Import useTranslation
 
 const LoginPage: React.FC = () => {
