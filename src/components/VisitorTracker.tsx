@@ -25,17 +25,16 @@ const VisitorTracker: React.FC = () => {
       if (user || profile) {
         recordVisit({
           userId: user?.id,
-          guestId: profile?.is_guest ? profile.id : undefined,
           username: profile?.username,
           email: profile?.email,
           ipAddress: ipAddress,
-          isGuestVisit: profile?.is_guest || false,
+          // isGuestVisit: profile?.is_guest || false, // Removed
         });
       } else {
-        // For completely anonymous users (before any login/guest login attempt)
+        // For completely anonymous users (before any login attempt)
         recordVisit({
           ipAddress: ipAddress,
-          isGuestVisit: false, // Not a guest session, just an anonymous visit
+          // isGuestVisit: false, // Removed
         });
       }
       hasTrackedVisit.current = true;

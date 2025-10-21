@@ -17,7 +17,7 @@ interface Profile {
   is_active: boolean;
   email: string;
   created_at: string;
-  is_guest?: boolean;
+  // is_guest?: boolean; // Removed
   isOnline?: boolean; // Added for online status
 }
 
@@ -57,7 +57,7 @@ const ActiveUsersPanel: React.FC = () => {
   };
 
   return (
-    <Card className="w-full flex flex-col h-full bg-background/80 backdrop-blur-sm shadow-lg border-primary/20 dark:border-primary/50"> {/* Added bg-background/80 backdrop-blur-sm */}
+    <Card className="w-full flex flex-col h-full bg-background/80 backdrop-blur-sm shadow-lg border-primary/20 dark:border-primary/50">
       <CardHeader className="pb-4 border-b">
         <CardTitle className="text-xl font-extrabold text-primary dark:text-primary-foreground flex items-center">
           <Users className="h-5 w-5 mr-2" /> {t("common.active_users_page_title")}
@@ -87,7 +87,7 @@ const ActiveUsersPanel: React.FC = () => {
                   key={user.id}
                   className={cn(
                     "flex items-center justify-between p-3 rounded-lg shadow-sm border transition-all duration-200 cursor-pointer",
-                    "bg-background/60 text-foreground border-primary/10 hover:bg-primary/5 dark:border-primary/20 dark:hover:bg-primary/10", // Changed bg-card to bg-background/60
+                    "bg-background/60 text-foreground border-primary/10 hover:bg-primary/5 dark:border-primary/20 dark:hover:bg-primary/10",
                     selectedUsers.some(u => u.id === user.id) && "bg-primary/10 border-primary dark:bg-primary/20"
                   )}
                   onClick={() => handleUserSelect(user)}
@@ -97,7 +97,7 @@ const ActiveUsersPanel: React.FC = () => {
                     <div>
                       <p className="font-extrabold text-foreground flex items-center">
                         {user.username}
-                        {user.is_guest && <span className="ml-2 text-xs text-muted-foreground font-bold">{t("common.guest_label")}</span>}
+                        {/* Removed is_guest badge */}
                       </p>
                       <p className="text-xs text-muted-foreground">{user.email}</p>
                     </div>

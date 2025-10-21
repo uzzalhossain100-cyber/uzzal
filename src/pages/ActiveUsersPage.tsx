@@ -17,7 +17,7 @@ interface Profile {
   is_active: boolean;
   email: string;
   created_at: string;
-  is_guest?: boolean;
+  // is_guest?: boolean; // Removed
   isOnline?: boolean; // Added for online status
 }
 
@@ -42,7 +42,7 @@ const ActiveUsersPage: React.FC = () => {
         fetchedUsers.push({
           ...currentUserProfile,
           is_active: true, // Admin is always active when logged in
-          is_guest: false,
+          // is_guest: false, // Removed
         });
       }
       
@@ -58,13 +58,13 @@ const ActiveUsersPage: React.FC = () => {
   useEffect(() => {
     // Combine all users (real and online guests) with online status
     const onlineUserIds = new Set(onlineUsers.map(u => u.id));
-    const onlineGuestUsers = onlineUsers.filter(u => u.is_guest);
+    // const onlineGuestUsers = onlineUsers.filter(u => u.is_guest); // Removed
 
-    const combinedUsers = [...allUsers, ...onlineGuestUsers.filter(guest => !allUsers.some(u => u.id === guest.id))];
+    const combinedUsers = [...allUsers]; // No guests from onlineUsers to combine anymore
 
     const usersWithStatus = combinedUsers.map(user => ({
       ...user,
-      isOnline: onlineUserIds.has(user.id) || (currentUserProfile?.id === user.id && (currentUserProfile.email === 'uzzal@admin.com' || currentUserProfile.is_guest)), // Admin/Guest is online if logged in
+      isOnline: onlineUserIds.has(user.id) || (currentUserProfile?.id === user.id && (currentUserProfile.email === 'uzzal@admin.com')), // Admin is online if logged in
     }));
 
     // Filter based on search query
@@ -100,7 +100,7 @@ const ActiveUsersPage: React.FC = () => {
 
   return (
     <div className="flex flex-col h-full">
-      <Card className="w-full flex flex-col flex-1 bg-background/80 backdrop-blur-sm shadow-lg border-primary/20 dark:border-primary/50"> {/* Added bg-background/80 backdrop-blur-sm */}
+      <Card className="w-full flex flex-col flex-1 bg-background/80 backdrop-blur-sm shadow-lg border-primary/20 dark:border-primary/50">
         <CardHeader className="flex flex-row items-center justify-between pb-4 border-b">
           <CardTitle className="text-3xl font-extrabold text-primary dark:text-primary-foreground flex items-center">
             <Users className="h-7 w-7 mr-2" /> {t("common.active_users_page_title")}
@@ -126,7 +126,7 @@ const ActiveUsersPage: React.FC = () => {
                 <div className="text-center text-muted-foreground p-4 font-bold">{t("common.no_users_found")}</div>
               ) : (
                 filteredUsers.map((user) => (
-                  <Card key={user.id} className="flex items-center justify-between p-4 shadow-sm border-primary/10 dark:border-primary/20 bg-background/60 backdrop-blur-sm"> {/* Added bg-background/60 backdrop-blur-sm */}
+                  <Card key={user.id} className="flex items-center justify-between p-4 shadow-sm border-primary/10 dark:border-primary/20 bg-background/60 backdrop-blur-sm">
                     <div className="flex items-center gap-3">
                       <Circle
                         className={cn(
@@ -137,7 +137,7 @@ const ActiveUsersPage: React.FC = () => {
                       <div>
                         <p className="font-extrabold text-foreground flex items-center">
                           {user.username}
-                          {user.is_guest && <span className="ml-2 text-xs text-muted-foreground font-bold">{t("common.guest_label")}</span>}
+                          {/* Removed is_guest badge */}
                         </p>
                         <p className="text-sm text-muted-foreground">{user.email}</p>
                       </div>

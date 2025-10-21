@@ -11,7 +11,7 @@ interface Profile {
   is_active: boolean;
   email: string;
   created_at: string;
-  is_guest?: boolean; // Added for guest users
+  // is_guest?: boolean; // Removed for guest users
 }
 
 interface PresenceState {
@@ -20,7 +20,7 @@ interface PresenceState {
     username: string;
     email: string;
     online_at: number;
-    is_guest?: boolean; // Added for guest users in presence
+    // is_guest?: boolean; // Removed for guest users in presence
   }[];
 }
 
@@ -31,11 +31,11 @@ interface AuthContextType {
   onlineUsers: Profile[]; // New: List of currently online users
   signIn: (identifier: string, password: string) => Promise<{ success: boolean; error?: string }>;
   signUp: (username: string, email: string, mobileNumber: string, password: string) => Promise<{ success: boolean; error?: string }>;
-  guestSignIn: (username: string) => Promise<{ success: boolean; error?: string }>; // Updated: Only username
+  // guestSignIn: (username: string) => Promise<{ success: boolean; error?: string }>; // Removed: Only username
   signOut: () => Promise<void>;
   getUsersProfiles: () => Promise<Profile[] | null>;
   updateUserProfileStatus: (userId: string, isActive: boolean) => Promise<{ success: boolean; error?: string }>;
-  recordVisit: (visitData: { userId?: string; guestId?: string; username?: string; email?: string; ipAddress?: string; isGuestVisit: boolean }) => Promise<void>; // New: Function to record visits
+  recordVisit: (visitData: { userId?: string; username?: string; email?: string; ipAddress?: string; }) => Promise<void>; // Updated: Removed guestId and isGuestVisit
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -66,7 +66,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               mobile_number: null, // Mobile number is not part of presence payload
               is_active: true, // Assume online users are active
               created_at: new Date(p.online_at).toISOString(),
-              is_guest: p.is_guest || false, // Include is_guest from presence
+              // is_guest: p.is_guest || false, // Removed is_guest from presence
             });
           }
         });
@@ -78,7 +78,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Helper function to set mock admin state
   const setMockAdminSession = () => {
     const adminUser: User = { id: 'admin-id', email: 'uzzal@admin.com', app_metadata: {}, user_metadata: {}, aud: 'authenticated', created_at: new Date().toISOString() } as User;
-    const adminProfile: Profile = { id: 'admin-id', username: 'Uzzal', mobile_number: '01713236980', is_active: true, email: 'uzzal@admin.com', created_at: new Date().toISOString(), is_guest: false };
+    const adminProfile: Profile = { id: 'admin-id', username: 'Uzzal', mobile_number: '01713236980', is_active: true, email: 'uzzal@admin.com', created_at: new Date().toISOString() };
     setUser(adminUser);
     setProfile(adminProfile);
     localStorage.setItem('isMockAdminLoggedIn', 'true'); // Persist mock admin state
@@ -101,50 +101,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setOnlineUsers(prev => prev.filter(u => u.id !== 'admin-id'));
   };
 
-  // Helper function to set guest session
-  const setGuestSession = (guestUsername: string) => {
-    const guestId = `guest-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
-    const guestEmail = `${guestUsername.toLowerCase().replace(/[^a-z0-9]/g, '')}@guest.com`; // Generate dummy email
-    const guestUser: User = {
-      id: guestId,
-      email: guestEmail,
-      app_metadata: { is_guest: true },
-      user_metadata: { username: guestUsername },
-      aud: 'authenticated', // Or a custom aud for guests
-      created_at: new Date().toISOString(),
-    } as User;
-    const guestProfile: Profile = {
-      id: guestId,
-      username: guestUsername,
-      mobile_number: null,
-      is_active: true,
-      email: guestEmail,
-      created_at: new Date().toISOString(),
-      is_guest: true,
-    };
-    setUser(guestUser);
-    setProfile(guestProfile);
-    localStorage.setItem('guestUser', JSON.stringify(guestUser));
-    localStorage.setItem('guestProfile', JSON.stringify(guestProfile));
-
-    // Manually add guest to onlineUsers for immediate display
-    setOnlineUsers(prev => {
-      if (!prev.some(u => u.id === guestProfile.id)) {
-        return [...prev, guestProfile];
-      }
-      return prev;
-    });
-  };
-
-  // Helper function to clear guest session
-  const clearGuestSession = () => {
-    setUser(null);
-    setProfile(null);
-    localStorage.removeItem('guestUser');
-    localStorage.removeItem('guestProfile');
-    // Manually remove guest from onlineUsers
-    setOnlineUsers(prev => prev.filter(u => !u.is_guest)); // Filter out all guests
-  };
+  // Removed setGuestSession and clearGuestSession functions
 
   useEffect(() => {
     const setupPresenceChannel = (sessionUser: User, userProfile: Profile) => {
@@ -183,7 +140,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             username: userProfile.username,
             email: userProfile.email,
             online_at: Date.now(),
-            is_guest: userProfile.is_guest || false,
+            // is_guest: userProfile.is_guest || false, // Removed is_guest from presence
           });
           if (presenceError) {
             console.error("Error tracking presence:", presenceError);
@@ -213,28 +170,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setProfile(null);
             showError(t("common.account_deactivated"));
             clearMockAdminSession();
-            clearGuestSession();
+            // clearGuestSession(); // Removed
           } else {
             setupPresenceChannel(sessionUser, data);
           }
         }
         // Ensure these are cleared if a real user logs in over a mock/guest session
         localStorage.removeItem('isMockAdminLoggedIn');
-        localStorage.removeItem('guestUser');
-        localStorage.removeItem('guestProfile');
+        localStorage.removeItem('guestUser'); // Removed
+        localStorage.removeItem('guestProfile'); // Removed
       } else {
         if (localStorage.getItem('isMockAdminLoggedIn') === 'true') {
           setMockAdminSession();
           const adminUser: User = { id: 'admin-id', email: 'uzzal@admin.com', app_metadata: {}, user_metadata: {}, aud: 'authenticated', created_at: new Date().toISOString() } as User;
-          const adminProfile: Profile = { id: 'admin-id', username: 'Uzzal', mobile_number: '01713236980', is_active: true, email: 'uzzal@admin.com', created_at: new Date().toISOString(), is_guest: false };
+          const adminProfile: Profile = { id: 'admin-id', username: 'Uzzal', mobile_number: '01713236980', is_active: true, email: 'uzzal@admin.com', created_at: new Date().toISOString() };
           setupPresenceChannel(adminUser, adminProfile);
-        } else if (localStorage.getItem('guestUser') && localStorage.getItem('guestProfile')) {
-          const storedGuestUser = JSON.parse(localStorage.getItem('guestUser')!);
-          const storedGuestProfile = JSON.parse(localStorage.getItem('guestProfile')!);
-          setUser(storedGuestUser);
-          setProfile(storedGuestProfile);
-          setupPresenceChannel(storedGuestUser, storedGuestProfile);
-        } else {
+        } else { // Removed guest session check
           if (presenceChannelRef.current) {
             try {
               presenceChannelRef.current.unsubscribe();
@@ -284,7 +235,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signIn = async (identifier: string, password: string) => {
     // Updated mock admin login credentials
-    if (identifier === 'uzzal@admin.com' && password === '200186') {
+    if (identifier === 'uzzal@admin.com' && password === 'Goodman') { // Updated password
       setMockAdminSession();
       showSuccess(t("common.admin_login_success"));
       return { success: true };
@@ -322,7 +273,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       showError(t("common.failed_to_load_profile"));
       await supabase.auth.signOut();
       clearMockAdminSession();
-      clearGuestSession();
+      // clearGuestSession(); // Removed
       return { success: false, error: t("common.failed_to_load_profile") };
     }
 
@@ -330,15 +281,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       showError(t("common.account_deactivated"));
       await supabase.auth.signOut();
       clearMockAdminSession();
-      clearGuestSession();
+      // clearGuestSession(); // Removed
       return { success: false, error: t("common.account_deactivated") };
     }
 
     setUser(data.user);
     setProfile(profileData);
     localStorage.removeItem('isMockAdminLoggedIn');
-    localStorage.removeItem('guestUser');
-    localStorage.removeItem('guestProfile');
+    localStorage.removeItem('guestUser'); // Removed
+    localStorage.removeItem('guestProfile'); // Removed
     showSuccess(t("common.login_successful"));
     return { success: true };
   };
@@ -386,14 +337,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return { success: true };
   };
 
-  const guestSignIn = async (username: string) => { // Only username as parameter
-    await supabase.auth.signOut();
-    clearMockAdminSession();
-
-    setGuestSession(username); // Pass only username
-    showSuccess(t("common.guest_login_successful"));
-    return { success: true };
-  };
+  // Removed guestSignIn function
 
   const signOut = async () => {
     // Always untrack/unsubscribe presence
@@ -416,8 +360,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // Always clear local storage items related to mock/guest sessions
     localStorage.removeItem('isMockAdminLoggedIn');
-    localStorage.removeItem('guestUser');
-    localStorage.removeItem('guestProfile');
+    localStorage.removeItem('guestUser'); // Removed
+    localStorage.removeItem('guestProfile'); // Removed
 
     // Optimistically clear state for immediate UI update
     setUser(null);
@@ -426,7 +370,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     showSuccess(t("common.logout_successful")); // Show success immediately
 
     // Only call Supabase signOut for real users (not mock admin or guest)
-    if (!(profile?.is_guest || profile?.email === 'uzzal@admin.com')) {
+    if (!(profile?.email === 'uzzal@admin.com')) { // Removed is_guest check
       const { error } = await supabase.auth.signOut();
       if (error) {
         console.error("Error during Supabase signOut:", error.message);
@@ -465,14 +409,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return { success: true };
   };
 
-  const recordVisit = async (visitData: { userId?: string; guestId?: string; username?: string; email?: string; ipAddress?: string; isGuestVisit: boolean }) => {
+  const recordVisit = async (visitData: { userId?: string; username?: string; email?: string; ipAddress?: string; }) => { // Updated parameters
     const { error } = await supabase.from('visits').insert({
       user_id: visitData.userId,
-      guest_id: visitData.guestId,
+      // guest_id: visitData.guestId, // Removed
       username: visitData.username,
       email: visitData.email,
       ip_address: visitData.ipAddress,
-      is_guest_visit: visitData.isGuestVisit,
+      is_guest_visit: false, // Always false as guest login is removed
     });
 
     if (error) {
@@ -481,14 +425,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ user, profile, loading, onlineUsers, signIn, signUp, guestSignIn, signOut, getUsersProfiles, updateUserProfileStatus, recordVisit }}>
+    <AuthContext.Provider value={{ user, profile, loading, onlineUsers, signIn, signUp, signOut, getUsersProfiles, updateUserProfileStatus, recordVisit }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
 export const useAuth = () => {
-  const context = useContext(AuthContext); // Line 492
+  const context = useContext(AuthContext);
   if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
   }

@@ -44,7 +44,7 @@ export function Header() {
   const { switchLanguage } = useLanguage(); // Initialize useLanguage
 
   const isAdmin = profile?.email === 'uzzal@admin.com';
-  const isGuest = profile?.is_guest;
+  // const isGuest = profile?.is_guest; // Removed
 
   const avatarSrc = isAdmin ? "/images/uzzal-hossain.jpg" : (user?.user_metadata?.avatar_url || "https://github.com/shadcn.png");
   const avatarFallback = user?.email ? user.email.charAt(0).toUpperCase() : (profile?.username ? profile.username.charAt(0).toUpperCase() : 'U');
@@ -55,11 +55,12 @@ export function Header() {
       icon: Home,
       href: "/",
     },
-    ...(!isGuest ? [{
+    // Removed isGuest condition
+    {
       name: t("common.active_users"),
       icon: MessageSquareText,
       href: "/active-users",
-    }] : []),
+    },
     ...(isAdmin ? [{
       name: t("common.live_chat"),
       icon: MessageCircleMore,
@@ -90,7 +91,7 @@ export function Header() {
       icon: Users,
       href: "/user-management",
     }] : []),
-  ], [t, isGuest, isAdmin, currentLanguage]); // Add currentLanguage to dependencies
+  ], [t, isAdmin, currentLanguage]); // Add currentLanguage to dependencies
 
   const allSearchableItems = useMemo(() => {
     const items: SearchableItem[] = [];
@@ -349,33 +350,27 @@ export function Header() {
             className="overflow-hidden rounded-full border-primary/30 hover:bg-primary/10"
           >
             <Avatar>
-              {isGuest ? (
+              {/* Removed isGuest check */}
+              <>
+                <AvatarImage src={avatarSrc} alt={user?.email || "@user"} />
                 <AvatarFallback>
-                  <UserIcon className="h-5 w-5" />
+                  {avatarFallback}
                 </AvatarFallback>
-              ) : (
-                <>
-                  <AvatarImage src={avatarSrc} alt={user?.email || "@user"} />
-                  <AvatarFallback>
-                    {avatarFallback}
-                  </AvatarFallback>
-                </>
-              )}
+              </>
             </Avatar>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" key={currentLanguage}>
           <DropdownMenuLabel className="font-extrabold">
-            {isGuest ? `${t("common.guest")}: ${profile?.username}` : (user?.email || t("common.my_account"))}
+            {user?.email || (profile?.username || t("common.my_account"))} {/* Simplified label */}
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          {!isGuest && (
-            <>
-              <DropdownMenuItem>{t("common.settings")}</DropdownMenuItem>
-              <DropdownMenuItem>{t("common.support")}</DropdownMenuItem>
-              <DropdownMenuSeparator />
-            </>
-          )}
+          {/* Removed isGuest check */}
+          <>
+            <DropdownMenuItem>{t("common.settings")}</DropdownMenuItem>
+            <DropdownMenuItem>{t("common.support")}</DropdownMenuItem>
+            <DropdownMenuSeparator />
+          </>
           <DropdownMenuItem onClick={signOut} className="text-destructive hover:bg-destructive/10">
             <LogOut className="mr-2 h-4 w-4" />
             {t("common.logout")}

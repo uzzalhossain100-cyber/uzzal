@@ -114,7 +114,7 @@ const translations: TranslationKeys = {
   "common.account_exists": { bn: "আপনার নামে একটি একাউন্ট আছে।", en: "An account already exists with your details." },
   "common.signup_failed_check_error": { bn: "সাইন আপ চেক করতে সমস্যা হয়েছে।", en: "Problem checking existing profiles." },
   "common.signup_successful": { bn: "সাইন আপ সফল হয়েছে!", en: "Signup successful!" },
-  "common.guest_login_successful": { bn: "সাধারণ ইউজার হিসেবে লগইন সফল!", en: "Guest user login successful!" },
+  // "common.guest_login_successful": { bn: "সাধারণ ইউজার হিসেবে লগইন সফল!", en: "Guest user login successful!" }, // Removed
   "common.logout_successful": { bn: "লগআউট সফল!", en: "Logout successful!" },
   "common.logout_failed": { bn: "লগআউট ব্যর্থ হয়েছে:", en: "Logout failed:" },
   "common.permission_denied": { bn: "আপনার এই অ্যাকশন করার অনুমতি নেই।", en: "You do not have permission to perform this action." },
@@ -128,7 +128,7 @@ const translations: TranslationKeys = {
   "common.failed_to_delete_ad": { bn: "বিজ্ঞাপন ডিলিট করতে ব্যর্থ:", en: "Failed to delete advertisement:" },
   "common.ad_deleted_successfully": { bn: "বিজ্ঞাপন সফলভাবে ডিলিট করা হয়েছে!", en: "Advertisement successfully deleted!" },
   "common.failed_to_load_ads": { bn: "বিজ্ঞাপন লোড করতে ব্যর্থ:", en: "Failed to load advertisements:" },
-  "common.only_jpg_png": { bn: "শুধুমাত্র JPG বা PNG ছবি আপলোড করা যাবে।", en: "Only JPG or PNG images can be uploaded." },
+  "common.only_jpg_png": { bn: "শুধুমাত্র JPG বা PNG ছবি আপলোড করা যাবে।", en: "Only JPG বা PNG images can be uploaded." },
   "common.file_size_limit": { bn: "ফাইলের আকার {size}MB এর বেশি হতে পারবে না।", en: "File size cannot exceed {size}MB." },
   "common.failed_to_upload_image": { bn: "ছবি আপলোড করতে ব্যর্থ:", en: "Failed to upload image:" },
   "common.failed_to_update_ad": { bn: "বিজ্ঞাপন আপডেট করতে ব্যর্থ:", en: "Failed to update advertisement:" },
@@ -172,16 +172,16 @@ const translations: TranslationKeys = {
   "common.no_users_found": { bn: "কোনো ইউজার পাওয়া যায়নি।", en: "No users found." },
   "common.admin_login": { bn: "এডমিন লগইন", en: "Admin Login" },
   "common.admin_login_desc": { bn: "এডমিন হিসেবে প্রবেশ করতে আপনার ইউজারনেম/ইমেল এবং পাসওয়ার্ড লিখুন।", en: "Enter your username/email and password to log in as admin." },
-  "common.login_desc": { bn: "আপনার অ্যাকাউন্টে প্রবেশ করুন বা সাধারণ ইউজার হিসেবে চালিয়ে যান।", en: "Access your account or continue as a guest user." },
-  "common.guest_login_button": { bn: "সাধারণ ইউজার হিসেবে প্রবেশ করুন", en: "Log in as Guest User" },
-  "common.login_as_admin_button": { bn: "এডমিন হিসাবে প্রবেশ করুন", en: "Log in as Admin" },
+  "common.login_desc": { bn: "আপনার অ্যাকাউন্টে প্রবেশ করতে আপনার ইউজারনেম/ইমেল এবং পাসওয়ার্ড লিখুন।", en: "Enter your username/email and password to access your account." }, // Updated
+  // "common.guest_login_button": { bn: "সাধারণ ইউজার হিসেবে প্রবেশ করুন", en: "Log in as Guest User" }, // Removed
+  // "common.login_as_admin_button": { bn: "এডমিন হিসাবে প্রবেশ করুন", en: "Log in as Admin" }, // Removed
   "common.signup_desc": { bn: "একটি নতুন অ্যাকাউন্ট তৈরি করতে আপনার তথ্য লিখুন।", en: "Enter your information to create a new account." },
   "common.username_validation_error": { bn: "ইউজারনেম শুধুমাত্র ইংরেজি অক্ষর, সংখ্যা, আন্ডারস্কোর এবং হাইফেন দিয়ে গঠিত হতে পারে।", en: "Username can only consist of English letters, numbers, underscores, and hyphens." },
   "common.mobile_number_validation_error": { bn: "মোবাইল নম্বর শুধুমাত্র সংখ্যা দিয়ে গঠিত হতে পারে।", en: "Mobile number can only consist of digits." },
   "common.username_required": { bn: "ইউজারনেম প্রয়োজন।", en: "Username is required." },
-  "common.guest_login_failed": { bn: "সাধারণ ইউজার হিসেবে লগইন ব্যর্থ হয়েছে।", en: "Guest user login failed." },
-  "common.guest_login_title": { bn: "সাধারণ ইউজার হিসেবে প্রবেশ করুন", en: "Log in as Guest User" },
-  "common.guest_login_dialog_desc": { bn: "আপনার ইউজারনেম দিয়ে সাইটে প্রবেশ করুন।", en: "Enter your username to access the site." },
+  // "common.guest_login_failed": { bn: "সাধারণ ইউজার হিসেবে লগইন ব্যর্থ হয়েছে।", en: "Guest user login failed." }, // Removed
+  // "common.guest_login_title": { bn: "সাধারণ ইউজার হিসেবে প্রবেশ করুন", en: "Log in as Guest User" }, // Removed
+  // "common.guest_login_dialog_desc": { bn: "আপনার ইউজারনেম দিয়ে সাইটে প্রবেশ করুন।", en: "Enter your username to access the site." }, // Removed
   "common.logging_in": { bn: "প্রবেশ করা হচ্ছে...", en: "Logging in..." },
   "common.enter_username_placeholder": { bn: "আপনার ইউজারনেম (শুধুমাত্র ইংরেজি)", en: "Your Username (English only)" },
   "common.enter_email_placeholder": { bn: "m@example.com", en: "m@example.com" },
@@ -217,7 +217,7 @@ const translations: TranslationKeys = {
   "common.active_users_page_title": { bn: "সক্রিয় ইউজার", en: "Active Users" },
   "common.active_users_desc": { bn: "অনলাইন এবং নিবন্ধিত ইউজারদের তালিকা", en: "List of online and registered users" },
   "common.search_users_placeholder": { bn: "ইউজারনেম বা ইমেল দিয়ে সার্চ করুন...", en: "Search by username or email..." },
-  "common.guest_label": { bn: "(গেস্ট)", en: "(Guest)" },
+  // "common.guest_label": { bn: "(গেস্ট)", en: "(Guest)" }, // Removed
   "common.chat_button": { bn: "চ্যাট", en: "Chat" },
   "common.live_chat_page_title": { bn: "লাইভ চ্যাট", en: "Live Chat" },
   "common.online_users_list": { bn: "অনলাইন ইউজারদের তালিকা", en: "List of online users" },
@@ -346,7 +346,7 @@ const translations: TranslationKeys = {
   "country.italy": { bn: "ইতালি", en: "Italy" },
   "country.spain": { bn: "স্পেন", en: "Spain" },
   "country.brazil": { bn: "ব্রাজিল", en: "Brazil" },
-  "country.south_africa": { bn: "দক্ষিণ আফ্রিকা", en : "South Africa" },
+  "country.south_africa": { bn: "দক্ষিণ আফ্রিকা", en: "South Africa" },
   "country.egypt": { bn: "মিশর", en: "Egypt" },
   "country.pakistan": { bn: "পাকিস্তান", en: "Pakistan" },
   "country.indonesia": { bn: "ইন্দোনেশিয়া", en: "Indonesia" },
