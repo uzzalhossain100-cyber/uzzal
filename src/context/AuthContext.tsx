@@ -295,20 +295,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signUp = async (username: string, email: string, mobileNumber: string, password: string) => {
-    // Sanitize username and mobileNumber to ensure they are ASCII
+    // Sanitize all input fields to ensure they are ASCII
     const trimmedUsername = username.trim();
     const trimmedMobileNumber = mobileNumber.trim();
+    const trimmedEmail = email.trim();
+    const trimmedPassword = password.trim();
 
     const sanitizedUsername = trimmedUsername.replace(/[^\x00-\x7F]/g, '');
     const sanitizedMobileNumber = trimmedMobileNumber.replace(/[^\x00-\x7F]/g, '');
+    const sanitizedEmail = trimmedEmail.replace(/[^\x00-\x7F]/g, '');
+    const sanitizedPassword = trimmedPassword.replace(/[^\x00-\x7F]/g, '');
 
-    // Check if sanitization changed the input, indicating non-ASCII characters were present
-    if (sanitizedUsername !== trimmedUsername || (trimmedMobileNumber && sanitizedMobileNumber !== trimmedMobileNumber)) {
-      showError(t("common.non_ascii_characters_detected"));
-      return { success: false, error: t("common.non_ascii_characters_detected") };
+    // Check if sanitization changed any input, indicating non-ASCII characters were present
+    if (sanitizedUsername !== trimmedUsername || (trimmedMobileNumber && sanitizedMobileNumber !== trimmedMobileNumber) || sanitizedEmail !== trimmedEmail || sanitizedPassword !== trimmedPassword) {
+      showError(t("common.non_ascii_characters_detected_all")); // Use new, broader translation key
+      return { success: false, error: t("common.non_ascii_characters_detected_all") };
     }
 
-    const conditions = [`username.eq.${sanitizedUsername}`, `email.eq.${email.trim()}`];
+    const conditions = [`username.eq.${sanitizedUsername}`, `email.eq.${sanitizedEmail}`];
     
     // Only add mobile_number to the OR condition if it's not empty after sanitization
     if (sanitizedMobileNumber) {
@@ -335,8 +339,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // Pass NO user_metadata to supabase.auth.signUp to avoid header issues
     const { data: authData, error: authError } = await supabase.auth.signUp({ 
-      email, 
-      password,
+      email: sanitizedEmail, // Use sanitized email
+      password: sanitizedPassword, // Use sanitized password
       // Removed options.data entirely
     });
 
@@ -349,7 +353,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const { error: profileError } = await supabase.from('profiles').insert({
         id: authData.user.id,
         username: sanitizedUsername,
-        email,
+        email: sanitizedEmail,
         mobile_number: sanitizedMobileNumber || null, // Ensure empty string becomes null if DB allows
         is_active: true,
       });

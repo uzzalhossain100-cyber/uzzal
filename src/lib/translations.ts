@@ -85,7 +85,7 @@ const translations: TranslationKeys = {
   "common.start_group_chat": { bn: "গ্রুপ চ্যাট শুরু করার চেষ্টা হচ্ছে। (এই ফিচারটি এখনো ডেভেলপ করা হয়নি)", en: "Attempting to start group chat. (This feature is not yet developed)" },
   "common.select_at_least_two_users": { bn: "গ্রুপ চ্যাট শুরু করতে কমপক্ষে দুইজন ইউজার নির্বাচন করুন।", en: "Select at least two users to start a group chat." },
   "common.selected_users": { bn: "নির্বাচিত ইউজার", en: "Selected Users" },
-  "common.start_group_chat_button": { bn: "গ্রুপ চ্যাট শুরু করুন", en: "Start Group Chat" },
+  "common.start_group_chat_btn": { bn: "গ্রুপ চ্যাট শুরু করুন", en: "Start Group Chat" },
   "common.no_active_users_found": { bn: "কোনো সক্রিয় ইউজার পাওয়া যায়নি।", en: "No active users found." },
   "common.message_cannot_be_empty": { bn: "মেসেজ খালি হতে পারে না বা ইউজার লগইন করা নেই।", en: "Message cannot be empty or user is not logged in." },
   "common.failed_to_post_message": { bn: "মেসেজ পোস্ট করতে ব্যর্থ:", en: "Failed to post message:" },
@@ -310,6 +310,7 @@ const translations: TranslationKeys = {
   "common.quiz_confirm_delete_question": { bn: "আপনি কি নিশ্চিত যে এই প্রশ্নটি ডিলিট করতে চান?", en: "Are you sure you want to delete this question?" },
   "common.no_questions_found": { bn: "কোনো প্রশ্ন পাওয়া যায়নি।", en: "No questions found." },
   "common.non_ascii_characters_detected": { bn: "ইউজারনেম বা মোবাইল নম্বরে শুধুমাত্র ইংরেজি অক্ষর, সংখ্যা, আন্ডারস্কোর এবং হাইফেন ব্যবহার করা যাবে।", en: "Username or mobile number can only contain English letters, numbers, underscores, and hyphens." },
+  "common.non_ascii_characters_detected_all": { bn: "শুধুমাত্র ইংরেজি অক্ষর, সংখ্যা এবং নির্দিষ্ট চিহ্ন ব্যবহার করা যাবে।", en: "Only English letters, numbers, and specific symbols can be used." },
 
 
   // Categories
