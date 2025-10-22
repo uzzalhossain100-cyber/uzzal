@@ -340,11 +340,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       email: sanitizedEmail,
       password: sanitizedPassword,
       options: {
-        data: { // Explicitly set user_metadata to null/empty ASCII values
-          first_name: null,
-          last_name: null,
-          username: null,
-          mobile_number: null,
+        data: { // Explicitly set user_metadata to empty, sanitized strings
+          first_name: sanitizeToAscii(""),
+          last_name: sanitizeToAscii(""),
+          username: sanitizeToAscii(""),
+          mobile_number: sanitizeToAscii(""),
         }
       }
     });
