@@ -77,13 +77,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const setMockAdminSession = () => {
     const adminUser: User = { id: 'admin-id', email: 'uzzal@admin.com', app_metadata: {}, user_metadata: {}, aud: 'authenticated', created_at: new Date().toISOString() } as User;
     const adminProfile: Profile = { id: 'admin-id', username: 'Uzzal', mobile_number: '01713236980', is_active: true, email: 'uzzal@admin.com', created_at: new Date().toISOString(), first_name: 'Uzzal', last_name: 'Hossain' };
+    
+    // Sanitize adminProfile explicitly for consistency
+    const sanitizedAdminProfile: Profile = {
+      ...adminProfile,
+      username: sanitizeToAscii(adminProfile.username),
+      email: sanitizeToAscii(adminProfile.email),
+      first_name: sanitizeToAscii(adminProfile.first_name),
+      last_name: sanitizeToAscii(adminProfile.last_name),
+      mobile_number: sanitizeToAscii(adminProfile.mobile_number),
+    };
+
     setUser(adminUser);
-    setProfile(adminProfile);
+    setProfile(sanitizedAdminProfile);
     localStorage.setItem('isMockAdminLoggedIn', 'true');
 
     setOnlineUsers(prev => {
-      if (!prev.some(u => u.id === adminProfile.id)) {
-        return [...prev, adminProfile];
+      if (!prev.some(u => u.id === sanitizedAdminProfile.id)) {
+        return [...prev, sanitizedAdminProfile];
       }
       return prev;
     });
@@ -328,6 +339,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const { data: authData, error: authError } = await supabase.auth.signUp({ 
       email: sanitizedEmail,
       password: sanitizedPassword,
+      options: {
+        data: { // Explicitly set user_metadata to null/empty ASCII values
+          first_name: null,
+          last_name: null,
+          username: null,
+          mobile_number: null,
+        }
+      }
     });
 
     if (authError) {
