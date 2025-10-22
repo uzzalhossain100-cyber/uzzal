@@ -106,7 +106,7 @@ const translations: TranslationKeys = {
   "common.write_a_comment": { bn: "একটি কমেন্ট লিখুন...", en: "Write a comment..." },
   "common.write_your_message": { bn: "আপনার মেসেজ লিখুন...", en: "Write your message..." },
   "common.admin_login_success": { bn: "এডমিন লগইন সফল!", en: "Admin login successful!" },
-  "common.wrong_username_password": { bn: "ভুল ইমেল বা পাসওয়ার্ড।", en: "Wrong email or password." }, // Updated
+  "common.wrong_username_password": { bn: "ভুল ইমেল বা পাসওয়ার্ড।", en: "Wrong email or password." },
   "common.failed_to_load_profile": { bn: "প্রোফাইল ডেটা লোড করতে ব্যর্থ।", en: "Failed to load profile data." },
   "common.account_deactivated": { bn: "আপনার অ্যাকাউন্ট নিষ্ক্রিয় করা হয়েছে।", en: "Your account has been deactivated." },
   "common.login_successful": { bn: "লগইন সফল!", en: "Login successful!" },
@@ -173,13 +173,13 @@ const translations: TranslationKeys = {
   "common.no_users_found": { bn: "কোনো ইউজার পাওয়া যায়নি।", en: "No users found." },
   "common.admin_login": { bn: "এডমিন লগইন", en: "Admin Login" },
   "common.admin_login_desc": { bn: "এডমিন হিসেবে প্রবেশ করতে আপনার ইউজারনেম/ইমেল এবং পাসওয়ার্ড লিখুন।", en: "Enter your username/email and password to log in as admin." },
-  "common.login_desc": { bn: "আপনার অ্যাকাউন্টে প্রবেশ করতে আপনার ইমেল এবং পাসওয়ার্ড লিখুন।", en: "Enter your email and password to access your account." }, // Updated
-  "common.signup_desc": { bn: "একটি নতুন অ্যাকাউন্ট তৈরি করতে আপনার ইমেল এবং পাসওয়ার্ড লিখুন।", en: "Enter your email and password to create a new account." }, // Updated
+  "common.login_desc": { bn: "আপনার অ্যাকাউন্টে প্রবেশ করতে আপনার ইমেল এবং পাসওয়ার্ড লিখুন।", en: "Enter your email and password to access your account." },
+  "common.signup_desc": { bn: "একটি নতুন অ্যাকাউন্ট তৈরি করতে আপনার ইমেল এবং পাসওয়ার্ড লিখুন।", en: "Enter your email and password to create a new account." },
   "common.username_validation_error": { bn: "ইউজারনেম শুধুমাত্র ইংরেজি অক্ষর, সংখ্যা, আন্ডারস্কোর এবং হাইফেন দিয়ে গঠিত হতে পারে।", en: "Username can only consist of English letters, numbers, underscores, and hyphens." },
   "common.mobile_number_validation_error": { bn: "মোবাইল নম্বর শুধুমাত্র সংখ্যা দিয়ে গঠিত হতে পারে।", en: "Mobile number can only consist of digits." },
-  "common.email_validation_error": { bn: "ইমেল শুধুমাত্র ASCII অক্ষর, সংখ্যা এবং নির্দিষ্ট চিহ্ন দিয়ে গঠিত হতে পারে।", en: "Email can only consist of ASCII letters, numbers, and specific symbols." }, // Updated
-  "common.password_validation_error": { bn: "পাসওয়ার্ড শুধুমাত্র ASCII অক্ষর, সংখ্যা এবং নির্দিষ্ট চিহ্ন দিয়ে গঠিত হতে পারে।", en: "Password can only consist of ASCII letters, numbers, and specific symbols." }, // Updated
-  "common.identifier_validation_error": { bn: "ইমেল শুধুমাত্র ASCII অক্ষর, সংখ্যা এবং নির্দিষ্ট চিহ্ন দিয়ে গঠিত হতে পারে।", en: "Email can only consist of ASCII letters, numbers, and specific symbols." }, // Updated
+  "common.email_validation_error": { bn: "ইমেল শুধুমাত্র ASCII অক্ষর, সংখ্যা এবং নির্দিষ্ট চিহ্ন দিয়ে গঠিত হতে পারে।", en: "Email can only consist of ASCII letters, numbers, and specific symbols." },
+  "common.password_validation_error": { bn: "পাসওয়ার্ড শুধুমাত্র ASCII অক্ষর, সংখ্যা এবং নির্দিষ্ট চিহ্ন দিয়ে গঠিত হতে পারে।", en: "Password can only consist of ASCII letters, numbers, and specific symbols." },
+  "common.identifier_validation_error": { bn: "ইমেল শুধুমাত্র ASCII অক্ষর, সংখ্যা এবং নির্দিষ্ট চিহ্ন দিয়ে গঠিত হতে পারে।", en: "Email can only consist of ASCII letters, numbers, and specific symbols." },
   "common.username_required": { bn: "ইউজারনেম প্রয়োজন।", en: "Username is required." },
   "common.logging_in": { bn: "প্রবেশ করা হচ্ছে...", en: "Logging in..." },
   "common.enter_username_placeholder": { bn: "আপনার ইউজারনেম (শুধুমাত্র ইংরেজি)", en: "Your Username (English only)" },
@@ -304,6 +304,7 @@ const translations: TranslationKeys = {
   "common.no_questions_found": { bn: "কোনো প্রশ্ন পাওয়া যায়নি।", en: "No questions found." },
   "common.non_ascii_characters_detected": { bn: "ইউজারনেম বা মোবাইল নম্বরে শুধুমাত্র ইংরেজি অক্ষর, সংখ্যা, আন্ডারস্কোর এবং হাইফেন ব্যবহার করা যাবে।", en: "Username or mobile number can only contain English letters, numbers, underscores, and hyphens." },
   "common.non_ascii_characters_detected_all": { bn: "শুধুমাত্র ASCII অক্ষর, সংখ্যা এবং নির্দিষ্ট চিহ্ন ব্যবহার করা যাবে।", en: "Only ASCII letters, numbers, and specific symbols can be used." },
+  "common.login_to_view_special_pages": { bn: "বিশেষ পেজ দেখতে লগইন করুন", en: "Login to view special pages" },
 
 
   // Categories

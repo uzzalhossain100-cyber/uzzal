@@ -21,7 +21,7 @@ import AdvertisementPage from "./pages/AdvertisementPage";
 import ConverterPage from "./pages/ConverterPage";
 import AIPage from "./pages/AIPage";
 import QuizPage from "./pages/QuizPage";
-import { LanguageProvider } from "./context/LanguageContext"; // Import LanguageProvider
+import { LanguageProvider } from "./context/LanguageContext";
 
 const queryClient = new QueryClient();
 
@@ -31,16 +31,19 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <LanguageProvider> {/* Wrap with LanguageProvider */}
+        <LanguageProvider>
           <AuthProvider>
             <VisitorTracker />
             <Routes>
               <Route path="/login" element={<LoginPage />} />
               <Route path="/signup" element={<SignupPage />} />
               
-              <Route element={<ProtectedRoute />}>
-                <Route element={<MainLayout />}>
-                  <Route path="/" element={<Index />} />
+              {/* MainLayout is now always accessible */}
+              <Route element={<MainLayout />}>
+                <Route path="/" element={<Index />} /> {/* Home page is publicly accessible */}
+                
+                {/* Protected routes are nested inside ProtectedRoute */}
+                <Route element={<ProtectedRoute />}>
                   <Route path="/emergency-contacts" element={<EmergencyContactsPage />} />
                   <Route path="/contact" element={<ContactPage />} />
                   <Route path="/user-management" element={<UserManagementPage />} />

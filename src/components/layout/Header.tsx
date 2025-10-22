@@ -6,7 +6,7 @@ import {
   Menu, Bell, Search, LogOut, User as UserIcon, Home, MessageSquareText, MessageCircleMore,
   Image as ImageIcon, Sparkles, Brain, Users, Mail, LifeBuoy, Calculator, Newspaper, Tv,
   GraduationCap, BookOpen, Film, Gamepad, ShoppingCart, Banknote, Plane, HeartPulse,
-  Building, MessageSquare, Settings, Utensils, Laptop, Camera, Briefcase, Globe
+  Building, MessageSquare, Settings, Utensils, Laptop, Camera, Briefcase, Globe, LogIn
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -21,8 +21,8 @@ import {
 import { useAuth } from "@/context/AuthContext";
 import { cn } from "@/lib/utils";
 import { allInOneCategories } from '@/data/categories';
-import { useLanguage } from "@/context/LanguageContext"; // Import useLanguage
-import { useTranslation } from "@/lib/translations"; // Import useTranslation
+import { useLanguage } from "@/context/LanguageContext";
+import { useTranslation } from "@/lib/translations";
 
 interface SearchableItem {
   name: string;
@@ -40,115 +40,134 @@ export function Header() {
   const [searchParams, setSearchParams] = useSearchParams();
   const searchInputRef = useRef<HTMLInputElement>(null);
   const searchResultsRef = useRef<HTMLDivElement>(null);
-  const { t, currentLanguage } = useTranslation(); // Initialize useTranslation
-  const { switchLanguage } = useLanguage(); // Initialize useLanguage
+  const { t, currentLanguage } = useTranslation();
+  const { switchLanguage } = useLanguage();
 
   const isAdmin = profile?.email === 'uzzal@admin.com';
 
   const avatarSrc = isAdmin ? "/images/uzzal-hossain.jpg" : (user?.user_metadata?.avatar_url || "https://github.com/shadcn.png");
-  const avatarFallback = profile?.username ? profile.username.charAt(0).toUpperCase() : (user?.email ? user.email.charAt(0).toUpperCase() : 'U'); // Updated fallback
+  const avatarFallback = profile?.username ? profile.username.charAt(0).toUpperCase() : (user?.email ? user.email.charAt(0).toUpperCase() : 'U');
 
-  const filteredNavItems = useMemo(() => [
-    {
-      name: t("common.home"),
-      icon: Home,
-      href: "/",
-    },
-    {
-      name: t("common.active_users"),
-      icon: MessageSquareText,
-      href: "/active-users",
-    },
-    ...(isAdmin ? [{
-      name: t("common.live_chat"),
-      icon: MessageCircleMore,
-      href: "/live-chat",
-    }] : []),
-    {
-      name: t("common.contact"),
-      icon: Mail,
-      href: "/contact",
-    },
-    ...(isAdmin ? [{
-      name: t("common.advertisements"),
-      icon: ImageIcon,
-      href: "/advertisements",
-    }] : []),
-    {
-      name: t("common.ai"),
-      icon: Sparkles,
-      href: "/ai",
-    },
-    {
-      name: t("common.quiz"),
-      icon: Brain,
-      href: "/quiz",
-    },
-    ...(isAdmin ? [{
-      name: t("common.user_management"),
-      icon: Users,
-      href: "/user-management",
-    }] : []),
-  ], [t, isAdmin, currentLanguage]);
+  const filteredNavItems = useMemo(() => {
+    const items = [
+      {
+        name: t("common.home"),
+        icon: Home,
+        href: "/",
+      },
+    ];
+
+    if (user) { // Only show these items if user is logged in
+      items.push(
+        {
+          name: t("common.active_users"),
+          icon: MessageSquareText,
+          href: "/active-users",
+        },
+        ...(isAdmin ? [{
+          name: t("common.live_chat"),
+          icon: MessageCircleMore,
+          href: "/live-chat",
+        }] : []),
+        {
+          name: t("common.contact"),
+          icon: Mail,
+          href: "/contact",
+        },
+        ...(isAdmin ? [{
+          name: t("common.advertisements"),
+          icon: ImageIcon,
+          href: "/advertisements",
+        }] : []),
+        {
+          name: t("common.ai"),
+          icon: Sparkles,
+          href: "/ai",
+        },
+        {
+          name: t("common.quiz"),
+          icon: Brain,
+          href: "/quiz",
+        },
+        ...(isAdmin ? [{
+          name: t("common.user_management"),
+          icon: Users,
+          href: "/user-management",
+        }] : []),
+      );
+    } else {
+      // Add a special item for unauthenticated users to prompt login
+      items.push({
+        name: t("common.login_to_view_special_pages"),
+        icon: LogIn,
+        href: "/login",
+      });
+    }
+    return items;
+  }, [t, isAdmin, user, currentLanguage]);
 
   const allSearchableItems = useMemo(() => {
     const items: SearchableItem[] = [];
     const addedPaths = new Set<string>();
 
-    // Add direct pages from filteredNavItems
+    // Add direct pages from filteredNavItems (only if user is logged in, or if it's the home page)
     filteredNavItems.forEach(navItem => {
-      if (!addedPaths.has(navItem.href)) {
-        items.push({ name: navItem.name, path: navItem.href, type: 'page', icon: navItem.icon });
-        addedPaths.add(navItem.href);
-      }
-    });
-
-    // Add items from allInOneCategories
-    allInOneCategories.forEach(category => {
-      // Top-level category
-      const categoryPath = category.internalRoute || `/?category=${encodeURIComponent(category.name)}`;
-      if (!addedPaths.has(categoryPath)) {
-        items.push({ name: t(category.name), path: categoryPath, type: 'category', icon: category.icon });
-        addedPaths.add(categoryPath);
-      }
-
-      category.items?.forEach(item => {
-        // Sub-category (country)
-        if (item.subItems) {
-          const countryPath = `/?category=${encodeURIComponent(category.name)}&subCategory=${encodeURIComponent(item.name)}`;
-          if (!addedPaths.has(countryPath)) {
-            items.push({ name: `${t(category.name)} / ${t(item.name)}`, path: countryPath, type: 'country' });
-            addedPaths.add(countryPath);
-          }
-          // Items within sub-category (e.g., newspapers, TV channels)
-          item.subItems.forEach(subItem => {
-            let subItemPath = '';
-            if (subItem.internalRoute) {
-              subItemPath = subItem.internalRoute;
-            } else if (subItem.url) {
-              subItemPath = `/view/${encodeURIComponent(subItem.url)}/${encodeURIComponent(t(subItem.name))}`;
-            }
-            if (subItemPath && !addedPaths.has(subItemPath)) {
-              items.push({ name: `${t(category.name)} / ${t(item.name)} / ${t(subItem.name)}`, path: subItemPath, type: 'item' });
-              addedPaths.add(subItemPath);
-            }
-          });
-        } else if (item.url) { // Direct item under a top-level category (e.g., a shopping site)
-          const itemPath = `/view/${encodeURIComponent(item.url)}/${encodeURIComponent(t(item.name))}`;
-          if (!addedPaths.has(itemPath)) {
-            items.push({ name: `${t(category.name)} / ${t(item.name)}`, path: itemPath, type: 'item' });
-            addedPaths.add(itemPath);
-          }
-        } else if (item.internalRoute) { // Direct internal route under a top-level category (e.g., Quiz)
-          if (!addedPaths.has(item.internalRoute)) {
-            items.push({ name: `${t(category.name)} / ${t(item.name)}`, path: item.internalRoute, type: 'page' });
-            addedPaths.add(item.internalRoute);
-          }
+      if (user || navItem.href === '/') { // Always add home, and other pages if logged in
+        if (!addedPaths.has(navItem.href)) {
+          items.push({ name: navItem.name, path: navItem.href, type: 'page', icon: navItem.icon });
+          addedPaths.add(navItem.href);
         }
-      });
+      }
     });
+
+    // Add items from allInOneCategories (only if user is logged in)
+    if (user) {
+      allInOneCategories.forEach(category => {
+        // Top-level category
+        const categoryPath = category.internalRoute || `/?category=${encodeURIComponent(category.name)}`;
+        if (!addedPaths.has(categoryPath)) {
+          items.push({ name: t(category.name), path: categoryPath, type: 'category', icon: category.icon });
+          addedPaths.add(categoryPath);
+        }
+
+        category.items?.forEach(item => {
+          // Sub-category (country)
+          if (item.subItems) {
+            const countryPath = `/?category=${encodeURIComponent(category.name)}&subCategory=${encodeURIComponent(item.name)}`;
+            if (!addedPaths.has(countryPath)) {
+              items.push({ name: `${t(category.name)} / ${t(item.name)}`, path: countryPath, type: 'country' });
+              addedPaths.add(countryPath);
+            }
+            // Items within sub-category (e.g., newspapers, TV channels)
+            item.subItems.forEach(subItem => {
+              let subItemPath = '';
+              if (subItem.internalRoute) {
+                subItemPath = subItem.internalRoute;
+              } else if (subItem.url) {
+                subItemPath = `/view/${encodeURIComponent(subItem.url)}/${encodeURIComponent(t(subItem.name))}`;
+              }
+              if (subItemPath && !addedPaths.has(subItemPath)) {
+                items.push({ name: `${t(category.name)} / ${t(item.name)} / ${t(subItem.name)}`, path: subItemPath, type: 'item' });
+                addedPaths.add(subItemPath);
+              }
+            });
+          } else if (item.url) { // Direct item under a top-level category (e.g., a shopping site)
+            const itemPath = `/view/${encodeURIComponent(item.url)}/${encodeURIComponent(t(item.name))}`;
+            if (!addedPaths.has(itemPath)) {
+              items.push({ name: `${t(category.name)} / ${t(item.name)}`, path: itemPath, type: 'item' });
+              addedPaths.add(itemPath);
+            }
+          } else if (item.internalRoute) { // Direct internal route under a top-level category (e.g., Quiz)
+            if (!addedPaths.has(item.internalRoute)) {
+              items.push({ name: `${t(category.name)} / ${t(item.name)}`, path: item.internalRoute, type: 'page' });
+              addedPaths.add(item.internalRoute);
+            }
+          }
+        });
+      });
+    }
     return items;
-  }, [filteredNavItems, allInOneCategories, t, currentLanguage]);
+  }, [filteredNavItems, allInOneCategories, t, user, currentLanguage]);
 
   const performSearch = (query: string) => {
     const lowerCaseQuery = query.toLowerCase();
@@ -242,23 +261,25 @@ export function Header() {
                 );
               })}
             </nav>
-            <div className="mt-auto pt-4 border-t border-sidebar-border">
-              <Button
-                variant="ghost"
-                className="w-full justify-start text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-                onClick={signOut}
-              >
-                <LogOut className="h-5 w-5 mr-3" />
-                <span className="font-bold">{t("common.logout")}</span>
-              </Button>
-            </div>
+            {user && (
+              <div className="mt-auto pt-4 border-t border-sidebar-border">
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                  onClick={signOut}
+                >
+                  <LogOut className="h-5 w-5 mr-3" />
+                  <span className="font-bold">{t("common.logout")}</span>
+                </Button>
+              </div>
+            )}
           </div>
         </SheetContent>
       </Sheet>
 
       {/* Desktop Navigation */}
-      <div className="hidden sm:flex flex-col gap-1"> {/* Container for two rows of nav items */}
-        <nav className="flex items-center gap-4 text-sm font-medium"> {/* First row */}
+      <div className="hidden sm:flex flex-col gap-1">
+        <nav className="flex items-center gap-4 text-sm font-medium">
           {firstRowItems.map((item) => {
             const isActive = location.pathname === item.href;
             return (
@@ -276,8 +297,8 @@ export function Header() {
             );
           })}
         </nav>
-        {secondRowItems.length > 0 && ( // Only render second row if there are items
-          <nav className="flex items-center gap-4 text-sm font-medium"> {/* Second row */}
+        {secondRowItems.length > 0 && (
+          <nav className="flex items-center gap-4 text-sm font-medium">
             {secondRowItems.map((item) => {
               const isActive = location.pathname === item.href;
               return (
