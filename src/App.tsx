@@ -41,19 +41,19 @@ const App = () => (
               {/* MainLayout is now always accessible */}
               <Route element={<MainLayout />}>
                 <Route path="/" element={<Index />} /> {/* Home page is publicly accessible */}
+                <Route path="/emergency-contacts" element={<EmergencyContactsPage />} /> {/* Now public */}
+                <Route path="/converter" element={<ConverterPage />} /> {/* Now public */}
+                <Route path="/view/:encodedUrl/:itemName" element={<ViewPlatformPage />} /> {/* Now public */}
                 
                 {/* Protected routes are nested inside ProtectedRoute */}
                 <Route element={<ProtectedRoute />}>
-                  <Route path="/emergency-contacts" element={<EmergencyContactsPage />} />
                   <Route path="/contact" element={<ContactPage />} />
                   <Route path="/user-management" element={<UserManagementPage />} />
                   <Route path="/active-users" element={<ActiveUsersPage />} />
                   <Route path="/live-chat" element={<LiveChatPage />} />
                   <Route path="/advertisements" element={<AdvertisementPage />} />
-                  <Route path="/converter" element={<ConverterPage />} />
                   <Route path="/ai" element={<AIPage />} />
                   <Route path="/quiz" element={<QuizPage />} />
-                  <Route path="/view/:encodedUrl/:itemName" element={<ViewPlatformPage />} />
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 </Route>
               </Route>

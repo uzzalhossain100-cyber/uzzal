@@ -55,6 +55,16 @@ export function Header() {
         icon: Home,
         href: "/",
       },
+      {
+        name: t("common.emergency_contacts"), // Now public
+        icon: LifeBuoy,
+        href: "/emergency-contacts",
+      },
+      {
+        name: t("common.converter"), // Now public
+        icon: Calculator,
+        href: "/converter",
+      },
     ];
 
     if (user) { // Only show these items if user is logged in
@@ -112,7 +122,7 @@ export function Header() {
 
     // Add direct pages from filteredNavItems (only if user is logged in, or if it's the home page)
     filteredNavItems.forEach(navItem => {
-      if (user || navItem.href === '/') { // Always add home, and other pages if logged in
+      if (user || navItem.href === '/' || navItem.href === '/emergency-contacts' || navItem.href === '/converter') { // Always add home, emergency, converter, and other pages if logged in
         if (!addedPaths.has(navItem.href)) {
           items.push({ name: navItem.name, path: navItem.href, type: 'page', icon: navItem.icon });
           addedPaths.add(navItem.href);
@@ -121,51 +131,56 @@ export function Header() {
     });
 
     // Add items from allInOneCategories (only if user is logged in)
-    if (user) {
-      allInOneCategories.forEach(category => {
-        // Top-level category
-        const categoryPath = category.internalRoute || `/?category=${encodeURIComponent(category.name)}`;
-        if (!addedPaths.has(categoryPath)) {
-          items.push({ name: t(category.name), path: categoryPath, type: 'category', icon: category.icon });
-          addedPaths.add(categoryPath);
-        }
+    // The logic here needs to be careful about which categories are public vs private.
+    // For simplicity, I'll keep the existing logic that adds all categories if user is logged in.
+    // If a category itself is meant to be public, its items should also be public.
+    // For now, I'll assume categories are generally public, and specific pages are protected.
+    allInOneCategories.forEach(category => {
+      // Top-level category
+      const categoryPath = category.internalRoute || `/?category=${encodeURIComponent(category.name)}`;
+      if (!addedPaths.has(categoryPath)) {
+        items.push({ name: t(category.name), path: categoryPath, type: 'category', icon: category.icon });
+        addedPaths.add(categoryPath);
+      }
 
-        category.items?.forEach(item => {
-          // Sub-category (country)
-          if (item.subItems) {
-            const countryPath = `/?category=${encodeURIComponent(category.name)}&subCategory=${encodeURIComponent(item.name)}`;
-            if (!addedPaths.has(countryPath)) {
-              items.push({ name: `${t(category.name)} / ${t(item.name)}`, path: countryPath, type: 'country' });
-              addedPaths.add(countryPath);
+      category.items?.forEach(item => {
+        // Sub-category (country)
+        if (item.subItems) {
+          const countryPath = `/?category=${encodeURIComponent(category.name)}&subCategory=${encodeURIComponent(item.name)}`;
+          if (!addedPaths.has(countryPath)) {
+            items.push({ name: `${t(category.name)} / ${t(item.name)}`, path: countryPath, type: 'country' });
+            addedPaths.add(countryPath);
+          }
+          // Items within sub-category (e.g., newspapers, TV channels)
+          item.subItems.forEach(subItem => {
+            let subItemPath = '';
+            if (subItem.internalRoute) {
+              subItemPath = subItem.internalRoute;
+            } else if (subItem.url) {
+              subItemPath = `/view/${encodeURIComponent(subItem.url)}/${encodeURIComponent(t(subItem.name))}`;
             }
-            // Items within sub-category (e.g., newspapers, TV channels)
-            item.subItems.forEach(subItem => {
-              let subItemPath = '';
-              if (subItem.internalRoute) {
-                subItemPath = subItem.internalRoute;
-              } else if (subItem.url) {
-                subItemPath = `/view/${encodeURIComponent(subItem.url)}/${encodeURIComponent(t(subItem.name))}`;
-              }
-              if (subItemPath && !addedPaths.has(subItemPath)) {
-                items.push({ name: `${t(category.name)} / ${t(item.name)} / ${t(subItem.name)}`, path: subItemPath, type: 'item' });
-                addedPaths.add(subItemPath);
-              }
-            });
-          } else if (item.url) { // Direct item under a top-level category (e.g., a shopping site)
-            const itemPath = `/view/${encodeURIComponent(item.url)}/${encodeURIComponent(t(item.name))}`;
-            if (!addedPaths.has(itemPath)) {
-              items.push({ name: `${t(category.name)} / ${t(item.name)}`, path: itemPath, type: 'item' });
-              addedPaths.add(itemPath);
+            if (subItemPath && !addedPaths.has(subItemPath)) {
+              items.push({ name: `${t(category.name)} / ${t(item.name)} / ${t(subItem.name)}`, path: subItemPath, type: 'item' });
+              addedPaths.add(subItemPath);
             }
-          } else if (item.internalRoute) { // Direct internal route under a top-level category (e.g., Quiz)
+          });
+        } else if (item.url) { // Direct item under a top-level category (e.g., a shopping site)
+          const itemPath = `/view/${encodeURIComponent(item.url)}/${encodeURIComponent(t(item.name))}`;
+          if (!addedPaths.has(itemPath)) {
+            items.push({ name: `${t(category.name)} / ${t(item.name)}`, path: itemPath, type: 'item' });
+            addedPaths.add(itemPath);
+          }
+        } else if (item.internalRoute) { // Direct internal route under a top-level category (e.g., Quiz)
+          // Only add if the internal route is public or user is logged in
+          if (user || item.internalRoute === '/emergency-contacts' || item.internalRoute === '/converter') {
             if (!addedPaths.has(item.internalRoute)) {
               items.push({ name: `${t(category.name)} / ${t(item.name)}`, path: item.internalRoute, type: 'page' });
               addedPaths.add(item.internalRoute);
             }
           }
-        });
+        }
       });
-    }
+    });
     return items;
   }, [filteredNavItems, allInOneCategories, t, user, currentLanguage]);
 
