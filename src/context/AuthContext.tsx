@@ -61,8 +61,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             currentOnlineUserIds.add(p.user_id);
             newOnlineUsers.push({
               id: p.user_id,
-              username: sanitizeToAscii(p.username),
-              email: sanitizeToAscii(p.email),
+              username: sanitizeToAscii(p.username), // Sanitize here
+              email: sanitizeToAscii(p.email),     // Sanitize here
               mobile_number: null,
               is_active: true,
               created_at: new Date(p.online_at).toISOString(),
