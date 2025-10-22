@@ -152,15 +152,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           console.error("Error fetching profile:", error);
           setProfile(null);
         } else if (data) {
-          setProfile(data);
-          if (!data.is_active) {
+          // Sanitize profile data immediately after fetching from DB
+          const sanitizedProfile: Profile = {
+            ...data,
+            username: sanitizeToAscii(data.username),
+            email: sanitizeToAscii(data.email),
+          };
+          setProfile(sanitizedProfile);
+          if (!sanitizedProfile.is_active) { // Use sanitizedProfile here
             await supabase.auth.signOut();
             setUser(null);
             setProfile(null);
             showError(t("common.account_deactivated"));
             clearMockAdminSession();
           } else {
-            setupPresenceChannel(sessionUser, data);
+            setupPresenceChannel(sessionUser, sanitizedProfile); // Use sanitizedProfile here
           }
         }
         localStorage.removeItem('isMockAdminLoggedIn');
@@ -280,6 +286,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       showError(t("common.non_ascii_characters_detected_all"));
       return { success: false, error: t("common.non_ascii_characters_detected_all") };
     }
+
+    // Ensure a clean state before attempting signup
+    await signOut(); // This will clear any existing session and mock admin state
 
     // Log sanitized values before sending to Supabase
     console.log("Attempting signup with sanitized email:", sanitizedEmail);
