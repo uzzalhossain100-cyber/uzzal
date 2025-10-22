@@ -33,7 +33,7 @@ const App = () => (
       <BrowserRouter>
         <LanguageProvider>
           <AuthProvider>
-            <VisitorTracker />
+            <VisitorTracker /> {/* VisitorTracker added here */}
             <Routes>
               <Route path="/login" element={<LoginPage />} />
               <Route path="/signup" element={<SignupPage />} />

@@ -440,7 +440,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       username: sanitizeToAscii(visitData.username),
       email: sanitizeToAscii(visitData.email),
       ip_address: sanitizeToAscii(visitData.ipAddress), // Sanitize IP address as well
-      is_guest_visit: false,
+      is_guest_visit: !visitData.userId, // If no userId, it's a guest visit
     });
 
     if (error) {

@@ -23,6 +23,7 @@ const VisitorTracker: React.FC = () => {
         console.error(t("common.failed_to_fetch_ip_address"), error); // Translated error message
       }
 
+      // Determine if it's a guest or registered user visit
       if (user || profile) {
         recordVisit({
           userId: user?.id,

@@ -305,6 +305,7 @@ const translations: TranslationKeys = {
   "common.non_ascii_characters_detected": { bn: "ইউজারনেম বা মোবাইল নম্বরে শুধুমাত্র ইংরেজি অক্ষর, সংখ্যা, আন্ডারস্কোর এবং হাইফেন ব্যবহার করা যাবে।", en: "Username or mobile number can only contain English letters, numbers, underscores, and hyphens." },
   "common.non_ascii_characters_detected_all": { bn: "শুধুমাত্র ASCII অক্ষর, সংখ্যা এবং নির্দিষ্ট চিহ্ন ব্যবহার করা যাবে।", en: "Only ASCII letters, numbers, and specific symbols can be used." },
   "common.login_to_view_special_pages": { bn: "বিশেষ পেজ দেখতে লগইন করুন", en: "Login to view special pages" },
+  "common.failed_to_fetch_ip_address": { bn: "আইপি অ্যাড্রেস আনতে ব্যর্থ।", en: "Failed to fetch IP address." },
 
 
   // Categories
@@ -663,7 +664,6 @@ const translations: TranslationKeys = {
   "item.discord": { bn: "ডিসকর্ড", en: "Discord" },
   "item.slack": { bn: "স্ল্যাক", en: "Slack" },
   "item.microsoft_teams": { bn: "মাইক্রোসফট টিমস", en: "Microsoft Teams" },
-  "item.twitter_x": { bn: "টুইটার (X)", en: "Twitter (X)" },
   "item.facebook_messenger": { bn: "ফেসবুক মেসেঞ্জার", en: "Facebook Messenger" },
   "item.linkedin_message": { bn: "লিঙ্কডইন মেসেজ", en: "LinkedIn Message" },
   "item.reddit_chat": { bn: "রেডিট চ্যাট", en: "Reddit Chat" },
