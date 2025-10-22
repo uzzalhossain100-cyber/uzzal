@@ -12,6 +12,8 @@ interface Profile {
   is_active: boolean;
   email: string;
   created_at: string;
+  first_name?: string | null; // Added first_name
+  last_name?: string | null;  // Added last_name
 }
 
 interface PresenceState {
@@ -59,8 +61,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             currentOnlineUserIds.add(p.user_id);
             newOnlineUsers.push({
               id: p.user_id,
-              username: p.username,
-              email: p.email,
+              username: sanitizeToAscii(p.username),
+              email: sanitizeToAscii(p.email),
               mobile_number: null,
               is_active: true,
               created_at: new Date(p.online_at).toISOString(),
@@ -74,7 +76,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const setMockAdminSession = () => {
     const adminUser: User = { id: 'admin-id', email: 'uzzal@admin.com', app_metadata: {}, user_metadata: {}, aud: 'authenticated', created_at: new Date().toISOString() } as User;
-    const adminProfile: Profile = { id: 'admin-id', username: 'Uzzal', mobile_number: '01713236980', is_active: true, email: 'uzzal@admin.com', created_at: new Date().toISOString() };
+    const adminProfile: Profile = { id: 'admin-id', username: 'Uzzal', mobile_number: '01713236980', is_active: true, email: 'uzzal@admin.com', created_at: new Date().toISOString(), first_name: 'Uzzal', last_name: 'Hossain' };
     setUser(adminUser);
     setProfile(adminProfile);
     localStorage.setItem('isMockAdminLoggedIn', 'true');
@@ -128,8 +130,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (status === 'SUBSCRIBED') {
           const { error: presenceError } = await presenceChannelRef.current.track({
             user_id: sessionUser.id,
-            username: sanitizeToAscii(userProfile.username), // Sanitize username
-            email: sanitizeToAscii(userProfile.email),     // Sanitize email
+            username: sanitizeToAscii(userProfile.username),
+            email: sanitizeToAscii(userProfile.email),
+            first_name: sanitizeToAscii(userProfile.first_name), // Sanitize first_name
+            last_name: sanitizeToAscii(userProfile.last_name),   // Sanitize last_name
             online_at: Date.now(),
           });
           if (presenceError) {
@@ -158,6 +162,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             ...data,
             username: sanitizeToAscii(data.username),
             email: sanitizeToAscii(data.email),
+            first_name: sanitizeToAscii(data.first_name), // Sanitize first_name
+            last_name: sanitizeToAscii(data.last_name),   // Sanitize last_name
+            mobile_number: sanitizeToAscii(data.mobile_number), // Sanitize mobile_number
           };
           setProfile(sanitizedProfile);
           if (!sanitizedProfile.is_active) { // Use sanitizedProfile here
@@ -175,7 +182,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (localStorage.getItem('isMockAdminLoggedIn') === 'true') {
           setMockAdminSession();
           const adminUser: User = { id: 'admin-id', email: 'uzzal@admin.com', app_metadata: {}, user_metadata: {}, aud: 'authenticated', created_at: new Date().toISOString() } as User;
-          const adminProfile: Profile = { id: 'admin-id', username: 'Uzzal', mobile_number: '01713236980', is_active: true, email: 'uzzal@admin.com', created_at: new Date().toISOString() };
+          const adminProfile: Profile = { id: 'admin-id', username: 'Uzzal', mobile_number: '01713236980', is_active: true, email: 'uzzal@admin.com', created_at: new Date().toISOString(), first_name: 'Uzzal', last_name: 'Hossain' };
           setupPresenceChannel(adminUser, adminProfile);
         } else {
           if (presenceChannelRef.current) {
@@ -269,8 +276,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return { success: false, error: t("common.account_deactivated") };
     }
 
+    // Sanitize profile data after successful login
+    const sanitizedProfile: Profile = {
+      ...profileData,
+      username: sanitizeToAscii(profileData.username),
+      email: sanitizeToAscii(profileData.email),
+      first_name: sanitizeToAscii(profileData.first_name),
+      last_name: sanitizeToAscii(profileData.last_name),
+      mobile_number: sanitizeToAscii(profileData.mobile_number),
+    };
+
     setUser(data.user);
-    setProfile(profileData);
+    setProfile(sanitizedProfile);
     localStorage.removeItem('isMockAdminLoggedIn');
     showSuccess(t("common.login_successful"));
     return { success: true };
@@ -317,24 +334,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       showError(authError.message);
       return { success: false, error: authError.message };
     }
-
-    // The profile creation is now handled by the 'handle_new_user' database trigger.
-    // No need for explicit insert here.
-    // if (authData.user) {
-    //   const { error: profileError } = await supabase.from('profiles').insert({
-    //     id: authData.user.id,
-    //     email: sanitizedEmail,
-    //     is_active: true,
-    //     username: null, // Set to null by default
-    //     mobile_number: null, // Set to null by default
-    //   });
-
-    //   if (profileError) {
-    //     console.error("Error creating profile:", profileError);
-    //     showError(profileError.message);
-    //     return { success: false, error: profileError.message };
-    //   }
-    // }
+    
     showSuccess(t("common.signup_successful"));
     return { success: true };
   };
@@ -386,7 +386,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       showError(error.message);
       return null;
     }
-    return data;
+    // Sanitize fetched profiles before returning
+    return data.map(p => ({
+      ...p,
+      username: sanitizeToAscii(p.username),
+      email: sanitizeToAscii(p.email),
+      first_name: sanitizeToAscii(p.first_name),
+      last_name: sanitizeToAscii(p.last_name),
+      mobile_number: sanitizeToAscii(p.mobile_number),
+    }));
   };
 
   const updateUserProfileStatus = async (userId: string, isActive: boolean): Promise<{ success: boolean; error?: string }> => {
@@ -410,9 +418,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const recordVisit = async (visitData: { userId?: string; username?: string; email?: string; ipAddress?: string; }) => {
     const { error } = await supabase.from('visits').insert({
       user_id: visitData.userId,
-      username: sanitizeToAscii(visitData.username), // Sanitize username
-      email: sanitizeToAscii(visitData.email),     // Sanitize email
-      ip_address: visitData.ipAddress,
+      username: sanitizeToAscii(visitData.username),
+      email: sanitizeToAscii(visitData.email),
+      ip_address: sanitizeToAscii(visitData.ipAddress), // Sanitize IP address as well
       is_guest_visit: false,
     });
 

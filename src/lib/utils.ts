@@ -10,5 +10,6 @@ export function sanitizeToAscii(input: string | null | undefined): string | null
     return null;
   }
   // Remove any character that is not in the ASCII range (0-127)
+  // This regex specifically targets characters outside the basic Latin range.
   return input.replace(/[^\x00-\x7F]/g, '');
 }

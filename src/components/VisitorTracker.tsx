@@ -28,14 +28,12 @@ const VisitorTracker: React.FC = () => {
           userId: user?.id,
           username: sanitizeToAscii(profile?.username), // Sanitize username
           email: sanitizeToAscii(profile?.email),     // Sanitize email
-          ipAddress: ipAddress,
-          // isGuestVisit: profile?.is_guest || false, // Removed
+          ipAddress: sanitizeToAscii(ipAddress), // Sanitize IP address
         });
       } else {
         // For completely anonymous users (before any login attempt)
         recordVisit({
-          ipAddress: ipAddress,
-          // isGuestVisit: false, // Removed
+          ipAddress: sanitizeToAscii(ipAddress), // Sanitize IP address
         });
       }
       hasTrackedVisit.current = true;
