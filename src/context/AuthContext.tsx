@@ -318,21 +318,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return { success: false, error: authError.message };
     }
 
-    if (authData.user) {
-      const { error: profileError } = await supabase.from('profiles').insert({
-        id: authData.user.id,
-        email: sanitizedEmail,
-        is_active: true,
-        username: null, // Set to null by default
-        mobile_number: null, // Set to null by default
-      });
+    // The profile creation is now handled by the 'handle_new_user' database trigger.
+    // No need for explicit insert here.
+    // if (authData.user) {
+    //   const { error: profileError } = await supabase.from('profiles').insert({
+    //     id: authData.user.id,
+    //     email: sanitizedEmail,
+    //     is_active: true,
+    //     username: null, // Set to null by default
+    //     mobile_number: null, // Set to null by default
+    //   });
 
-      if (profileError) {
-        console.error("Error creating profile:", profileError);
-        showError(profileError.message);
-        return { success: false, error: profileError.message };
-      }
-    }
+    //   if (profileError) {
+    //     console.error("Error creating profile:", profileError);
+    //     showError(profileError.message);
+    //     return { success: false, error: profileError.message };
+    //   }
+    // }
     showSuccess(t("common.signup_successful"));
     return { success: true };
   };
