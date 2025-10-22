@@ -36,7 +36,8 @@ interface AuthContextType {
   recordVisit: (visitData: { userId?: string; username?: string; email?: string; ipAddress?: string; }) => Promise<void>;
 }
 
-export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+// Initialize AuthContext with null and specify type as AuthContextType | null
+export const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -287,9 +288,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return { success: false, error: t("common.non_ascii_characters_detected_all") };
     }
 
-    // Ensure a clean state before attempting signup
-    await signOut(); // This will clear any existing session and mock admin state
-
     // Log sanitized values before sending to Supabase
     console.log("Attempting signup with sanitized email:", sanitizedEmail);
     console.log("Attempting signup with sanitized password (length):", sanitizedPassword.length); // Log length for security
@@ -430,7 +428,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (context === undefined) {
+  // Check for null instead of undefined
+  if (context === null) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
