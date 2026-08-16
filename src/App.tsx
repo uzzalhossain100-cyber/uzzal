@@ -19,6 +19,7 @@ import LiveChatPage from "./pages/LiveChatPage";
 import VisitorTracker from "./components/VisitorTracker";
 import AdvertisementPage from "./pages/AdvertisementPage";
 import ConverterPage from "./pages/ConverterPage";
+import MobileAppsPage from "./pages/MobileAppsPage";
 import AIPage from "./pages/AIPage";
 import QuizPage from "./pages/QuizPage";
 import { LanguageProvider } from "./context/LanguageContext";
@@ -33,19 +34,20 @@ const App = () => (
       <BrowserRouter>
         <LanguageProvider>
           <AuthProvider>
-            <VisitorTracker /> {/* VisitorTracker added here */}
+            <VisitorTracker />
             <Routes>
               <Route path="/login" element={<LoginPage />} />
               <Route path="/signup" element={<SignupPage />} />
               
-              {/* MainLayout is now always accessible */}
+              {/* MainLayout is always accessible */}
               <Route element={<MainLayout />}>
-                <Route path="/" element={<Index />} /> {/* Home page is publicly accessible */}
-                <Route path="/emergency-contacts" element={<EmergencyContactsPage />} /> {/* Now public */}
-                <Route path="/converter" element={<ConverterPage />} /> {/* Now public */}
-                <Route path="/view/:encodedUrl/:itemName" element={<ViewPlatformPage />} /> {/* Now public */}
+                <Route path="/" element={<Index />} />
+                <Route path="/mobile-apps" element={<MobileAppsPage />} />
+                <Route path="/emergency-contacts" element={<EmergencyContactsPage />} />
+                <Route path="/converter" element={<ConverterPage />} />
+                <Route path="/view/:encodedUrl/:itemName" element={<ViewPlatformPage />} />
                 
-                {/* Protected routes are nested inside ProtectedRoute */}
+                {/* Protected routes */}
                 <Route element={<ProtectedRoute />}>
                   <Route path="/contact" element={<ContactPage />} />
                   <Route path="/user-management" element={<UserManagementPage />} />
@@ -54,7 +56,6 @@ const App = () => (
                   <Route path="/advertisements" element={<AdvertisementPage />} />
                   <Route path="/ai" element={<AIPage />} />
                   <Route path="/quiz" element={<QuizPage />} />
-                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 </Route>
               </Route>
               <Route path="*" element={<NotFound />} />
