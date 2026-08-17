@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { 
   Smartphone, ArrowLeft, Search, Download, ExternalLink, Play, 
-  CheckCircle2, ShieldCheck, Layers
+  CheckCircle2, ShieldCheck, Layers, Sparkles, PlusCircle, Share2
 } from 'lucide-react';
 import { popularMobileApps, MobileAppItem } from '@/data/mobileApps';
 import { useTranslation } from '@/lib/translations';
@@ -29,7 +29,26 @@ const MobileAppsPage: React.FC = () => {
   const { t, currentLanguage } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [isDownloadingApk, setIsDownloadingApk] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [isAppInstalled, setIsAppInstalled] = useState(false);
+
+  // Capture PWA Install event for direct native 1-click mobile install
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e: Event) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      setIsAppInstalled(true);
+    }
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    };
+  }, []);
 
   const filteredApps = useMemo(() => {
     return popularMobileApps.filter(app => {
@@ -56,26 +75,27 @@ const MobileAppsPage: React.FC = () => {
     }
   };
 
-  const handleDownloadApk = () => {
-    setIsDownloadingApk(true);
-    toast.success(
-      currentLanguage === 'bn' 
-        ? "অল-ইন-ওয়ান APK ফাইল ডাউনলোড শুরু হচ্ছে..." 
-        : "Downloading All-In-One APK file..."
-    );
-
-    setTimeout(() => {
-      const element = document.createElement("a");
-      const file = new Blob([
-        "AllInOne App Package\nVersion: 1.0.0\nInstall directly or add to mobile home screen."
-      ], { type: 'application/vnd.android.package-archive' });
-      element.href = URL.createObjectURL(file);
-      element.download = "AllInOne-v1.0.0.apk";
-      document.body.appendChild(element);
-      element.click();
-      document.body.removeChild(element);
-      setIsDownloadingApk(false);
-    }, 600);
+  const handleNativeInstall = async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        toast.success(
+          currentLanguage === 'bn' 
+            ? "অ্যাপটি আপনার মোবাইলে সফলভাবে ইনস্টল হয়েছে!" 
+            : "App successfully installed on your device!"
+        );
+        setIsAppInstalled(true);
+      }
+      setDeferredPrompt(null);
+    } else {
+      // Guide user on Chrome / Safari mobile install
+      toast.info(
+        currentLanguage === 'bn'
+          ? "ব্রাউজারের ৩ ডট (⋮) মেনু থেকে 'Install app' বা 'Add to Home screen' চাপুন।"
+          : "Tap browser menu (⋮) and select 'Install app' or 'Add to Home screen'."
+      );
+    }
   };
 
   return (
@@ -103,14 +123,17 @@ const MobileAppsPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Direct APK Quick Action Button */}
+          {/* 1-Click Install Button */}
           <Button
-            onClick={handleDownloadApk}
-            disabled={isDownloadingApk}
-            className="w-full sm:w-auto bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold shadow-lg flex items-center justify-center gap-2 py-5 sm:py-2 rounded-xl"
+            onClick={handleNativeInstall}
+            className="w-full sm:w-auto bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold shadow-lg flex items-center justify-center gap-2 py-5 sm:py-2 rounded-xl"
           >
             <Download className="h-5 w-5" />
-            <span>{t("common.apk_download")}</span>
+            <span>
+              {isAppInstalled 
+                ? (currentLanguage === 'bn' ? "ইনস্টল করা আছে ✓" : "Installed ✓") 
+                : (currentLanguage === 'bn' ? "মোবাইলে অ্যাপ ইনস্টল করুন" : "Install Mobile App")}
+            </span>
           </Button>
         </CardHeader>
 
@@ -224,22 +247,24 @@ const MobileAppsPage: React.FC = () => {
         </CardContent>
       </Card>
 
-      {/* Prominent APK File Download & Installation Box */}
-      <Card className="w-full overflow-hidden bg-gradient-to-br from-purple-950 via-slate-900 to-indigo-950 text-white shadow-2xl border-2 border-primary/40 rounded-3xl p-6 sm:p-8">
+      {/* Direct Mobile App Installation Guide Card */}
+      <Card className="w-full overflow-hidden bg-gradient-to-br from-slate-900 via-purple-950 to-indigo-950 text-white shadow-2xl border-2 border-primary/40 rounded-3xl p-6 sm:p-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
           <div className="lg:col-span-8 space-y-4">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-extrabold border border-emerald-500/30">
               <ShieldCheck className="h-4 w-4" />
-              <span>100% Safe & Verified APK</span>
+              <span>{currentLanguage === 'bn' ? "১০০% নিরাপদ ও মেমোরি সাশ্রয়ী" : "100% Secure & Lightweight"}</span>
             </div>
 
             <h3 className="text-2xl sm:text-3xl font-extrabold text-white flex items-center gap-2">
-              <Download className="h-7 w-7 text-emerald-400" />
-              {t("common.apk_download")}
+              <Smartphone className="h-7 w-7 text-emerald-400" />
+              {currentLanguage === 'bn' ? "মোবাইলে আসল অ্যাপ হিসেবে ইনস্টল করুন" : "Install as Native App on Mobile"}
             </h3>
 
             <p className="text-sm sm:text-base text-gray-300 leading-relaxed">
-              {t("common.apk_download_desc")}
+              {currentLanguage === 'bn' 
+                ? "কোনো জটিল .APK বা ফাইল ছাড়াই যেকোনো অ্যান্ড্রয়েড বা আইফোনে নিচের বাটনে চাপ দিয়ে সরাসরি আপনার ফোনের হোম স্ক্রিনে অ্যাপটি ইনস্টল করে নিন।" 
+                : "Install this application directly on your Android or iOS home screen without complex APK files."}
             </p>
 
             {/* Easy 3-step installation guide */}
@@ -247,19 +272,19 @@ const MobileAppsPage: React.FC = () => {
               <div className="flex items-start gap-2 bg-white/5 p-3 rounded-xl border border-white/10">
                 <CheckCircle2 className="h-5 w-5 text-emerald-400 shrink-0 mt-0.5" />
                 <span className="text-xs text-gray-200 font-medium">
-                  {t("common.apk_install_step1")}
+                  {currentLanguage === 'bn' ? "১. নিচে 'ইনস্টল করুন' বাটনে ক্লিক করুন" : "1. Click 'Install App' button below"}
                 </span>
               </div>
               <div className="flex items-start gap-2 bg-white/5 p-3 rounded-xl border border-white/10">
                 <CheckCircle2 className="h-5 w-5 text-emerald-400 shrink-0 mt-0.5" />
                 <span className="text-xs text-gray-200 font-medium">
-                  {t("common.apk_install_step2")}
+                  {currentLanguage === 'bn' ? "২. 'Install' বা 'Add' অপশনে কনফার্ম করুন" : "2. Confirm 'Install' or 'Add'"}
                 </span>
               </div>
               <div className="flex items-start gap-2 bg-white/5 p-3 rounded-xl border border-white/10">
                 <CheckCircle2 className="h-5 w-5 text-emerald-400 shrink-0 mt-0.5" />
                 <span className="text-xs text-gray-200 font-medium">
-                  {t("common.apk_install_step3")}
+                  {currentLanguage === 'bn' ? "৩. মোবাইলের হোম স্ক্রিনে অ্যাপ আইকন তৈরি হবে" : "3. App icon appears on mobile home screen"}
                 </span>
               </div>
             </div>
@@ -267,17 +292,16 @@ const MobileAppsPage: React.FC = () => {
 
           <div className="lg:col-span-4 flex flex-col items-center justify-center space-y-3 pt-2 lg:pt-0">
             <Button
-              onClick={handleDownloadApk}
-              disabled={isDownloadingApk}
+              onClick={handleNativeInstall}
               size="lg"
               className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-extrabold shadow-xl text-base sm:text-lg h-14 rounded-2xl flex items-center justify-center gap-3 transition-transform hover:scale-105"
             >
               <Download className="h-6 w-6 animate-bounce" />
-              <span>{t("common.download_now")}</span>
+              <span>{currentLanguage === 'bn' ? "অ্যাপটি ইনস্টল করুন" : "Install App on Phone"}</span>
             </Button>
 
             <span className="text-xs text-gray-400 text-center font-medium">
-              Android 6.0+ | Size: ~8.4 MB | Free & No Ads
+              Android & iOS Compatible | 0 MB Storage | Instant Launch
             </span>
           </div>
         </div>
