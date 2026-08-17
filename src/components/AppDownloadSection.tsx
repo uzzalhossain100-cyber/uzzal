@@ -3,10 +3,10 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { QRCodeSVG } from 'qrcode.react';
+import { QRCodeView } from '@/components/QRCodeView';
 import { 
   Smartphone, Download, QrCode, Sparkles, CheckCircle2, 
-  ShieldCheck, Share2, MoreVertical, HelpCircle, Copy, Check, ExternalLink
+  ShieldCheck, Share2, MoreVertical, HelpCircle, Copy, Check
 } from 'lucide-react';
 import { useTranslation } from '@/lib/translations';
 import { toast } from 'sonner';
@@ -25,14 +25,12 @@ export const AppDownloadSection: React.FC = () => {
   const [isCopied, setIsCopied] = useState(false);
   const [appUrl, setAppUrl] = useState('');
   const [isIOS, setIsIOS] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setAppUrl(window.location.href);
       const userAgent = window.navigator.userAgent.toLowerCase();
       setIsIOS(/iphone|ipad|ipod/.test(userAgent));
-      setIsMobile(/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent));
     }
 
     const handleBeforeInstall = (e: any) => {
@@ -182,11 +180,9 @@ export const AppDownloadSection: React.FC = () => {
                 </div>
 
                 <div className="w-48 h-48 rounded-2xl overflow-hidden bg-white p-2 flex items-center justify-center border-2 border-primary/20 shadow-inner">
-                  <QRCodeSVG
+                  <QRCodeView
                     value={appUrl || 'https://all-in-one-app.com'}
                     size={176}
-                    level="H"
-                    includeMargin={false}
                     fgColor="#5b21b6"
                   />
                 </div>
