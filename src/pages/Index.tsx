@@ -4,10 +4,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { allInOneCategories, Category, CategoryItem } from '@/data/categories.ts';
-import { countryFlags } from '@/data/countryFlags'; // Import countryFlags
-import { ArrowLeft, ExternalLink, Newspaper as NewspaperIcon, Globe, Tv, GraduationCap, BookOpen, Film } from 'lucide-react';
+import { ArrowLeft, Globe, Tv, GraduationCap, Film } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useTranslation } from '@/lib/translations'; // Import useTranslation
+import { useTranslation } from '@/lib/translations';
+import { AppDownloadSection } from '@/components/AppDownloadSection';
 
 // Define a set of vibrant gradient colors for top-level categories
 const categoryGradientColors = [
@@ -49,7 +49,7 @@ const countryButtonGradients = [
 
 // Define a set of slightly different gradient colors for sub-categories (items)
 const itemGradientColors = [
-  "from-gray-700 to-gray-800", // Darker for contrast
+  "from-gray-700 to-gray-800",
   "from-blue-600 to-blue-700",
   "from-green-600 to-green-700",
   "from-yellow-600 to-yellow-700",
@@ -61,16 +61,14 @@ const itemGradientColors = [
   "from-orange-600 to-orange-700",
 ];
 
-
 const Index: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { t } = useTranslation(); // Initialize useTranslation
+  const { t } = useTranslation();
 
   const categoryParam = searchParams.get('category');
-  const subCategoryParam = searchParams.get('subCategory'); // For countries within News/Live TV/Education/Entertainment
+  const subCategoryParam = searchParams.get('subCategory');
 
-  // Find currentCategory and currentSubCategoryItems using the raw keys
   const currentCategory = categoryParam
     ? allInOneCategories.find(cat => cat.name === categoryParam)
     : null;
@@ -83,20 +81,18 @@ const Index: React.FC = () => {
     if (category.internalRoute) {
       navigate(category.internalRoute);
     } else {
-      setSearchParams({ category: category.name }); // Use category.name (key)
+      setSearchParams({ category: category.name });
     }
   };
 
   const handleItemClick = (item: CategoryItem) => {
-    if (item.internalRoute) { // Handle internal routes for sub-items first
+    if (item.internalRoute) {
       navigate(item.internalRoute);
     } else if ((currentCategory?.name === "category.news" || currentCategory?.name === "category.live_tv" || currentCategory?.name === "category.education" || currentCategory?.name === "category.entertainment") && item.subItems) {
-      // If it's a country within "খবর", "লাইভ টিভি", "শিক্ষা" or "বিনোদন" category
-      setSearchParams({ category: currentCategory.name, subCategory: item.name }); // Use item.name (key)
+      setSearchParams({ category: currentCategory.name, subCategory: item.name });
     } else if (item.url) {
-      // If it's a final item with a URL (e.g., a newspaper, TV channel, educational site, or entertainment site)
       const encodedUrl = encodeURIComponent(item.url);
-      const encodedItemName = encodeURIComponent(t(item.name)); // Translate item name for URL display
+      const encodedItemName = encodeURIComponent(t(item.name));
       navigate(`/view/${encodedUrl}/${encodedItemName}`, {
         state: {
           fromCategory: categoryParam,
@@ -108,64 +104,57 @@ const Index: React.FC = () => {
 
   const handleBack = () => {
     if (subCategoryParam) {
-      // If currently viewing sub-items (newspapers/TV channels/educational sites/entertainment sites), go back to countries
       setSearchParams({ category: categoryParam || '' });
     } else if (categoryParam) {
-      // If currently viewing countries or a regular category, go back to all categories
       setSearchParams({});
     }
   };
 
-  // State 1: Displaying Top-Level Categories
+  // State 1: Displaying Top-Level Categories (Home Page)
   if (!currentCategory) {
-    console.log("Index.tsx: Rendering Top-Level Categories screen.");
     return (
-      <Card className="w-full flex flex-col h-full bg-background/80 backdrop-blur-sm shadow-xl border-primary/20"> {/* Added bg-background/80 backdrop-blur-sm */}
-        <CardHeader className="pb-4 border-b">
-          <CardTitle className="text-3xl font-extrabold text-center text-primary dark:text-primary-foreground">
-            {t("common.all_categories")}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="flex-1 overflow-hidden p-6">
-          <ScrollArea className="h-[calc(100vh-180px)] w-full rounded-xl border-2 border-primary/20 bg-background/80 p-4 shadow-lg">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-              {console.log("Index.tsx: Raw allInOneCategories before filter:", allInOneCategories)}
+      <div className="flex flex-col gap-6 w-full pb-10">
+        <Card className="w-full flex flex-col bg-background/80 backdrop-blur-sm shadow-xl border-primary/20">
+          <CardHeader className="pb-4 border-b">
+            <CardTitle className="text-3xl font-extrabold text-center text-primary dark:text-primary-foreground">
+              {t("common.all_categories")}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-4 sm:p-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4 lg:gap-6">
               {[...allInOneCategories]
-                .filter(category => {
-                  console.log("Index.tsx: Category name being considered by filter:", category.name);
-                  return category.name.startsWith("category.");
-                })
+                .filter(category => category.name.startsWith("category."))
                 .map((category, index) => {
-                  console.log("Index.tsx: Category passed filter and being mapped:", category.name);
-                const Icon = category.icon;
-                const gradientClass = categoryGradientColors[index % categoryGradientColors.length];
-                return (
-                  <Button
-                    key={category.name}
-                    variant="outline"
-                    className={cn(
-                      "h-32 flex flex-col items-center justify-center text-center p-4 rounded-lg shadow-md transition-all duration-200",
-                      `bg-gradient-to-br ${gradientClass} text-white border-none hover:scale-105 transform`, // Apply gradient and white text
-                      "hover:shadow-lg", // Add hover shadow
-                    )}
-                    onClick={() => handleCategoryClick(category)}
-                  >
-                    {Icon && <Icon className="h-12 w-12 mb-2 text-white text-shadow-sm" />} {/* Icon color white */}
-                    <span className="font-extrabold text-xl tracking-wide text-shadow-sm">{t(category.name)}</span> {/* Attractive text style */}
-                  </Button>
-                );
-              })}
+                  const Icon = category.icon;
+                  const gradientClass = categoryGradientColors[index % categoryGradientColors.length];
+                  return (
+                    <Button
+                      key={category.name}
+                      variant="outline"
+                      className={cn(
+                        "h-28 sm:h-32 flex flex-col items-center justify-center text-center p-3 rounded-2xl shadow-md transition-all duration-200",
+                        `bg-gradient-to-br ${gradientClass} text-white border-none hover:scale-105 transform`,
+                        "hover:shadow-xl",
+                      )}
+                      onClick={() => handleCategoryClick(category)}
+                    >
+                      {Icon && <Icon className="h-8 w-8 sm:h-10 sm:w-10 mb-1.5 text-white text-shadow-sm" />}
+                      <span className="font-extrabold text-sm sm:text-base tracking-wide text-shadow-sm line-clamp-1">{t(category.name)}</span>
+                    </Button>
+                  );
+                })}
             </div>
-          </ScrollArea>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+
+        {/* Mobile App Download & QR Code Section at Bottom of Home Page */}
+        <AppDownloadSection />
+      </div>
     );
   }
 
   // State 2: Displaying Countries for "খবর", "লাইভ টিভি", "শিক্ষা" or "বিনোদন"
   if ((currentCategory.name === "category.news" || currentCategory.name === "category.live_tv" || currentCategory.name === "category.education" || currentCategory.name === "category.entertainment") && !subCategoryParam) {
-    console.log("Index.tsx: Rendering Country Selection screen for category:", currentCategory.name);
-    // Determine icon based on category
     let CountryIcon: React.ElementType;
     let titleSuffix: string;
 
@@ -178,42 +167,41 @@ const Index: React.FC = () => {
     } else if (currentCategory.name === "category.education") {
       CountryIcon = GraduationCap;
       titleSuffix = t("common.select_country");
-    } else { // currentCategory.name === "category.entertainment"
-      CountryIcon = Film; // Specific icon for entertainment country selection
+    } else {
+      CountryIcon = Film;
       titleSuffix = t("common.select_country");
     }
 
     return (
-      <Card className="w-full flex flex-col h-full bg-background/80 backdrop-blur-sm shadow-xl border-primary/20"> {/* Added bg-background/80 backdrop-blur-sm */}
+      <Card className="w-full flex flex-col h-full bg-background/80 backdrop-blur-sm shadow-xl border-primary/20">
         <CardHeader className="flex flex-row items-center justify-between pb-4 border-b">
-          <CardTitle className="text-3xl font-extrabold text-primary dark:text-primary-foreground flex items-center">
+          <CardTitle className="text-2xl sm:text-3xl font-extrabold text-primary dark:text-primary-foreground flex items-center">
             <Button variant="ghost" onClick={handleBack} className="p-0 h-auto mr-2 text-primary dark:text-primary-foreground hover:bg-transparent hover:text-primary/80">
               <ArrowLeft className="h-6 w-6" />
             </Button>
             {t(currentCategory.name)} - {titleSuffix}
           </CardTitle>
         </CardHeader>
-        <CardContent className="flex-1 overflow-hidden p-6">
+        <CardContent className="flex-1 overflow-hidden p-4 sm:p-6">
           <ScrollArea className="h-[calc(100vh-180px)] w-full rounded-xl border-2 border-primary/20 bg-background/80 p-4 shadow-lg">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
               {currentCategory.items?.map((country, index) => {
-                const gradientClass = countryButtonGradients[index % countryButtonGradients.length]; // Use new vibrant gradients
+                const gradientClass = countryButtonGradients[index % countryButtonGradients.length];
                 return (
                   <Button
                     key={country.name}
                     variant="outline"
                     className={cn(
-                      "group h-32 flex flex-col items-center justify-center text-center p-4 rounded-lg shadow-md transition-all duration-200 relative overflow-hidden",
-                      "text-white border-none hover:scale-105 transform", // Apply white text
-                      "hover:shadow-lg", // Add hover shadow
-                      `bg-gradient-to-br ${gradientClass}`, // Always apply gradient
+                      "group h-28 sm:h-32 flex flex-col items-center justify-center text-center p-3 rounded-2xl shadow-md transition-all duration-200 relative overflow-hidden",
+                      "text-white border-none hover:scale-105 transform",
+                      "hover:shadow-lg",
+                      `bg-gradient-to-br ${gradientClass}`,
                     )}
                     onClick={() => handleItemClick(country)}
                   >
-                    {/* Overlay for better text readability */}
                     <div className="absolute inset-0 bg-black opacity-30 group-hover:opacity-20 transition-opacity duration-200 rounded-lg"></div>
-                    <CountryIcon className="h-12 w-12 mb-2 text-white relative z-10 text-shadow-sm" /> {/* Icon color white */}
-                    <span className="font-extrabold text-xl tracking-wide relative z-10 text-shadow-sm">{t(country.name)}</span> {/* Attractive text style */}
+                    <CountryIcon className="h-8 w-8 sm:h-10 sm:w-10 mb-1.5 text-white relative z-10 text-shadow-sm" />
+                    <span className="font-extrabold text-sm sm:text-base tracking-wide relative z-10 text-shadow-sm">{t(country.name)}</span>
                   </Button>
                 );
               })}
@@ -228,28 +216,25 @@ const Index: React.FC = () => {
   let itemsToDisplay: CategoryItem[] | undefined = [];
 
   if ((currentCategory.name === "category.news" || currentCategory.name === "category.live_tv" || currentCategory.name === "category.education" || currentCategory.name === "category.entertainment") && subCategoryParam) {
-    console.log("Index.tsx: Rendering Sub-Category Items for:", subCategoryParam);
     itemsToDisplay = currentSubCategoryItems;
     if (currentCategory.name === "category.live_tv" && itemsToDisplay) {
-      let allInOneTvUrl = "https://tv.garden/"; // Default URL
-      if (subCategoryParam === "country.bangladesh") { // Compare with key
+      let allInOneTvUrl = "https://tv.garden/";
+      if (subCategoryParam === "country.bangladesh") {
         allInOneTvUrl = "https://tv.garden/bd/NikPw9VKIQ0CfQ";
-      } else if (subCategoryParam === "country.india") { // Compare with key
+      } else if (subCategoryParam === "country.india") {
         allInOneTvUrl = "https://tv.garden/in/A75lVEYwDx8Emp";
-      } else if (subCategoryParam === "country.united_kingdom") { // Compare with key
+      } else if (subCategoryParam === "country.united_kingdom") {
         allInOneTvUrl = "https://tv.garden/uk/g1kSsRGdu6pjqO";
-      } else if (subCategoryParam === "country.united_states") { // Compare with key
+      } else if (subCategoryParam === "country.united_states") {
         allInOneTvUrl = "https://tv.garden/us/1vLEWY7mhnX4hE";
-      } else if (subCategoryParam === "country.canada") { // Compare with key
+      } else if (subCategoryParam === "country.canada") {
         allInOneTvUrl = "https://tv.garden/ca/uBUxokoZzvdGBC";
-      } else if (subCategoryParam === "country.australia") { // Compare with key
+      } else if (subCategoryParam === "country.australia") {
         allInOneTvUrl = "https://tv.garden/au/1U3UtAxYHSHl5p";
       }
-      // Prepend "All In One TV" with the dynamic URL
       itemsToDisplay = [{ name: "item.all_in_one_tv", url: allInOneTvUrl }, ...itemsToDisplay];
     }
   } else {
-    console.log("Index.tsx: Rendering Direct Category Items for:", currentCategory.name);
     itemsToDisplay = currentCategory.items;
   }
 
@@ -267,33 +252,32 @@ const Index: React.FC = () => {
   }
 
   return (
-    <Card className="w-full flex flex-col h-full bg-background/80 backdrop-blur-sm shadow-xl border-primary/20"> {/* Added bg-background/80 backdrop-blur-sm */}
+    <Card className="w-full flex flex-col h-full bg-background/80 backdrop-blur-sm shadow-xl border-primary/20">
       <CardHeader className="flex flex-row items-center justify-between pb-4 border-b">
-        <CardTitle className="text-3xl font-extrabold text-primary dark:text-primary-foreground flex items-center">
+        <CardTitle className="text-2xl sm:text-3xl font-extrabold text-primary dark:text-primary-foreground flex items-center">
           <Button variant="ghost" onClick={handleBack} className="p-0 h-auto mr-2 text-primary dark:text-primary-foreground hover:bg-transparent hover:text-primary/80">
             <ArrowLeft className="h-6 w-6" />
           </Button>
           {titleText}
         </CardTitle>
       </CardHeader>
-      <CardContent className="flex-1 overflow-hidden p-6">
+      <CardContent className="flex-1 overflow-hidden p-4 sm:p-6">
         <ScrollArea className="h-[calc(100vh-180px)] w-full rounded-xl border-2 border-primary/20 bg-background/80 p-4 shadow-lg">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
             {itemsToDisplay?.map((item, index) => (
               <Button
                 key={item.name}
                 variant="ghost"
                 className={cn(
-                  "w-full justify-start text-left flex flex-col items-start h-auto py-3 px-4 rounded-lg shadow-sm transition-all duration-200",
-                  `bg-gradient-to-br ${itemGradientColors[index % itemGradientColors.length]} text-white border-none hover:scale-105 transform`, // Apply gradient and white text
-                  "hover:shadow-lg", // Add hover shadow
+                  "w-full justify-start text-left flex flex-col items-start h-auto py-3 px-4 rounded-xl shadow-sm transition-all duration-200",
+                  `bg-gradient-to-br ${itemGradientColors[index % itemGradientColors.length]} text-white border-none hover:scale-105 transform`,
+                  "hover:shadow-lg",
                 )}
                 onClick={() => handleItemClick(item)}
               >
-                <span className="font-extrabold text-lg flex items-center mb-1 text-white text-shadow-sm"> {/* Attractive text style */}
+                <span className="font-extrabold text-base flex items-center mb-1 text-white text-shadow-sm">
                   {t(item.name)}
                 </span>
-                {/* Removed the URL display */}
               </Button>
             ))}
           </div>
