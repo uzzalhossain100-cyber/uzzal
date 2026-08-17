@@ -12,7 +12,7 @@ import {
 import { 
   Smartphone, ArrowLeft, Search, Download, ExternalLink, Play, 
   CheckCircle2, ShieldCheck, Layers, AlertCircle, FileDown, Check,
-  Share2, MoreVertical
+  Share2, MoreVertical, HelpCircle
 } from 'lucide-react';
 import { popularMobileApps, MobileAppItem } from '@/data/mobileApps';
 import { useTranslation } from '@/lib/translations';
