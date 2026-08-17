@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Plus, Edit, Trash2, Loader2, X, Check } from 'lucide-react';
+import { Plus, Edit, Trash2, Loader2, X, Check, Brain } from 'lucide-react';
 import { useTranslation } from '@/lib/translations';
 import { getAllQuizQuestions, addQuizQuestion, updateQuizQuestion, deleteQuizQuestion } from '@/lib/quizService';
 import { showError } from '@/utils/toast';
