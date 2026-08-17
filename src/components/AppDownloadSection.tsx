@@ -3,9 +3,10 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { QRCodeSVG } from 'qrcode.react';
 import { 
   Smartphone, Download, QrCode, Sparkles, CheckCircle2, 
-  ShieldCheck, Share, MoreVertical, HelpCircle, Copy, Check
+  ShieldCheck, Share2, MoreVertical, HelpCircle, Copy, Check, ExternalLink
 } from 'lucide-react';
 import { useTranslation } from '@/lib/translations';
 import { toast } from 'sonner';
@@ -22,14 +23,16 @@ export const AppDownloadSection: React.FC = () => {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [isInstallModalOpen, setIsInstallModalOpen] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
-  const [currentUrl, setCurrentUrl] = useState('');
+  const [appUrl, setAppUrl] = useState('');
   const [isIOS, setIsIOS] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      setCurrentUrl(window.location.origin);
+      setAppUrl(window.location.href);
       const userAgent = window.navigator.userAgent.toLowerCase();
       setIsIOS(/iphone|ipad|ipod/.test(userAgent));
+      setIsMobile(/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent));
     }
 
     const handleBeforeInstall = (e: any) => {
@@ -51,8 +54,8 @@ export const AppDownloadSection: React.FC = () => {
       if (choice.outcome === 'accepted') {
         toast.success(
           currentLanguage === 'bn' 
-            ? "অ্যাপটি সফলভাবে আপনার মোবাইলে ইনস্টল হয়েছে!" 
-            : "App successfully installed on your mobile!"
+            ? "অভিনন্দন! অ্যাপটি সফলভাবে আপনার মোবাইলে ইনস্টল হয়েছে!" 
+            : "Congratulations! App successfully installed on your mobile!"
         );
       }
       setDeferredPrompt(null);
@@ -62,15 +65,29 @@ export const AppDownloadSection: React.FC = () => {
   };
 
   const handleCopyLink = () => {
-    if (currentUrl) {
-      navigator.clipboard.writeText(currentUrl);
+    if (appUrl) {
+      navigator.clipboard.writeText(appUrl);
       setIsCopied(true);
-      toast.success(currentLanguage === 'bn' ? "অ্যাপ লিংক কপি হয়েছে!" : "App link copied!");
-      setTimeout(() => setIsCopied(false), 2000);
+      toast.success(currentLanguage === 'bn' ? "অ্যাপ লিংক কপি হয়েছে! এবার মোবাইলে পেস্ট করে খুলুন।" : "App link copied! Open on mobile.");
+      setTimeout(() => setIsCopied(false), 2500);
     }
   };
 
-  const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(currentUrl || 'https://all-in-one-app.com')}&color=7c3aed&bgcolor=ffffff`;
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'All In One App',
+          text: currentLanguage === 'bn' ? 'অল ইন ওয়ান অ্যাপটি সরাসরি মোবাইলে ইনস্টল করুন:' : 'Install All In One App directly on your mobile:',
+          url: appUrl,
+        });
+      } catch (err) {
+        console.log('Share dismissed');
+      }
+    } else {
+      handleCopyLink();
+    }
+  };
 
   return (
     <div className="mt-8 w-full">
@@ -82,7 +99,7 @@ export const AppDownloadSection: React.FC = () => {
             <div className="lg:col-span-7 space-y-5">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-black border border-emerald-500/30">
                 <ShieldCheck className="h-4 w-4" />
-                <span>100% Free & Fast Mobile App</span>
+                <span>100% Free & Direct Mobile App</span>
               </div>
 
               <div className="space-y-2">
@@ -96,12 +113,12 @@ export const AppDownloadSection: React.FC = () => {
                 </h3>
                 <p className="text-sm sm:text-base text-gray-300 leading-relaxed font-medium">
                   {currentLanguage === 'bn'
-                    ? "ডাউনলোড ও ইনস্টল বাটনে চাপ দিয়ে অথবা পাশের কিউআর (QR) কোডটি স্ক্যান করে যেকোনো অ্যান্ড্রয়েড ও আইফোনে ১-ক্লিকে অ্যাপ ইনস্টল করে নিন।"
-                    : "Tap the Install button or scan the QR code from your phone camera to instantly install the app."}
+                    ? "নিচের ইনস্টল বাটনে চাপ দিয়ে অথবা মোবাইলের ক্যামেরা দিয়ে কিউআর (QR) কোডটি স্ক্যান করে যেকোনো অ্যান্ড্রয়েড ও আইফোনে ১-ক্লিকে অ্যাপ হিসেবে যুক্ত করে নিন।"
+                    : "Tap Install button or scan the QR code with your mobile camera to install directly onto your device."}
                 </p>
               </div>
 
-              {/* Steps */}
+              {/* 3 Step Process */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
                 <div className="bg-white/5 backdrop-blur-sm p-3.5 rounded-2xl border border-white/10 flex items-start gap-2.5">
                   <span className="h-6 w-6 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-black flex items-center justify-center shrink-0">১</span>
@@ -113,14 +130,14 @@ export const AppDownloadSection: React.FC = () => {
                 <div className="bg-white/5 backdrop-blur-sm p-3.5 rounded-2xl border border-white/10 flex items-start gap-2.5">
                   <span className="h-6 w-6 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-black flex items-center justify-center shrink-0">২</span>
                   <p className="text-xs text-gray-200 font-bold">
-                    {currentLanguage === 'bn' ? "'Install' বাটন চাপ দিয়ে কনফার্ম করুন" : "Confirm 'Install' prompt"}
+                    {currentLanguage === 'bn' ? "ব্রাউজারে 'Install' বাটনে চাপুন" : "Confirm 'Install' prompt"}
                   </p>
                 </div>
 
                 <div className="bg-white/5 backdrop-blur-sm p-3.5 rounded-2xl border border-white/10 flex items-start gap-2.5">
                   <span className="h-6 w-6 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-black flex items-center justify-center shrink-0">৩</span>
                   <p className="text-xs text-gray-200 font-bold">
-                    {currentLanguage === 'bn' ? "হোম স্ক্রিনে অ্যাপ হিসেবে ব্যবহার করুন" : "Use app from Home Screen"}
+                    {currentLanguage === 'bn' ? "হোম স্ক্রিনে আসল অ্যাপের মতো ব্যবহার করুন" : "Enjoy full-screen App"}
                   </p>
                 </div>
               </div>
@@ -133,16 +150,16 @@ export const AppDownloadSection: React.FC = () => {
                   className="bg-gradient-to-r from-emerald-500 via-teal-500 to-primary hover:from-emerald-600 hover:to-teal-600 text-white font-black shadow-xl h-13 px-6 rounded-2xl flex items-center gap-2 text-sm sm:text-base transition-transform hover:scale-105"
                 >
                   <Download className="h-5 w-5 animate-bounce" />
-                  <span>{currentLanguage === 'bn' ? "মোবাইলে অ্যাপ ইনস্টল করুন" : "Install App on Phone"}</span>
+                  <span>{currentLanguage === 'bn' ? "মোবাইলে অ্যাপ ইনস্টল করুন" : "Install App on Mobile"}</span>
                 </Button>
 
                 <Button
                   variant="outline"
-                  onClick={() => setIsInstallModalOpen(true)}
+                  onClick={handleShare}
                   className="bg-white/10 hover:bg-white/20 text-white border-white/20 font-bold h-13 px-5 rounded-2xl text-xs sm:text-sm"
                 >
-                  <HelpCircle className="h-4 w-4 mr-2" />
-                  {currentLanguage === 'bn' ? "ইনস্টল করার নিয়ম" : "Install Guide"}
+                  <Share2 className="h-4 w-4 mr-2" />
+                  {currentLanguage === 'bn' ? "মোবাইলে লিংক পাঠান" : "Share to Mobile"}
                 </Button>
 
                 <Button
@@ -151,30 +168,32 @@ export const AppDownloadSection: React.FC = () => {
                   className="text-gray-300 hover:text-white hover:bg-white/10 font-bold h-13 px-4 rounded-2xl text-xs"
                 >
                   {isCopied ? <Check className="h-4 w-4 mr-1 text-emerald-400" /> : <Copy className="h-4 w-4 mr-1" />}
-                  <span>{isCopied ? (currentLanguage === 'bn' ? "কপি হয়েছে" : "Copied") : (currentLanguage === 'bn' ? "লিংক কপি করুন" : "Copy Link")}</span>
+                  <span>{isCopied ? (currentLanguage === 'bn' ? "কপি হয়েছে!" : "Copied!") : (currentLanguage === 'bn' ? "লিংক কপি করুন" : "Copy Link")}</span>
                 </Button>
               </div>
             </div>
 
-            {/* Right QR Code Area */}
+            {/* Right QR Code Area with Pure SVG Generator */}
             <div className="lg:col-span-5 flex flex-col items-center justify-center">
-              <div className="bg-white p-4 sm:p-5 rounded-3xl shadow-2xl border-4 border-primary/50 flex flex-col items-center text-center space-y-3 max-w-[280px] w-full transform transition-transform hover:scale-105">
+              <div className="bg-white p-5 sm:p-6 rounded-3xl shadow-2xl border-4 border-primary/50 flex flex-col items-center text-center space-y-3 max-w-[280px] w-full transform transition-transform hover:scale-105">
                 <div className="flex items-center gap-2 text-primary font-black text-xs uppercase tracking-wider">
                   <QrCode className="h-4 w-4" />
-                  <span>{currentLanguage === 'bn' ? "মোবাইল দিয়ে স্ক্যান করুন" : "Scan With Mobile"}</span>
+                  <span>{currentLanguage === 'bn' ? "মোবাইল দিয়ে স্ক্যান করুন" : "Scan With Mobile Camera"}</span>
                 </div>
 
-                <div className="w-44 h-44 sm:w-48 sm:h-48 rounded-2xl overflow-hidden bg-white p-1 flex items-center justify-center border border-gray-200">
-                  <img
-                    src={qrCodeUrl}
-                    alt="App Install QR Code"
-                    className="w-full h-full object-contain"
+                <div className="w-48 h-48 rounded-2xl overflow-hidden bg-white p-2 flex items-center justify-center border-2 border-primary/20 shadow-inner">
+                  <QRCodeSVG
+                    value={appUrl || 'https://all-in-one-app.com'}
+                    size={176}
+                    level="H"
+                    includeMargin={false}
+                    fgColor="#5b21b6"
                   />
                 </div>
 
-                <div className="space-y-0.5">
-                  <p className="text-[11px] font-bold text-gray-700">
-                    {currentLanguage === 'bn' ? "ক্যামেরা বা স্ক্যানার দিয়ে স্ক্যান করুন" : "Scan with camera to install"}
+                <div className="space-y-1">
+                  <p className="text-xs font-bold text-gray-800">
+                    {currentLanguage === 'bn' ? "ক্যামেরা বা Google Lens দিয়ে স্ক্যান করুন" : "Scan with Camera / Google Lens"}
                   </p>
                   <p className="text-[10px] text-gray-500 font-semibold">
                     Android & iPhone Supported
@@ -193,11 +212,11 @@ export const AppDownloadSection: React.FC = () => {
           <DialogHeader>
             <DialogTitle className="text-xl sm:text-2xl font-black text-primary flex items-center gap-2">
               <Smartphone className="h-6 w-6 text-primary" />
-              {currentLanguage === 'bn' ? "মোবাইলে ইনস্টল করার নিয়মাবলী" : "Mobile Installation Guide"}
+              {currentLanguage === 'bn' ? "মোবাইলে ইনস্টল করার সহজ নিয়ম" : "Mobile Installation Guide"}
             </DialogTitle>
             <DialogDescription className="text-xs sm:text-sm text-muted-foreground">
               {currentLanguage === 'bn' 
-                ? "খুব সহজে কোনো এরর ছাড়াই সরাসরি মোবাইলে অ্যাপ যুক্ত করুন:" 
+                ? "খুব সহজে কোনো এরর ছাড়াই সরাসরি মোবাইলে অ্যাপ হিসেবে যুক্ত করার নিয়ম:" 
                 : "Steps to install cleanly on your mobile without any errors:"}
             </DialogDescription>
           </DialogHeader>
@@ -216,7 +235,7 @@ export const AppDownloadSection: React.FC = () => {
                   </p>
                   <p className="flex items-start gap-2">
                     <span className="font-bold text-primary bg-primary/20 h-5 w-5 rounded-full flex items-center justify-center shrink-0">২</span>
-                    <span>মেনু থেকে <strong>"Install app"</strong> অথবা <strong>"Add to Home screen"</strong> (হোম স্ক্রিনে যুক্ত করুন) নির্বাচন করুন।</span>
+                    <span>মেনু থেকে <strong>"Install app"</strong> অথবা <strong>"Add to Home screen"</strong> (হোম স্ক্রিনে যোগ করুন) চাপুন।</span>
                   </p>
                   <p className="flex items-start gap-2">
                     <span className="font-bold text-primary bg-primary/20 h-5 w-5 rounded-full flex items-center justify-center shrink-0">৩</span>
@@ -227,7 +246,7 @@ export const AppDownloadSection: React.FC = () => {
             ) : (
               <div className="p-4 rounded-2xl bg-primary/10 border border-primary/20 space-y-3">
                 <span className="font-extrabold text-sm text-primary flex items-center gap-1.5">
-                  <Share className="h-4 w-4" />
+                  <Smartphone className="h-4 w-4" />
                   {currentLanguage === 'bn' ? "আইফোন / আইপ্যাড (Safari)" : "iPhone / iPad (Safari)"}
                 </span>
                 <div className="space-y-2.5 text-xs text-muted-foreground">
