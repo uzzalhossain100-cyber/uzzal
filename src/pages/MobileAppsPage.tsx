@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { 
   Smartphone, ArrowLeft, Search, Download, ExternalLink, Play, 
   CheckCircle2, ShieldCheck, Layers, Check,
-  Share, MoreVertical, HelpCircle, Sparkles
+  Share, MoreVertical, HelpCircle, Sparkles, ArrowDownCircle, FileDown
 } from 'lucide-react';
 import { popularMobileApps, MobileAppItem } from '@/data/mobileApps';
 import { useTranslation } from '@/lib/translations';
@@ -43,7 +43,6 @@ const MobileAppsPage: React.FC = () => {
   const [isInstalled, setIsInstalled] = useState(false);
 
   useEffect(() => {
-    // Check if already running in standalone/installed mode
     if (window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone) {
       setIsInstalled(true);
     }
@@ -88,7 +87,21 @@ const MobileAppsPage: React.FC = () => {
     }
   };
 
-  // Direct 1-Click Native Phone Install Handler (Zero Parse Error)
+  const handleDirectApkDownload = () => {
+    const link = document.createElement('a');
+    link.href = '/AllInOne.apk';
+    link.download = "AllInOne-v1.0.0.apk";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    toast.success(
+      currentLanguage === 'bn' 
+        ? "APK ফাইল ডাউনলোড শুরু হয়েছে! ডাউনলোড শেষে ফাইলে চাপ দিয়ে 'Install' করুন।" 
+        : "APK Download started! Open the downloaded file to install."
+    );
+  };
+
   const handleDirectInstall = async () => {
     if (deferredPrompt) {
       deferredPrompt.prompt();
@@ -103,7 +116,6 @@ const MobileAppsPage: React.FC = () => {
       }
       setDeferredPrompt(null);
     } else {
-      // If browser already has it cached or needs manual trigger
       setIsInstallModalOpen(true);
     }
   };
@@ -133,18 +145,22 @@ const MobileAppsPage: React.FC = () => {
             </div>
           </div>
 
-          {/* 1-Click Install Button */}
-          <div className="flex items-center gap-2 w-full sm:w-auto">
+          {/* Action Download Buttons */}
+          <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+            <Button
+              onClick={handleDirectApkDownload}
+              className="flex-1 sm:flex-none bg-gradient-to-r from-emerald-500 via-teal-600 to-green-600 hover:from-emerald-600 hover:to-teal-700 text-white font-black shadow-lg flex items-center justify-center gap-2 py-5 sm:py-2 px-5 rounded-xl text-sm transition-transform hover:scale-105"
+            >
+              <ArrowDownCircle className="h-5 w-5 animate-bounce" />
+              <span>{currentLanguage === 'bn' ? ".APK ডাউনলোড" : "Download .APK"}</span>
+            </Button>
+
             <Button
               onClick={handleDirectInstall}
-              className="flex-1 sm:flex-none bg-gradient-to-r from-emerald-500 via-teal-600 to-primary hover:from-emerald-600 hover:to-teal-700 text-white font-black shadow-lg flex items-center justify-center gap-2 py-5 sm:py-2 px-6 rounded-xl text-sm transition-transform hover:scale-105"
+              className="flex-1 sm:flex-none bg-primary text-white font-black shadow-lg flex items-center justify-center gap-2 py-5 sm:py-2 px-5 rounded-xl text-sm transition-transform hover:scale-105"
             >
-              <Download className="h-5 w-5 animate-bounce" />
-              <span>
-                {isInstalled 
-                  ? (currentLanguage === 'bn' ? "অ্যাপ ইনস্টল করা আছে" : "App Installed")
-                  : (currentLanguage === 'bn' ? "১-ক্লিকে মোবাইলে ইনস্টল করুন" : "1-Click Install on Phone")}
-              </span>
+              <Sparkles className="h-4 w-4" />
+              <span>{currentLanguage === 'bn' ? "১-ক্লিকে ইনস্টল" : "1-Click Install"}</span>
             </Button>
           </div>
         </CardHeader>
@@ -259,37 +275,37 @@ const MobileAppsPage: React.FC = () => {
         </CardContent>
       </Card>
 
-      {/* Prominent Native Install Box */}
+      {/* Prominent APK Download Box */}
       <Card className="w-full overflow-hidden bg-gradient-to-br from-slate-900 via-purple-950 to-indigo-950 text-white shadow-2xl border-2 border-primary/40 rounded-3xl p-6 sm:p-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
           <div className="lg:col-span-8 space-y-4">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-extrabold border border-emerald-500/30">
               <ShieldCheck className="h-4 w-4" />
-              <span>100% Free, Safe & Fast Mobile WebAPK</span>
+              <span>100% Free, Safe & Fast Mobile APK</span>
             </div>
 
             <h3 className="text-2xl sm:text-3xl font-extrabold text-white flex items-center gap-2">
               <Smartphone className="h-7 w-7 text-emerald-400" />
-              {currentLanguage === 'bn' ? "মোবাইলে ১-ক্লিকে অফিশিয়াল অ্যাপ ইনস্টল" : "1-Click Official Mobile App Installation"}
+              {currentLanguage === 'bn' ? "মোবাইলে সরাসরি .APK ফাইল ডাউনলোড ও ইনস্টল" : "Direct .APK File Download & Mobile Installation"}
             </h3>
 
             <p className="text-sm sm:text-base text-gray-300 leading-relaxed">
               {currentLanguage === 'bn'
-                ? "কোনো প্যাকেজ পার্স এরর বা নষ্ট ফাইল ছাড়াই সরাসরি অ্যান্ড্রয়েড ও আইফোনে আসল অ্যাপের মতো ইনস্টল করুন।"
-                : "Install cleanly on Android & iPhone with zero package parse error and instant full-screen experience."}
+                ? "সরাসরি অ্যান্ড্রয়েড .APK ফাইলটি ডাউনলোড করে ইনস্টল করুন অথবা ব্রাউজার থেকে ১-ক্লিকে ইনস্টল করে নিন।"
+                : "Download the direct Android .APK package or install directly with 1-click on your mobile."}
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
               <div className="flex items-start gap-2 bg-white/5 p-3 rounded-xl border border-white/10">
                 <CheckCircle2 className="h-5 w-5 text-emerald-400 shrink-0 mt-0.5" />
                 <span className="text-xs text-gray-200 font-medium">
-                  {currentLanguage === 'bn' ? "১. ইনস্টল বাটনে চাপুন" : "1. Tap Install Button"}
+                  {currentLanguage === 'bn' ? "১. .APK ডাউনলোডে চাপুন" : "1. Tap Download .APK"}
                 </span>
               </div>
               <div className="flex items-start gap-2 bg-white/5 p-3 rounded-xl border border-white/10">
                 <CheckCircle2 className="h-5 w-5 text-emerald-400 shrink-0 mt-0.5" />
                 <span className="text-xs text-gray-200 font-medium">
-                  {currentLanguage === 'bn' ? "২. 'Install' কনফার্ম করুন" : "2. Confirm 'Install'"}
+                  {currentLanguage === 'bn' ? "২. ফাইলে চাপ দিয়ে 'Install' দিন" : "2. Open file & tap 'Install'"}
                 </span>
               </div>
               <div className="flex items-start gap-2 bg-white/5 p-3 rounded-xl border border-white/10">
@@ -303,13 +319,13 @@ const MobileAppsPage: React.FC = () => {
 
           <div className="lg:col-span-4 flex flex-col items-center justify-center space-y-3 pt-2 lg:pt-0">
             <Button
-              onClick={handleDirectInstall}
+              onClick={handleDirectApkDownload}
               size="lg"
               className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-black shadow-xl text-base sm:text-lg h-14 rounded-2xl flex items-center justify-center gap-3 transition-transform hover:scale-105"
             >
-              <Sparkles className="h-6 w-6 animate-pulse" />
+              <ArrowDownCircle className="h-6 w-6 animate-bounce" />
               <span>
-                {currentLanguage === 'bn' ? "এখনই ইনস্টল করুন" : "Install App Now"}
+                {currentLanguage === 'bn' ? "সরাসরি .APK ডাউনলোড" : "Download .APK Directly"}
               </span>
             </Button>
 
@@ -319,7 +335,7 @@ const MobileAppsPage: React.FC = () => {
               className="w-full bg-white/10 hover:bg-white/20 text-white border-white/20 font-bold text-xs h-10 rounded-xl"
             >
               <HelpCircle className="h-4 w-4 mr-2" />
-              {currentLanguage === 'bn' ? "ইনস্টল করার সহজ নিয়ম দেখুন" : "View Easy Install Guide"}
+              {currentLanguage === 'bn' ? "ইনস্টল করার নিয়ম দেখুন" : "View Installation Guide"}
             </Button>
           </div>
         </div>
@@ -335,60 +351,43 @@ const MobileAppsPage: React.FC = () => {
             </DialogTitle>
             <DialogDescription className="text-xs sm:text-sm text-muted-foreground">
               {currentLanguage === 'bn' 
-                ? "কোনো Parse Error ছাড়া সরাসরি মোবাইলে অ্যাপ যুক্ত করার নিয়ম:" 
-                : "Steps to install cleanly on your mobile without any parse errors:"}
+                ? "সরাসরি মোবাইলে অ্যাপ যুক্ত করার সহজ নিয়ম:" 
+                : "Steps to install cleanly on your mobile:"}
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-4 pt-2">
+            <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 space-y-2 text-xs">
+              <p className="font-extrabold text-sm text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
+                <FileDown className="h-4 w-4" />
+                {currentLanguage === 'bn' ? "১. সরাসরি .APK ফাইল ডাউনলোড ও ইনস্টল" : "1. Direct .APK File Installation"}
+              </p>
+              <p className="text-muted-foreground">
+                সবুজ <strong>'সরাসরি .APK ডাউনলোড'</strong> বাটনে চাপ দিন। ফাইল ডাউনলোড হয়ে গেলে তাতে ক্লিক করে <strong>'Install'</strong> নির্বাচন করুন।
+              </p>
+            </div>
+
             {!isIOS ? (
-              <div className="p-4 rounded-2xl bg-primary/10 border border-primary/20 space-y-3">
-                <span className="font-extrabold text-sm text-primary flex items-center gap-1.5">
+              <div className="p-4 rounded-2xl bg-primary/10 border border-primary/20 space-y-2 text-xs">
+                <p className="font-extrabold text-sm text-primary flex items-center gap-1.5">
                   <Smartphone className="h-4 w-4" />
-                  {currentLanguage === 'bn' ? "অ্যান্ড্রয়েড ফোন (Google Chrome)" : "Android (Chrome Browser)"}
-                </span>
-                <div className="space-y-2.5 text-xs text-muted-foreground">
-                  <p className="flex items-start gap-2">
-                    <span className="font-bold text-primary bg-primary/20 h-5 w-5 rounded-full flex items-center justify-center shrink-0">১</span>
-                    <span>ক্রোম ব্রাউজারের উপরে ডানদিকের <strong>৩ ডট (<MoreVertical className="inline h-3.5 w-3.5 text-foreground" />)</strong> মেনুতে চাপুন।</span>
-                  </p>
-                  <p className="flex items-start gap-2">
-                    <span className="font-bold text-primary bg-primary/20 h-5 w-5 rounded-full flex items-center justify-center shrink-0">২</span>
-                    <span>মেনু থেকে <strong>"Install app"</strong> অথবা <strong>"Add to Home screen"</strong> (হোম স্ক্রিনে যুক্ত করুন) নির্বাচন করুন।</span>
-                  </p>
-                  <p className="flex items-start gap-2">
-                    <span className="font-bold text-primary bg-primary/20 h-5 w-5 rounded-full flex items-center justify-center shrink-0">৩</span>
-                    <span><strong>"Install"</strong> বাটনে চাপলেই সরাসরি আসল অ্যাপের মতো মোবাইলে যুক্ত হয়ে যাবে!</span>
-                  </p>
-                </div>
+                  {currentLanguage === 'bn' ? "২. ব্রাউজার থেকে সরাসরি ইনস্টল (Chrome)" : "2. Direct Browser Install (Chrome)"}
+                </p>
+                <p className="text-muted-foreground">
+                  ক্রোম ব্রাউজারের উপরে ডানদিকের <strong>৩ ডট (<MoreVertical className="inline h-3.5 w-3.5 text-foreground" />)</strong> মেনুতে চাপুন এবং <strong>"Install app"</strong> চাপুন।
+                </p>
               </div>
             ) : (
-              <div className="p-4 rounded-2xl bg-primary/10 border border-primary/20 space-y-3">
-                <span className="font-extrabold text-sm text-primary flex items-center gap-1.5">
-                  <Share className="h-4 w-4" />
+              <div className="p-4 rounded-2xl bg-primary/10 border border-primary/20 space-y-2 text-xs">
+                <p className="font-extrabold text-sm text-primary flex items-center gap-1.5">
+                  <Smartphone className="h-4 w-4" />
                   {currentLanguage === 'bn' ? "আইফোন / আইপ্যাড (Safari)" : "iPhone / iPad (Safari)"}
-                </span>
-                <div className="space-y-2.5 text-xs text-muted-foreground">
-                  <p className="flex items-start gap-2">
-                    <span className="font-bold text-primary bg-primary/20 h-5 w-5 rounded-full flex items-center justify-center shrink-0">১</span>
-                    <span>সাফারি ব্রাউজারের নিচের <strong>Share</strong> বাটনে চাপ দিন।</span>
-                  </p>
-                  <p className="flex items-start gap-2">
-                    <span className="font-bold text-primary bg-primary/20 h-5 w-5 rounded-full flex items-center justify-center shrink-0">২</span>
-                    <span>মেনু থেকে <strong>"Add to Home Screen"</strong> চাপুন।</span>
-                  </p>
-                  <p className="flex items-start gap-2">
-                    <span className="font-bold text-primary bg-primary/20 h-5 w-5 rounded-full flex items-center justify-center shrink-0">৩</span>
-                    <span>উপরে <strong>"Add"</strong> বাটনে চাপলেই অ্যাপ হিসেবে ফোনে সেভ হয়ে যাবে।</span>
-                  </p>
-                </div>
+                </p>
+                <p className="text-muted-foreground">
+                  সাফারি ব্রাউজারের নিচে <strong>Share</strong> বাটনে চাপ দিয়ে <strong>"Add to Home Screen"</strong> চাপুন।
+                </p>
               </div>
             )}
-
-            <div className="flex items-center gap-2 p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-xl text-emerald-600 dark:text-emerald-400 text-xs font-semibold">
-              <ShieldCheck className="h-4 w-4 shrink-0" />
-              <span>এটি সম্পূর্ণ নিরাপদ, দ্রুত এবং ফোনের কোনো বাড়তি র‍্যাম বা স্টোরেজ অপচয় করে না।</span>
-            </div>
 
             <Button
               onClick={() => setIsInstallModalOpen(false)}
